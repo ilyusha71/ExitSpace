@@ -33,6 +33,29 @@ public:
                                                     // byte blockData[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     byte buffer[18];                                // 暫存讀取區塊內容的陣列，MIFARE_Read()方法要求至少要18位元組空間，來存放16位元組。
 
+    void ShowRubyName()
+    {
+        Serial.print(F("["));
+        for (byte i = 0; i < 16; i++)
+        {
+            if (blockData[i] == 0)
+                break;
+            Serial.write(blockData[i]);
+        }
+        Serial.print(F("]"));
+    }
+    void ShowRubyBlock()
+    {
+        Serial.print(F("[Sector "));
+        Serial.print(sector);
+        Serial.print(F("] [Block "));
+        Serial.print(block);
+        Serial.print(F("]"));
+    }
+    void RecodeTime()
+    {
+    }
+
 private:
 };
 RFID::RFID() {}
@@ -92,9 +115,4 @@ void RFID::Initialize(byte ruby)
     }
     Serial.print(badge);
     Serial.print(F("]"));
-    // Serial.print(F("] in Sector "));
-    // Serial.print(sector);
-    // Serial.print(F(" ,Block "));
-    // Serial.print(block);
-    // Serial.println();
 }

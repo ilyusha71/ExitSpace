@@ -42,114 +42,87 @@
  * Reserve:
  ****************************************************************************/
 #include <Arduino.h>
-#include <Wire.h>
-#include <RFID.h>
-void writeBlock(byte _sector, byte _block, byte _blockData[]);
-void readBlock(byte _sector, byte _block, byte _blockData[]);
-void dump_byte_array(byte *buffer, byte bufferSize);
 #include <SPI.h>
+/****************************************************************************
+ * RFID Setting
+ ****************************************************************************/
+#include <RFID.h>
+#include <Reader.h>
 #include <MFRC522.h>
-
-// I2C
-#define SLAVE_ADDRESS 1
-char incomingByte = 0;
-void receiveEvent(int howMany);
-void requestEvent();
-enum RequestType
-{
-  None,
-  Writer,
-  Pass,
-  At,
-} requestType = None;
-
-// #define WRITER ;
-#ifdef WRITER
+MFRC522::StatusCode status;
+MFRC522::MIFARE_Key key;           // 儲存金鑰
+byte wakakaKey[16] = "Wakaka Key"; // 最多可存入16個字元
+// #define WRITER_MODE ;
+#ifdef WRITER_MODE
 RFID rfid;
 #define RUBY_NUMBER 4
-MFRC522 mfrc522;
+#define NR_OF_READERS 1
 #define SS_PIN 10
 #endif
-
-#define READER ;
-#ifdef READER
-#define NR_OF_RUBY 2
+#define READER_MODE ;
+#ifdef READER_MODE
+#define NR_OF_RUBY 11
 RFID rfid[NR_OF_RUBY];
-#define RUBY_NUMBER_A 4  // Pass Ruby Number - Outer
-#define RUBY_NUMBER_B 05 // Pass Ruby Number - Inner
-byte rubies[] = {RUBY_NUMBER_A, RUBY_NUMBER_B};
 #define NR_OF_READERS 2
-MFRC522 mfrc522[NR_OF_READERS]; // Create MFRC522 instance.
-#define SS_PIN_A 10             // Slave Select Pin A
-#define SS_PIN_B 9              // Slave Select Pin B
+#define SS_PIN_A 10 // Slave Select Pin A
+#define SS_PIN_B 9  // Slave Select Pin B
 byte ssPins[] = {SS_PIN_A, SS_PIN_B};
 #endif
+READER reader[NR_OF_READERS];
+MFRC522 mfrc522[NR_OF_READERS]; // Create MFRC522 instance.
+int readerSelected;
+byte bufferAgentID[18] = "Unknown", bufferTime[18];
+byte blockID[2] = {7, 0}, blockTime[2] = {7, 1};
+long stageLimit[5] = {999999, 360, 780, 1200, 1500}; // 通過各關的最大時限
+long timer;
 
 #define RST_PIN 8 // Reset Pin
 #define LED_BUZZER 7
 #define RELAY_LOW 6
 
-// 定義RFID卡片標籤
-typedef struct
-{ // 宣告自訂的結構資料類型
-  byte uid[4];
-  const char *name;
-} RFIDTag;
+/****************************************************************************
+ * 燒錄設定
+ ****************************************************************************/
+#define STAGE 0         // 所在關卡
+#define SLAVE_ADDRESS 7 // Slave 地址 0x00~0x7F (0~127)  87 與 104 已經被 DS3231 使用
+char DEVICE_NAME[] = "A2-C2F9-W2";
 
-RFIDTag tags[] = { // 初始化結構資料
-    {{0xFF, 0xFF, 0xFF, 0xFF}, "Unknown"},
-    {{0xF9, 0x3A, 0x3D, 0x0D}, "KGB-001"},
-    {{0x1A, 0x81, 0x4E, 0x84}, "KGB-002"},
-    {{0xF5, 0xc4, 0x53, 0x84}, "KGB-003"},
-    {{0x3D, 0x85, 0xEA, 0x75}, "KGB-004"},
-    {{0x15, 0x76, 0x76, 0x63}, "KGB-005"},
-    {{0x97, 0x1E, 0xE0, 0xBE}, "KGB-006"},
-    {{0x4A, 0x5E, 0x28, 0x0C}, "KGB-007"},
-    {{0x96, 0xDC, 0x4D, 0x59}, "KGB-008"},
-    {{0xE7, 0x6F, 0xF3, 0x38}, "KGB-009"},
-    {{0xA4, 0xDB, 0xB0, 0xD5}, "KGB-010"},
-    {{0x10, 0x6F, 0x46, 0xD5}, "MI6-201"},
-    {{0x6A, 0x9D, 0xFB, 0xB8}, "MI6-202"},
-    {{0x46, 0x4A, 0x19, 0x00}, "MI6-203"},
-    {{0xF1, 0xE2, 0xA6, 0xD5}, "MI6-204"},
-    {{0x46, 0x8A, 0x30, 0x00}, "MI6-205"},
-    {{0x65, 0xAA, 0xA6, 0xD5}, "MI6-206"},
-    {{0x2A, 0x0A, 0xCA, 0x10}, "MI6-207"},
-    {{0xF7, 0xE2, 0x73, 0x62}, "MI6-208"},
-    {{0xF7, 0x83, 0x73, 0x62}, "MI6-209"},
-    {{0xD7, 0x50, 0x7C, 0x62}, "MI6-210"},
-    {{0xF9, 0x3A, 0x3D, 0x0D}, "Example"}};
-byte totalTags = sizeof(tags) / sizeof(RFIDTag);
-int indexAgent = 0;
-
-// Switcher
-unsigned long timer;
-unsigned long counter = 0;
-int readerSelected;
-
-MFRC522::MIFARE_Key key;           // 儲存金鑰
-byte wakakaKey[16] = "Wakaka Key"; // 最多可存入16個字元
-// 若要清除區塊內容，請寫入16個 0
-//byte blockData[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-
-// 暫存讀取區塊內容的陣列，MIFARE_Read()方法要求至少要18位元組空間，來存放16位元組。
-byte buffer[18];
+// I2C & DS3231
+#include <DS3231.h> // 包含 Wire.h
+#define I2C_BUFFER_SIZE 32
+uint8_t i2cBuffer[I2C_BUFFER_SIZE];
+uint8_t i2cBufferCnt = 0;
+enum RequestType
+{
+  None,
+  Timeout,
+  Get,
+  Pass,
+  Forbidden,
+} requestType = None;
+bool hasNewMsg;
+void receiveEvent(int howMany);
+void requestEvent();
+DS3231 clock;
+bool Century = false;
+bool h12;
+bool PM;
+byte ADay, AHour, AMinute, ASecond, ABits;
+bool ADy, A12h, Apm;
+byte year, month, date, DoW, hour, minute, second;
 
 #define SIZE_OF_ARRAY(ary) sizeof(ary) / sizeof(*ary)
 
-MFRC522::StatusCode status;
-
-// Flag
-enum Work
-{
-  Ready,
-  Failed,
-  Written,
-  OK,
-  Match,
-  Incorrect,
-};
-Work work = Ready;
+String getValue(String data, char separator, int index);
+bool SetCardData(byte data[], byte _block[]);
+bool GetCardData(byte data[], byte _block[]);
+bool ClearRuby();
+bool WriteData(RFID *ruby);
+bool ReadData(RFID *ruby);
+void dump_byte_array(byte *buffer, byte bufferSize);
+void Fail();
+void Unlock();
+void AccessForbidden();
 
 void setup()
 {
@@ -168,9 +141,11 @@ void setup()
     key.keyByte[i] = 0xFF;
   }
 
-#ifdef WRITER
+#ifdef WRITER_MODE
+
+  Serial.println(F(" * Stage 1, "));
   // 定義 RFID 寫入區域與內容
-  Serial.print(F(" * Stage 1, "));
+  Serial.print(F(" ********* "));
   rfid.Initialize(RUBY_NUMBER);
   Serial.print(F(" Badge Writer in [Sector "));
   Serial.print(rfid.sector);
@@ -178,40 +153,50 @@ void setup()
   Serial.print(rfid.block);
   Serial.println(F("]"));
   // 初始化 MFRC522
-  Serial.print(F(" * Writer Status ==> "));
-  mfrc522.PCD_Init(SS_PIN, RST_PIN); // Init each MFRC522 card
-  mfrc522.PCD_DumpVersionToSerial();
+  Serial.print(F(" *   Status ==> "));
+  mfrc522[0].PCD_Init(SS_PIN, RST_PIN); // Init each MFRC522 card
+  mfrc522[0].PCD_DumpVersionToSerial();
 #endif
 
-#ifdef READER
-
+#ifdef READER_MODE
   Serial.println(F(" * Stage 2"));
-  for (int i = 0; i < NR_OF_RUBY; i++)
+  for (int i = 1; i < NR_OF_RUBY; i++)
   {
     // 定義 RFID 讀取區域與內容
     Serial.print(F(" ********* "));
-    rfid[i].Initialize(rubies[i]);
+    rfid[i].Initialize(i);
     Serial.print(F(" Badge Reader in [Sector "));
     Serial.print(rfid[i].sector);
     Serial.print(F("] [Block "));
     Serial.print(rfid[i].block);
     Serial.println(F("]"));
+  }
+
+  for (int i = 0; i < NR_OF_READERS; i++)
+  {
+    // 定義 Reader Mode
+    if (i == 0) // Outer 外側
+    {
+      Serial.println(F(" * Outer Reader:"));
+      reader[i].Initialize(1); // 計數密鑰
+      // reader[i].Initialize(rfid[4]); // 指定密鑰 Pass
+      // RFID *keys[] = {&rfid[2], &rfid[4], &rfid[6]}; // 擇一/多重密鑰 Pass
+      // reader[i].Initialize(AND, keys);
+    }
+    else if (i == 1) // Inner 內側
+    {
+      Serial.println(F(" * Inner Reader:"));
+      reader[i].Initialize(1); // 計數密鑰
+      // reader[i].Initialize(rfid[6]); // // 指定密鑰 Pass
+      // RFID *keys[] = {&rfid[4], &rfid[6]}; // 擇一/多重密鑰 Pass
+      // reader[i].Initialize(AND, keys);
+    }
     // 初始化 MFRC522
-    Serial.print(F(" * Reader Status ==> "));
+    Serial.print(F(" *   Status ==> "));
     mfrc522[i].PCD_Init(ssPins[i], RST_PIN); // Init each MFRC522 card
     mfrc522[i].PCD_DumpVersionToSerial();
   }
 #endif
-
-  // 萬用鑰匙
-  Serial.print(F(" * All Pass is ["));
-  for (byte i = 0; i < 16; i++)
-  {
-    if (wakakaKey[i] == 0)
-      break;
-    Serial.write(wakakaKey[i]);
-  }
-  Serial.println(F("]"));
 
   pinMode(LED_BUZZER, OUTPUT);
   pinMode(RELAY_LOW, OUTPUT);
@@ -219,103 +204,351 @@ void setup()
   digitalWrite(RELAY_LOW, LOW);
 
   Serial.println(F(" *"));
-  Serial.println(F(" * 2020-01-21_Please scan MIFARE Classic card..."));
+  Serial.println(F(" * 2020-02-14_Please scan MIFARE Classic card..."));
   Serial.println(F(" ****************************************************************************/"));
 
   // pinMode(RST_PIN, OUTPUT);
   // digitalWrite(RST_PIN, LOW);
-}
 
+  second = clock.getSecond();
+  minute = clock.getMinute();
+  hour = clock.getHour(h12, PM);
+  Serial.print(F("  Now Time   : ["));
+  Serial.print(hour, DEC);
+  Serial.print(':');
+  Serial.print(minute, DEC);
+  Serial.print(':');
+  Serial.print(second, DEC);
+  Serial.println(F(" ]"));
+}
+String msg;
+void (*resetFunc)(void) = 0; //declare reset function at address 0
 void loop()
 {
-  work = Ready;
-
-#ifdef READER
-  for (uint8_t reader = 0; reader < NR_OF_READERS; reader++)
+  if (hasNewMsg)
   {
-    // more stable if Init everytimes
-    // mfrc522[reader].PCD_Init(ssPins[reader], RST_PIN); // Init each MFRC522 card
+    hasNewMsg = false;
+    Serial.print(F("Server Messages: "));
+    Serial.print(msg);
+    String msgType = getValue(msg, '/', 0);
+    String msgIndex = getValue(msg, '/', 1);
+    String msgValue = getValue(msg, '/', 2);
+    if (msgType == "Reset")
+    {
+      delay(500);
+      resetFunc();
+    }
+    else if (msgType == "Stage")
+      stageLimit[msgIndex.toInt()] = msgValue.toInt();
+
+    Serial.println(F("==================================================="));
+    return;
+  }
+
+  for (uint8_t index = 0; index < NR_OF_READERS; index++)
+  {
+    readerSelected = index;
 
     // Look for new cards
-    readerSelected = reader;
-
     if (mfrc522[readerSelected].PICC_IsNewCardPresent() && mfrc522[readerSelected].PICC_ReadCardSerial())
     {
-      byte *id = mfrc522[readerSelected].uid.uidByte; // 取得卡片的UID
-      byte idSize = mfrc522[readerSelected].uid.size; // 取得UID的長度
-      indexAgent = 0;
-      for (byte i = 1; i < totalTags; i++)
-      {
-        if (memcmp(tags[i].uid, id, idSize) == 0)
-        {
-          indexAgent = i;
-          break;
-        }
-      }
-      Serial.print(F("Agent: ["));
-      Serial.print(tags[indexAgent].name);
-      Serial.print(F("] ==> id: "));
-      for (byte i = 0; i < idSize; i++)
-      {
-        Serial.print(id[i] < 16 ? " 0" : " "); // 以16進位顯示UID值
-        Serial.print(id[i], HEX);
-        Serial.print(F(" "));
-      }
-      Serial.println();
+      // 時鐘
+      second = clock.getSecond();
+      minute = clock.getMinute();
+      hour = clock.getHour(h12, PM);
 
-      // 製作陣列使用
-      // Serial.print(F("{{"));
-      // for (byte i = 0; i < idSize; i++)
+      // // 特工ID 寫入
+      // byte agentID[16] = "KGB020";
+      // if (!SetCardData(agentID, blockID))
       // {
-      //   Serial.print(F("0x"));
-      //   Serial.print(id[i] < 0x16 ? "0" : ""); // 以16進位顯示UID值
-      //   Serial.print(id[i], HEX);
-      //   if (i != (idSize - 1))
-      //     Serial.print(F(", "));
+      //   Fail();
+      //   return;
       // }
-      // Serial.println(F("}, ABCDEF"));
+      // // 如果是記錄點，寫入時間
+      // byte time[16] = {hour, minute, second};
+      // if (!SetCardData(time, blockTime))
+      // {
+      //   Fail();
+      //   return;
+      // }
+      // // 清除密鑰
+      // if (!ClearRuby())
+      // {
+      //   Fail();
+      //   return;
+      // }
 
-      for (int indexTarget = 0; indexTarget < 2; indexTarget++)
+      // 特工資料
+      if (!GetCardData(bufferAgentID, blockID))
       {
-        Serial.print(F("Target "));
-        Serial.print(indexTarget + 1);
-        Serial.print(F(": ["));
-        // 顯示目標名稱
-        for (byte j = 0; j < 16; j++)
+        Fail();
+        return;
+      }
+      else
+      {
+        Serial.print(F("Agent: ["));
+        if (bufferAgentID[0] == 0)
         {
-          if (rfid[indexTarget].blockData[j] == 0)
+          byte unknownID[18] = "Unknown";
+          memcpy(bufferAgentID, unknownID, sizeof(bufferAgentID));
+        }
+        for (size_t i = 0; i < 16; i++)
+        {
+          if (bufferAgentID[i] == 0)
             break;
-          Serial.write(rfid[indexTarget].blockData[j]);
+          Serial.write(bufferAgentID[i]);
+        }
+        Serial.print(F("] ==> id: ["));
+        byte *id = mfrc522[readerSelected].uid.uidByte; // 取得卡片的UID
+        byte idSize = mfrc522[readerSelected].uid.size; // 取得UID的長度
+        for (byte i = 0; i < idSize; i++)
+        {
+          Serial.print(id[i] < 16 ? " 0" : " "); // 以16進位顯示UID值
+          Serial.print(id[i], HEX);
+          Serial.print(F(" "));
+        }
+        Serial.println(F("]"));
+      }
+
+#ifdef READER_MODE
+      // 萬能鑰匙比對
+      if (memcmp(bufferAgentID, wakakaKey, 16) == 0)
+      {
+        Serial.println(F("==> Hello Wakaka Agent!"));
+        digitalWrite(RELAY_LOW, HIGH);
+        digitalWrite(LED_BUZZER, HIGH);
+        delay(50);
+        digitalWrite(LED_BUZZER, LOW);
+        delay(50);
+        digitalWrite(LED_BUZZER, HIGH);
+        delay(50);
+        digitalWrite(LED_BUZZER, LOW);
+        delay(1000);
+        digitalWrite(RELAY_LOW, LOW);
+        return;
+      }
+
+      // 讀取器
+      (readerSelected == 0) ? Serial.print(F("Outer")) : Serial.print(F("Inner"));
+      Serial.println(F(" Reader:"));
+#endif
+
+      // 時間記錄
+      if (!GetCardData(bufferTime, blockTime))
+      {
+        Fail();
+        return;
+      }
+      else
+      {
+        Serial.print(F("  Now Time   : ["));
+        Serial.print(hour, DEC);
+        Serial.print(':');
+        Serial.print(minute, DEC);
+        Serial.print(':');
+        Serial.print(second, DEC);
+        Serial.println(F(" ]"));
+        Serial.print(F("  Sector Time: ["));
+        Serial.print(bufferTime[0], DEC);
+        Serial.print(':');
+        Serial.print(bufferTime[1], DEC);
+        Serial.print(':');
+        Serial.print(bufferTime[2], DEC);
+        Serial.println(F(" ]"));
+        Serial.print(F("  Timer      : ["));
+        timer = (long)(hour - bufferTime[0]) * 3600 + (long)(minute - bufferTime[1]) * 60 + (long)(second - bufferTime[2]);
+        Serial.print(timer);
+        Serial.println(F("]"));
+      }
+
+      if (timer > stageLimit[STAGE])
+      {
+        Serial.println(F("  TIMEOUT"));
+        requestType = Timeout;
+        digitalWrite(LED_BUZZER, HIGH);
+        delay(3000);
+        digitalWrite(LED_BUZZER, LOW);
+        delay(1000);
+        // 令卡片進入停止狀態
+        //   // Halt PICC
+        mfrc522[readerSelected].PICC_HaltA();
+        //   // Stop encryption on PCD
+        mfrc522[readerSelected].PCD_StopCrypto1();
+        return;
+      }
+#ifdef WRITER_MODE
+      Serial.print(F("  Target ==> "));
+      rfid.ShowRubyName();
+      Serial.print(F(" in "));
+      rfid.ShowRubyBlock();
+      Serial.print(F(", "));
+      if (!WriteData(&rfid))
+      {
+        Fail();
+        return;
+      }
+      else
+      {
+        requestType = Get;
+        digitalWrite(LED_BUZZER, HIGH);
+        delay(500);
+        digitalWrite(LED_BUZZER, LOW);
+        delay(1000);
+      }
+
+#endif
+
+#ifdef READER_MODE
+      Serial.print(F("  Mode   ==> "));
+      Serial.println(reader[index].modeName[reader[index].mode]);
+
+      switch (reader[index].mode)
+      {
+      case Counting:
+      {
+        int countMatch = 0;
+        for (size_t i = 1; i < NR_OF_RUBY; i++)
+        {
+          if (!ReadData(&(rfid[i])))
+          {
+            Fail();
+            return;
+          }
+          else
+          {
+            if (memcmp(rfid[i].buffer, rfid[i].blockData, 16) == 0)
+            {
+              Serial.print(F("  Target ==> "));
+              rfid[i].ShowRubyName();
+              Serial.print(F(" in "));
+              rfid[i].ShowRubyBlock();
+              Serial.print(F(", "));
+              Serial.print(F("Data was read ==> "));
+              Serial.println(F("Match "));
+              countMatch++;
+            }
+          }
         }
 
-        Serial.print(F("], search ==> "));
-        readBlock(rfid[indexTarget].sector, rfid[indexTarget].block, rfid[indexTarget].buffer); // 區段編號、區塊編號、存放讀取資料的陣列
-
-        if (work == Failed)
-          break;
-        // 秀出寫入的資料與記憶體位置
-        for (byte i = 0; i < 16; i++)
-        {
-          if (rfid[indexTarget].buffer[i] == 0)
-            break;
-          Serial.write(rfid[indexTarget].buffer[i]);
-        }
-
+        Serial.print(F("  Target ==> x"));
+        Serial.print(reader[index].countKeys);
+        Serial.print(F(" ==> Match x"));
+        Serial.print(countMatch);
         Serial.print(F(" ==> "));
-        if (memcmp(rfid[indexTarget].buffer, rfid[indexTarget].blockData, 16) == 0 ||
-            memcmp(rfid[indexTarget].buffer, wakakaKey, 16) == 0) // 判斷用
+        if (countMatch >= reader[index].countKeys)
         {
-          Serial.println(F("Match"));
-          if (work == OK)
-            work = Match;
+          Serial.println(F("Unlock"));
+          Unlock();
         }
         else
         {
-          Serial.println(F("Incorrect"));
-          if (work == OK)
-            work = Incorrect;
+          Serial.println(F("AccessForbidden"));
+          AccessForbidden();
         }
+        break;
       }
+
+      case Specify:
+        Serial.print(F("  Target ==> "));
+        reader[index].specificKey->ShowRubyName();
+        Serial.print(F(" in "));
+        reader[index].specificKey->ShowRubyBlock();
+        Serial.print(F(", "));
+
+        if (!ReadData(reader[index].specificKey))
+        {
+          Fail();
+          return;
+        }
+        else
+        {
+          Serial.print(F("Data was read ==> "));
+          if (memcmp(reader[index].specificKey->buffer, reader[index].specificKey->blockData, 16) == 0)
+          {
+            Serial.println(F("Match "));
+            Unlock();
+          }
+          else
+          {
+            Serial.println(F("Incorrect "));
+            AccessForbidden();
+          }
+        }
+        break;
+      case OR:
+      {
+        int countMatch = 0;
+        for (int i = 0; i < reader[index].countKeys; i++)
+        {
+          Serial.print(F("  Target ==> "));
+          reader[index].passKeys[i]->ShowRubyName();
+          Serial.print(F(" in "));
+          reader[index].passKeys[i]->ShowRubyBlock();
+          Serial.print(F(", "));
+
+          if (!ReadData(reader[index].passKeys[i]))
+          {
+            Fail();
+            return;
+          }
+          else
+          {
+            Serial.print(F("Data was read ==> "));
+            if (memcmp(reader[index].passKeys[i]->buffer, reader[index].passKeys[i]->blockData, 16) == 0)
+            {
+              Serial.println(F("Match"));
+              countMatch++;
+            }
+            else
+              Serial.println(F("Incorrect"));
+          };
+        }
+        if (countMatch > 0)
+          Unlock();
+        else
+          AccessForbidden();
+        break;
+      }
+      case AND:
+      {
+        int countMatch = 0;
+        for (int i = 0; i < reader[index].countKeys; i++)
+        {
+          Serial.print(F("  Target ==> "));
+          reader[index].passKeys[i]->ShowRubyName();
+          Serial.print(F(" in "));
+          reader[index].passKeys[i]->ShowRubyBlock();
+          Serial.print(F(", "));
+
+          if (!ReadData(reader[index].passKeys[i]))
+          {
+            Fail();
+            return;
+          }
+          else
+          {
+            Serial.print(F("Data was read ==> "));
+            if (memcmp(reader[index].passKeys[i]->buffer, reader[index].passKeys[i]->blockData, 16) == 0)
+            {
+              Serial.println(F("Match"));
+              countMatch++;
+            }
+            else
+              Serial.println(F("Incorrect"));
+          }
+        }
+        if (countMatch == reader[index].countKeys)
+          Unlock();
+        else
+          AccessForbidden();
+        break;
+      }
+      case Wakaka:
+        break;
+      case Special:
+        break;
+      }
+#endif
 
       // 令卡片進入停止狀態
       //   // Halt PICC
@@ -324,258 +557,104 @@ void loop()
       mfrc522[readerSelected].PCD_StopCrypto1();
     }
   }
-#endif
+}
 
-#ifdef WRITER
-  if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial())
-  {
-    byte *id = mfrc522.uid.uidByte; // 取得卡片的UID
-    byte idSize = mfrc522.uid.size; // 取得UID的長度
-    indexAgent = 0;
-    for (byte i = 1; i < totalTags; i++)
-    {
-      if (memcmp(tags[i].uid, id, idSize) == 0)
-      {
-        indexAgent = i;
-        break;
-      }
-    }
-    Serial.print(F("Agent: ["));
-    Serial.print(tags[indexAgent].name);
-    Serial.print(F("] ==> id: "));
-    for (byte i = 0; i < idSize; i++)
-    {
-      Serial.print(id[i] < 16 ? " 0" : " "); // 以16進位顯示UID值
-      Serial.print(id[i], HEX);
-      Serial.print(F(" "));
-    }
-    Serial.println();
-    Serial.print(F("Target: "));
-    // 顯示目標名稱
-    for (byte j = 0; j < 16; j++)
-    {
-      if (rfid.blockData[j] == 0)
-        break;
-      Serial.write(rfid.blockData[j]);
-    }
-    Serial.print(F(" ["));
-    Serial.print(rfid.badge);
-    Serial.print(F("], search ==> "));
-    writeBlock(rfid.sector, rfid.block, rfid.blockData); // 區段編號、區塊編號、存放讀取資料的陣列
-    // 令卡片進入停止狀態
-    //   // Halt PICC
-    mfrc522.PICC_HaltA();
-    //   // Stop encryption on PCD
-    mfrc522.PCD_StopCrypto1();
-  }
-#endif
+String getValue(String data, char separator, int index)
+{
+  int found = 0;
+  int strIndex[] = {0, -1};
+  int maxIndex = data.length() - 1;
 
-  switch (work)
+  for (int i = 0; i <= maxIndex && found <= index; i++)
   {
-  case Failed: // 兩長
-    digitalWrite(LED_BUZZER, HIGH);
-    delay(500);
-    digitalWrite(LED_BUZZER, LOW);
-    delay(100);
-    digitalWrite(LED_BUZZER, HIGH);
-    delay(500);
-    digitalWrite(LED_BUZZER, LOW);
-    delay(1000);
-    break;
-  case Written: // 一長
-    requestType = Writer;
-    digitalWrite(LED_BUZZER, HIGH);
-    delay(500);
-    digitalWrite(LED_BUZZER, LOW);
-    delay(1000);
-    break;
-  case Match: // 一長三短
-    requestType = Pass;
-    digitalWrite(RELAY_LOW, HIGH);
-    digitalWrite(LED_BUZZER, HIGH);
-    delay(500);
-    digitalWrite(LED_BUZZER, LOW);
-    delay(100);
-    digitalWrite(LED_BUZZER, HIGH);
-    delay(50);
-    digitalWrite(LED_BUZZER, LOW);
-    delay(50);
-    digitalWrite(LED_BUZZER, HIGH);
-    delay(50);
-    digitalWrite(LED_BUZZER, LOW);
-    delay(50);
-    digitalWrite(LED_BUZZER, HIGH);
-    delay(50);
-    digitalWrite(LED_BUZZER, LOW);
-    delay(3000);
-    digitalWrite(RELAY_LOW, LOW);
-    break;
-  case Incorrect: // 一長兩短
-    requestType = At;
-    digitalWrite(LED_BUZZER, HIGH);
-    delay(500);
-    digitalWrite(LED_BUZZER, LOW);
-    delay(100);
-    digitalWrite(LED_BUZZER, HIGH);
-    delay(200);
-    digitalWrite(LED_BUZZER, LOW);
-    delay(50);
-    digitalWrite(LED_BUZZER, HIGH);
-    delay(200);
-    digitalWrite(LED_BUZZER, LOW);
-    delay(1000);
-    break;
-  default:
-    break;
+    if (data.charAt(i) == separator || i == maxIndex)
+    {
+      found++;
+      strIndex[0] = strIndex[1] + 1;
+      strIndex[1] = (i == maxIndex) ? i + 1 : i;
+    }
   }
+  return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
 
 void receiveEvent(int howMany)
 {
+  i2cBufferCnt = 0;
+  msg = "";
   while (Wire.available())
   {
-    // receive one byte from Master
-    incomingByte = Wire.read();
-    Serial.print(incomingByte);
+    i2cBuffer[i2cBufferCnt] = Wire.read();
+    // '\0' as NULL, 255 = unuse index
+    if (i2cBuffer[i2cBufferCnt] == '\0' || i2cBuffer[i2cBufferCnt] == 255)
+      break;
+    msg += (char)i2cBuffer[i2cBufferCnt];
+    i2cBufferCnt++;
   }
+  hasNewMsg = true;
 }
 // function that executes whenever data is requested by master
 void requestEvent()
 {
-  switch (requestType)
+  if (requestType != None)
   {
-  case Writer:
-#ifdef WRITER
-    Wire.write("[");
-    Wire.write(tags[indexAgent].name);
-    Wire.write("] have got [");
-    for (byte j = 0; j < 16; j++)
+    // 特工代號
+    for (size_t i = 0; i < 16; i++)
     {
-      if (rfid.blockData[j] == 0)
+      if (bufferAgentID[i] == 0)
         break;
-      Wire.write(rfid.blockData[j]);
-    }
-    Wire.write("]\n");
-#endif
-    requestType = None;
-    break;
-  case Pass:
-#ifdef READER
-    Wire.write("[");
-    Wire.write(tags[indexAgent].name);
-    Wire.write("] have Pass ["); // 讀取器尚未命名
-    for (byte j = 0; j < 16; j++)
-    {
-      if (rfid[0].blockData[j] == 0)
-        break;
-      Wire.write(rfid[0].blockData[j]);
-    }
-    Wire.write("]\n");
-#endif
-    requestType = None;
-    break;
-  case At:
-    Wire.write("[");
-    Wire.write(tags[indexAgent].name);
-    Wire.write("] is at ["); // 讀取器尚未命名
-
-    for (byte j = 0; j < 16; j++)
-    {
-#ifdef WRITER
-      if (rfid.blockData[j] == 0)
-        break;
-      Wire.write(rfid.blockData[j]);
-#endif
-#ifdef READER
-      if (rfid[0].blockData[j] == 0)
-        break;
-      Wire.write(rfid[0].blockData[j]);
-#endif
+      Wire.write(bufferAgentID[i]);
     }
 
-    Wire.write("]\n");
-    requestType = None;
-    break;
-  default:
-    break;
+    switch (requestType)
+    {
+    case None:
+      break;
+    case Timeout:
+      Wire.write("/Timeout/");
+      readerSelected == 0 ? Wire.write("0/") : Wire.write("1/");
+
+      break;
+    case Get:
+#ifdef WRITER_MODE
+      Wire.write("/Get/");
+      for (size_t i = 0; i < 16; i++)
+      {
+        if (rfid.blockData[i] == 0)
+          break;
+        Wire.write(rfid.blockData[i]);
+      }
+      Wire.write("/");
+#endif
+      break;
+    case Pass:
+      Wire.write("/Pass/");
+      readerSelected == 0 ? Wire.write("0/") : Wire.write("1/");
+      break;
+    case Forbidden:
+      Wire.write("/Forbidden/");
+      readerSelected == 0 ? Wire.write("0/") : Wire.write("1/");
+      break;
+    default:
+      Wire.write("//");
+      break;
+    }
+
+    // 裝置代號
+    for (size_t i = 0; i < 10; i++)
+    {
+      if (DEVICE_NAME[i] == 0)
+        break;
+      Wire.write(DEVICE_NAME[i]);
+    }
+    Wire.write("\n");
   }
+  requestType = None;
 }
 
-void writeBlock(byte _sector, byte _block, byte _blockData[])
+bool SetCardData(byte data[], byte _block[])
 {
-#ifdef WRITER
-  if (_sector < 0 || _sector > 15 || _block < 0 || _block > 3)
-  {
-    // 顯示「區段或區塊碼錯誤」，然後結束函式。
-    Serial.println(F("Wrong sector or block number."));
-    return;
-  }
-
-  if (_sector == 0 && _block == 0)
-  {
-    // 顯示「第一個區塊只能讀取」，然後結束函式。
-    Serial.println(F("First block is read-only."));
-    return;
-  }
-
-  // iK.顯示寫入的位置
-  Serial.print(F("Sector "));
-  Serial.print(_sector);
-  Serial.print(F(", Block "));
-  Serial.print(_block);
-  Serial.print(F(", "));
-
-  byte blockNum = _sector * 4 + _block; // 計算區塊的實際編號（0~63）
-  byte trailerBlock = _sector * 4 + 3;  // 控制區塊編號
-
-  // 驗證金鑰
-  status = (MFRC522::StatusCode)mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, trailerBlock, &key, &(mfrc522.uid));
-  // 若未通過驗證…
-  if (status != MFRC522::STATUS_OK)
-  {
-    // 顯示錯誤訊息
-    Serial.print(F("PCD_Authenticate() failed: "));
-    Serial.println(mfrc522.GetStatusCodeName(status));
-    work = Failed;
-    return;
-  }
-
-  // 在指定區塊寫入16位元組資料
-  status = (MFRC522::StatusCode)mfrc522.MIFARE_Write(blockNum, _blockData, 16);
-  // 若寫入不成功…
-  if (status != MFRC522::STATUS_OK)
-  {
-    // 顯示錯誤訊息
-    Serial.print(F("MIFARE_Write() failed: "));
-    Serial.println(mfrc522.GetStatusCodeName(status));
-    return;
-  }
-
-  // 顯示「寫入成功！」
-  Serial.println(F("Data was written."));
-  if (work != Failed)
-    work = Written;
-#endif
-}
-
-void readBlock(byte _sector, byte _block, byte _blockData[])
-{
-#ifdef READER
-  if (_sector < 0 || _sector > 15 || _block < 0 || _block > 3)
-  {
-    // 顯示「區段或區塊碼錯誤」，然後結束函式。
-    Serial.println(F("Wrong sector or block number."));
-    return;
-  }
-  // iK.顯示讀取的位置
-  Serial.print(F("Sector "));
-  Serial.print(_sector);
-  Serial.print(F(", Block "));
-  Serial.print(_block);
-  Serial.print(F(", "));
-
-  byte blockNum = _sector * 4 + _block; // 計算區塊的實際編號（0~63）
-  byte trailerBlock = _sector * 4 + 3;  // 控制區塊編號
+  byte blockNum = _block[0] * 4 + _block[1]; // 計算區塊的實際編號（0~63）
+  byte trailerBlock = _block[0] * 4 + 3;     // 控制區塊編號
 
   // 驗證金鑰
   status = (MFRC522::StatusCode)mfrc522[readerSelected].PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, trailerBlock, &key, &(mfrc522[readerSelected].uid));
@@ -585,12 +664,40 @@ void readBlock(byte _sector, byte _block, byte _blockData[])
     // 顯示錯誤訊息
     Serial.print(F("PCD_Authenticate() failed: "));
     Serial.println(mfrc522[readerSelected].GetStatusCodeName(status));
-    work = Failed;
-    return;
+    return false;
+  }
+
+  // 在指定區塊寫入16位元組資料
+  status = (MFRC522::StatusCode)mfrc522[readerSelected].MIFARE_Write(blockNum, data, 16);
+  // 若寫入不成功…
+  if (status != MFRC522::STATUS_OK)
+  {
+    // 顯示錯誤訊息
+    Serial.print(F("MIFARE_Write() failed: "));
+    Serial.println(mfrc522[readerSelected].GetStatusCodeName(status));
+    return false;
+  }
+  return true;
+}
+
+bool GetCardData(byte data[], byte _block[])
+{
+  byte blockNum = _block[0] * 4 + _block[1]; // 計算區塊的實際編號（0~63）
+  byte trailerBlock = _block[0] * 4 + 3;     // 控制區塊編號
+
+  // 驗證金鑰
+  status = (MFRC522::StatusCode)mfrc522[readerSelected].PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, trailerBlock, &key, &(mfrc522[readerSelected].uid));
+  // 若未通過驗證…
+  if (status != MFRC522::STATUS_OK)
+  {
+    // 顯示錯誤訊息
+    Serial.print(F("PCD_Authenticate() failed: "));
+    Serial.println(mfrc522[readerSelected].GetStatusCodeName(status));
+    return false;
   }
 
   byte buffersize = 18;
-  status = (MFRC522::StatusCode)mfrc522[readerSelected].MIFARE_Read(blockNum, _blockData, &buffersize);
+  status = (MFRC522::StatusCode)mfrc522[readerSelected].MIFARE_Read(blockNum, data, &buffersize);
 
   // 若讀取不成功…
   if (status != MFRC522::STATUS_OK)
@@ -598,14 +705,120 @@ void readBlock(byte _sector, byte _block, byte _blockData[])
     // 顯示錯誤訊息
     Serial.print(F("MIFARE_read() failed: "));
     Serial.println(mfrc522[readerSelected].GetStatusCodeName(status));
-    return;
+    return false;
+  }
+  return true;
+}
+
+bool ClearRuby()
+{
+  byte blockData[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  for (size_t _sector = 15; _sector >= 12; _sector--)
+  {
+    for (size_t _block = 0; _block < 3; _block++)
+    {
+      byte blockNum = _sector * 4 + _block; // 計算區塊的實際編號（0~63）
+      byte trailerBlock = _sector * 4 + 3;  // 控制區塊編號
+      // 驗證金鑰
+      status = (MFRC522::StatusCode)mfrc522[readerSelected].PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, trailerBlock, &key, &(mfrc522[readerSelected].uid));
+      // 若未通過驗證…
+      if (status != MFRC522::STATUS_OK)
+      {
+        // 顯示錯誤訊息
+        Serial.print(F("PCD_Authenticate() failed: "));
+        Serial.println(mfrc522[readerSelected].GetStatusCodeName(status));
+        return false;
+      }
+
+      // 在指定區塊寫入16位元組資料
+      status = (MFRC522::StatusCode)mfrc522[readerSelected].MIFARE_Write(blockNum, blockData, 16);
+      // 若寫入不成功…
+      if (status != MFRC522::STATUS_OK)
+      {
+        // 顯示錯誤訊息
+        Serial.print(F("MIFARE_Write() failed: "));
+        Serial.println(mfrc522[readerSelected].GetStatusCodeName(status));
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+bool WriteData(RFID *ruby)
+{
+  if (ruby->sector < 0 || ruby->sector > 15 || ruby->block < 0 || ruby->block > 3)
+  {
+    // 顯示「區段或區塊碼錯誤」，然後結束函式。
+    Serial.println(F("Wrong sector or block number."));
+    return false;
   }
 
-  // 顯示「讀取成功！」
-  Serial.print(F("Data was read ==> "));
-  if (work != Failed && work != Match)
-    work = OK;
-#endif
+  byte blockNum = ruby->sector * 4 + ruby->block; // 計算區塊的實際編號（0~63）
+  byte trailerBlock = ruby->sector * 4 + 3;       // 控制區塊編號
+
+  // 驗證金鑰
+  status = (MFRC522::StatusCode)mfrc522[readerSelected].PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, trailerBlock, &key, &(mfrc522[readerSelected].uid));
+  // 若未通過驗證…
+  if (status != MFRC522::STATUS_OK)
+  {
+    // 顯示錯誤訊息
+    Serial.print(F("PCD_Authenticate() failed: "));
+    Serial.println(mfrc522[readerSelected].GetStatusCodeName(status));
+    return false;
+  }
+
+  // 在指定區塊寫入16位元組資料
+  status = (MFRC522::StatusCode)mfrc522[readerSelected].MIFARE_Write(blockNum, ruby->blockData, 16);
+  // 若寫入不成功…
+  if (status != MFRC522::STATUS_OK)
+  {
+    // 顯示錯誤訊息
+    Serial.print(F("MIFARE_Write() failed: "));
+    Serial.println(mfrc522[readerSelected].GetStatusCodeName(status));
+    return false;
+  }
+
+  // 顯示「寫入成功！」
+  Serial.println(F("Data was written."));
+  return true;
+}
+
+bool ReadData(RFID *ruby)
+{
+  if (ruby->sector < 0 || ruby->sector > 15 || ruby->block < 0 || ruby->block > 3)
+  {
+    // 顯示「區段或區塊碼錯誤」，然後結束函式。
+    Serial.println(F("Wrong sector or block number."));
+    return false;
+  }
+
+  byte blockNum = ruby->sector * 4 + ruby->block; // 計算區塊的實際編號（0~63）
+  byte trailerBlock = ruby->sector * 4 + 3;       // 控制區塊編號
+
+  // 驗證金鑰
+  status = (MFRC522::StatusCode)mfrc522[readerSelected].PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, trailerBlock, &key, &(mfrc522[readerSelected].uid));
+  // 若未通過驗證…
+  if (status != MFRC522::STATUS_OK)
+  {
+    // 顯示錯誤訊息
+    Serial.print(F("PCD_Authenticate() failed: "));
+    Serial.println(mfrc522[readerSelected].GetStatusCodeName(status));
+    return false;
+  }
+
+  byte buffersize = 18;
+  status = (MFRC522::StatusCode)mfrc522[readerSelected].MIFARE_Read(blockNum, ruby->buffer, &buffersize);
+
+  // 若讀取不成功…
+  if (status != MFRC522::STATUS_OK)
+  {
+    // 顯示錯誤訊息
+    Serial.print(F("MIFARE_read() failed: "));
+    Serial.println(mfrc522[readerSelected].GetStatusCodeName(status));
+    return false;
+  }
+  return true;
 }
 
 /**
@@ -618,4 +831,60 @@ void dump_byte_array(byte *buffer, byte bufferSize)
     Serial.print(buffer[i] < 0x10 ? " 0" : " ");
     Serial.print(buffer[i], HEX);
   }
+}
+
+void Fail()
+{
+  digitalWrite(LED_BUZZER, HIGH);
+  delay(500);
+  digitalWrite(LED_BUZZER, LOW);
+  delay(100);
+  digitalWrite(LED_BUZZER, HIGH);
+  delay(500);
+  digitalWrite(LED_BUZZER, LOW);
+  delay(1000);
+#ifdef WRITER_MODE
+  mfrc522[0].PCD_Init(SS_PIN, RST_PIN); // Init each MFRC522 card
+#endif
+#ifdef READER_MODE
+  mfrc522[readerSelected].PCD_Init(ssPins[readerSelected], RST_PIN); // Init each MFRC522 card
+#endif
+}
+void Unlock()
+{
+  requestType = Pass;
+  digitalWrite(RELAY_LOW, HIGH);
+  digitalWrite(LED_BUZZER, HIGH);
+  delay(500);
+  digitalWrite(LED_BUZZER, LOW);
+  delay(100);
+  digitalWrite(LED_BUZZER, HIGH);
+  delay(50);
+  digitalWrite(LED_BUZZER, LOW);
+  delay(50);
+  digitalWrite(LED_BUZZER, HIGH);
+  delay(50);
+  digitalWrite(LED_BUZZER, LOW);
+  delay(50);
+  digitalWrite(LED_BUZZER, HIGH);
+  delay(50);
+  digitalWrite(LED_BUZZER, LOW);
+  delay(1000);
+  digitalWrite(RELAY_LOW, LOW);
+}
+void AccessForbidden()
+{
+  requestType = Forbidden;
+  digitalWrite(LED_BUZZER, HIGH);
+  delay(500);
+  digitalWrite(LED_BUZZER, LOW);
+  delay(100);
+  digitalWrite(LED_BUZZER, HIGH);
+  delay(200);
+  digitalWrite(LED_BUZZER, LOW);
+  delay(50);
+  digitalWrite(LED_BUZZER, HIGH);
+  delay(200);
+  digitalWrite(LED_BUZZER, LOW);
+  delay(1000);
 }
