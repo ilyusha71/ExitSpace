@@ -52,14 +52,14 @@
 MFRC522::StatusCode status;
 MFRC522::MIFARE_Key key;           // 儲存金鑰
 byte wakakaKey[16] = "Wakaka Key"; // 最多可存入16個字元
-// #define WRITER_MODE ;
+#define WRITER_MODE ;
 #ifdef WRITER_MODE
 RFID rfid;
-#define RUBY_NUMBER 4
+#define RUBY_NUMBER 7
 #define NR_OF_READERS 1
 #define SS_PIN 10
 #endif
-#define READER_MODE ;
+// #define READER_MODE ;
 #ifdef READER_MODE
 #define NR_OF_RUBY 11
 RFID rfid[NR_OF_RUBY];
@@ -71,10 +71,11 @@ byte ssPins[] = {SS_PIN_A, SS_PIN_B};
 READER reader[NR_OF_READERS];
 MFRC522 mfrc522[NR_OF_READERS]; // Create MFRC522 instance.
 int readerSelected;
-byte bufferAgentID[18] = "Unknown", bufferTime[18];
-byte blockID[2] = {7, 0}, blockTime[2] = {7, 1};
+byte bufferAgentID[18] = "Unknown", bufferTime[18], bufferStage[18];
+byte blockID[2] = {7, 0}, blockStage[2] = {7, 1}, blockTime[2] = {7, 2};
 long stageLimit[5] = {999999, 360, 780, 1200, 1500}; // 通過各關的最大時限
-long timer;
+long trapLimit = 180, doorLimit = 50;
+long timerStage, timerTrap, timerDoor;
 
 #define RST_PIN 8 // Reset Pin
 #define LED_BUZZER 7
@@ -83,9 +84,9 @@ long timer;
 /****************************************************************************
  * 燒錄設定
  ****************************************************************************/
-#define STAGE 0         // 所在關卡
+#define STAGE 1         // 所在關卡
 #define SLAVE_ADDRESS 7 // Slave 地址 0x00~0x7F (0~127)  87 與 104 已經被 DS3231 使用
-char DEVICE_NAME[] = "A2-C2F9-W2";
+char DEVICE_NAME[] = "Guinevere";
 
 // I2C & DS3231
 #include <DS3231.h> // 包含 Wire.h
@@ -95,10 +96,12 @@ uint8_t i2cBufferCnt = 0;
 enum RequestType
 {
   None,
+  Cheacking,
   Timeout,
   Get,
   Pass,
   Forbidden,
+  Cheater,
 } requestType = None;
 bool hasNewMsg;
 void receiveEvent(int howMany);
@@ -341,41 +344,104 @@ void loop()
       }
       else
       {
-        Serial.print(F("  Now Time   : ["));
+        Serial.print(F("  Now Time:   ["));
         Serial.print(hour, DEC);
         Serial.print(':');
         Serial.print(minute, DEC);
         Serial.print(':');
         Serial.print(second, DEC);
         Serial.println(F(" ]"));
-        Serial.print(F("  Sector Time: ["));
+
+        Serial.print(F("  Stage Time: ["));
         Serial.print(bufferTime[0], DEC);
         Serial.print(':');
         Serial.print(bufferTime[1], DEC);
         Serial.print(':');
         Serial.print(bufferTime[2], DEC);
-        Serial.println(F(" ]"));
-        Serial.print(F("  Timer      : ["));
-        timer = (long)(hour - bufferTime[0]) * 3600 + (long)(minute - bufferTime[1]) * 60 + (long)(second - bufferTime[2]);
-        Serial.print(timer);
-        Serial.println(F("]"));
+        Serial.print(F("] ==> "));
+        timerStage = (long)(hour - bufferTime[0]) * 3600 + (long)(minute - bufferTime[1]) * 60 + (long)(second - bufferTime[2]);
+        Serial.print(timerStage);
+        if (timerStage > stageLimit[STAGE])
+        {
+          Serial.println(F(" ==> TIMEOUT"));
+          requestType = Timeout;
+        }
+        else
+          Serial.println(F(" ==> GO!GO!GO!"));
+        Serial.print(F("  Trap Time:  ["));
+        Serial.print(bufferTime[3], DEC);
+        Serial.print(':');
+        Serial.print(bufferTime[4], DEC);
+        Serial.print(':');
+        Serial.print(bufferTime[5], DEC);
+        Serial.print(F("] ==> "));
+        timerTrap = (long)(hour - bufferTime[3]) * 3600 + (long)(minute - bufferTime[4]) * 60 + (long)(second - bufferTime[5]);
+        Serial.print(timerTrap);
+        if (timerTrap > trapLimit && bufferTime[3] != 0)
+        {
+          Serial.println(F(" ==> TIMEOUT"));
+          requestType = Timeout;
+        }
+        else
+          Serial.println(F(" ==> GO!GO!GO!"));
+        Serial.print(F("  Door Time:  ["));
+        Serial.print(bufferTime[6], DEC);
+        Serial.print(':');
+        Serial.print(bufferTime[7], DEC);
+        Serial.print(':');
+        Serial.print(bufferTime[8], DEC);
+        Serial.print(F("] ==> "));
+        timerDoor = (long)(hour - bufferTime[6]) * 3600 + (long)(minute - bufferTime[7]) * 60 + (long)(second - bufferTime[8]);
+        Serial.print(timerDoor);
+        if (timerDoor > doorLimit && bufferTime[6] != 0)
+        {
+          Serial.println(F(" ==> TIMEOUT"));
+          requestType = Timeout;
+        }
+        else
+          Serial.println(F(" ==> GO!GO!GO!"));
+
+        if (requestType == Timeout)
+        {
+          digitalWrite(LED_BUZZER, HIGH);
+          delay(3000);
+          digitalWrite(LED_BUZZER, LOW);
+          delay(1000);
+          // 令卡片進入停止狀態
+          //   // Halt PICC
+          mfrc522[readerSelected].PICC_HaltA();
+          //   // Stop encryption on PCD
+          mfrc522[readerSelected].PCD_StopCrypto1();
+          return;
+        }
       }
 
-      if (timer > stageLimit[STAGE])
+      // 關卡記錄
+      if (!GetCardData(bufferStage, blockStage))
       {
-        Serial.println(F("  TIMEOUT"));
-        requestType = Timeout;
-        digitalWrite(LED_BUZZER, HIGH);
-        delay(3000);
-        digitalWrite(LED_BUZZER, LOW);
-        delay(1000);
-        // 令卡片進入停止狀態
-        //   // Halt PICC
-        mfrc522[readerSelected].PICC_HaltA();
-        //   // Stop encryption on PCD
-        mfrc522[readerSelected].PCD_StopCrypto1();
+        Fail();
         return;
       }
+      else
+      {
+        if (bufferStage[0] != STAGE)
+        {
+          Serial.print(F("  Cheater!!!"));
+
+          requestType = Cheater;
+          digitalWrite(LED_BUZZER, HIGH);
+          delay(3000);
+          digitalWrite(LED_BUZZER, LOW);
+          delay(1000);
+          // 令卡片進入停止狀態
+          //   // Halt PICC
+          mfrc522[readerSelected].PICC_HaltA();
+          //   // Stop encryption on PCD
+          mfrc522[readerSelected].PCD_StopCrypto1();
+          return;
+        }
+      }
+
 #ifdef WRITER_MODE
       Serial.print(F("  Target ==> "));
       rfid.ShowRubyName();
@@ -597,6 +663,15 @@ void requestEvent()
 {
   if (requestType != None)
   {
+    // 裝置代號
+    for (size_t i = 0; i < 10; i++)
+    {
+      if (DEVICE_NAME[i] == 0)
+        break;
+      Wire.write(DEVICE_NAME[i]);
+    }
+    readerSelected == 0 ? Wire.write("/0/") : Wire.write("/1/");
+
     // 特工代號
     for (size_t i = 0; i < 16; i++)
     {
@@ -609,10 +684,14 @@ void requestEvent()
     {
     case None:
       break;
+    case Cheacking:
+      Wire.write("/Cheacking");
+      break;
     case Timeout:
-      Wire.write("/Timeout/");
-      readerSelected == 0 ? Wire.write("0/") : Wire.write("1/");
-
+      Wire.write("/Timeout");
+      break;
+    case Cheater:
+      Wire.write("/Cheater");
       break;
     case Get:
 #ifdef WRITER_MODE
@@ -623,28 +702,17 @@ void requestEvent()
           break;
         Wire.write(rfid.blockData[i]);
       }
-      Wire.write("/");
 #endif
       break;
     case Pass:
-      Wire.write("/Pass/");
-      readerSelected == 0 ? Wire.write("0/") : Wire.write("1/");
+      Wire.write("/Pass");
       break;
     case Forbidden:
-      Wire.write("/Forbidden/");
-      readerSelected == 0 ? Wire.write("0/") : Wire.write("1/");
+      Wire.write("/Forbidden");
       break;
     default:
-      Wire.write("//");
+      Wire.write("/");
       break;
-    }
-
-    // 裝置代號
-    for (size_t i = 0; i < 10; i++)
-    {
-      if (DEVICE_NAME[i] == 0)
-        break;
-      Wire.write(DEVICE_NAME[i]);
     }
     Wire.write("\n");
   }
@@ -835,6 +903,10 @@ void dump_byte_array(byte *buffer, byte bufferSize)
 
 void Fail()
 {
+#ifdef WRITER_MODE
+  mfrc522[0].PCD_Init(SS_PIN, RST_PIN); // Init each MFRC522 card
+#endif
+#ifdef READER_MODE
   digitalWrite(LED_BUZZER, HIGH);
   delay(500);
   digitalWrite(LED_BUZZER, LOW);
@@ -843,10 +915,6 @@ void Fail()
   delay(500);
   digitalWrite(LED_BUZZER, LOW);
   delay(1000);
-#ifdef WRITER_MODE
-  mfrc522[0].PCD_Init(SS_PIN, RST_PIN); // Init each MFRC522 card
-#endif
-#ifdef READER_MODE
   mfrc522[readerSelected].PCD_Init(ssPins[readerSelected], RST_PIN); // Init each MFRC522 card
 #endif
 }

@@ -44,7 +44,7 @@ void setup()
   Wire.begin(); // join I2C bus as a Master
 
   Serial.begin(9600);
-  // ModTime(20,02,13,04,16,19,00);
+  // ModTime(20,02,21,05,11,01,00);
   Serial.println("Type something to send:");
 }
 
