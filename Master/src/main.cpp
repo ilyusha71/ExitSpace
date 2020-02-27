@@ -30,12 +30,13 @@ uint8_t DATA_SIZE = 32;
  ****************************************************************************/
 // 重設關卡時限
 // boolean
-bool resetADN = true;
-bool resetStageLimit = true;
+bool resetADN = false;
+bool resetStageLimit = false;
+bool check = true;
 int indexStage = 0;
 long timeLimit = 86400;
 
-int targetAddress = 999;
+int targetAddress = 7;
 
 void ModTime(byte year, byte month, byte date, byte DoW, byte hour, byte minute, byte second);
 
@@ -44,7 +45,7 @@ void setup()
   Wire.begin(); // join I2C bus as a Master
 
   Serial.begin(9600);
-  // ModTime(20,02,21,05,11,01,00);
+  ModTime(20,02,26,03,17,18,00);
   Serial.println("Type something to send:");
 }
 
@@ -83,6 +84,13 @@ void loop()
           Wire.write("Reset/\n");
           Wire.endTransmission();
         }
+        else if (check)
+        {
+          Wire.beginTransmission(i2cAddress);
+          Wire.write("Check/\n");
+          Wire.endTransmission();
+        }
+
         else if (resetStageLimit)
         {
           Wire.beginTransmission(i2cAddress);
@@ -101,6 +109,7 @@ void loop()
   }
   targetAddress = -1;
   resetADN = false;
+  check = false;
   resetStageLimit = false;
 
   // second = clock.getSecond();

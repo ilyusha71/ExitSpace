@@ -105,7 +105,7 @@ void RFID::Initialize(byte ruby)
         badge = "Excalibur";
         break;
     case 9:
-        badge = "The Sword in the Stone";
+        badge = "SwordStone";
         break;
     case 10:
         badge = "Viviane";

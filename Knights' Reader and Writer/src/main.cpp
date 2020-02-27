@@ -55,7 +55,6 @@ byte wakakaKey[16] = "Wakaka Key"; // 最多可存入16個字元
 #define WRITER_MODE ;
 #ifdef WRITER_MODE
 RFID rfid;
-#define RUBY_NUMBER 7
 #define NR_OF_READERS 1
 #define SS_PIN 10
 #endif
@@ -84,9 +83,9 @@ long timerStage, timerTrap, timerDoor;
 /****************************************************************************
  * 燒錄設定
  ****************************************************************************/
-#define STAGE 1         // 所在關卡
-#define SLAVE_ADDRESS 7 // Slave 地址 0x00~0x7F (0~127)  87 與 104 已經被 DS3231 使用
-char DEVICE_NAME[] = "Guinevere";
+#define STAGE 1          // 所在關卡
+#define SLAVE_ADDRESS 5  // Slave 地址 0x00~0x7F (0~127)  87 與 104 已經被 DS3231 使用
+char DEVICE_NAME[] = ""; // 讀取器名字需定義，寫入器名稱為Badge名稱
 
 // I2C & DS3231
 #include <DS3231.h> // 包含 Wire.h
@@ -145,11 +144,11 @@ void setup()
   }
 
 #ifdef WRITER_MODE
-
-  Serial.println(F(" * Stage 1, "));
+  Serial.print(F(" * Stage "));
+  Serial.println(STAGE);
   // 定義 RFID 寫入區域與內容
-  Serial.print(F(" ********* "));
-  rfid.Initialize(RUBY_NUMBER);
+  Serial.print(F(" *  "));
+  rfid.Initialize(SLAVE_ADDRESS);
   Serial.print(F(" Badge Writer in [Sector "));
   Serial.print(rfid.sector);
   Serial.print(F("] [Block "));
@@ -162,11 +161,12 @@ void setup()
 #endif
 
 #ifdef READER_MODE
-  Serial.println(F(" * Stage 2"));
+  Serial.print(F(" * Stage "));
+  Serial.println(STAGE);
   for (int i = 1; i < NR_OF_RUBY; i++)
   {
     // 定義 RFID 讀取區域與內容
-    Serial.print(F(" ********* "));
+    Serial.print(F(" *  "));
     rfid[i].Initialize(i);
     Serial.print(F(" Badge Reader in [Sector "));
     Serial.print(rfid[i].sector);
@@ -240,6 +240,11 @@ void loop()
     {
       delay(500);
       resetFunc();
+    }
+    else if (msgType == "Check")
+    {
+      requestType = Cheacking;
+      return;
     }
     else if (msgType == "Stage")
       stageLimit[msgIndex.toInt()] = msgValue.toInt();
@@ -336,6 +341,38 @@ void loop()
       Serial.println(F(" Reader:"));
 #endif
 
+      // 關卡記錄
+      if (!GetCardData(bufferStage, blockStage))
+      {
+        Fail();
+        return;
+      }
+      else
+      {
+        Serial.print(F("  STAGE:      ["));
+        Serial.print(bufferStage[0]);
+        Serial.print(F("] == ["));
+        Serial.print(STAGE);
+        Serial.print(F("]? ==> "));
+        if (bufferStage[0] < STAGE)
+        {
+          Serial.println(F("Cheater"));
+          requestType = Cheater;
+          digitalWrite(LED_BUZZER, HIGH);
+          delay(3000);
+          digitalWrite(LED_BUZZER, LOW);
+          delay(1000);
+          // 令卡片進入停止狀態
+          //   // Halt PICC
+          mfrc522[readerSelected].PICC_HaltA();
+          //   // Stop encryption on PCD
+          mfrc522[readerSelected].PCD_StopCrypto1();
+          return;
+        }
+        else
+          Serial.println(F("Go on!"));
+      }
+
       // 時間記錄
       if (!GetCardData(bufferTime, blockTime))
       {
@@ -416,32 +453,6 @@ void loop()
         }
       }
 
-      // 關卡記錄
-      if (!GetCardData(bufferStage, blockStage))
-      {
-        Fail();
-        return;
-      }
-      else
-      {
-        if (bufferStage[0] != STAGE)
-        {
-          Serial.print(F("  Cheater!!!"));
-
-          requestType = Cheater;
-          digitalWrite(LED_BUZZER, HIGH);
-          delay(3000);
-          digitalWrite(LED_BUZZER, LOW);
-          delay(1000);
-          // 令卡片進入停止狀態
-          //   // Halt PICC
-          mfrc522[readerSelected].PICC_HaltA();
-          //   // Stop encryption on PCD
-          mfrc522[readerSelected].PCD_StopCrypto1();
-          return;
-        }
-      }
-
 #ifdef WRITER_MODE
       Serial.print(F("  Target ==> "));
       rfid.ShowRubyName();
@@ -458,6 +469,18 @@ void loop()
         requestType = Get;
         digitalWrite(LED_BUZZER, HIGH);
         delay(500);
+        digitalWrite(LED_BUZZER, LOW);
+        delay(100);
+        digitalWrite(LED_BUZZER, HIGH);
+        delay(50);
+        digitalWrite(LED_BUZZER, LOW);
+        delay(50);
+        digitalWrite(LED_BUZZER, HIGH);
+        delay(50);
+        digitalWrite(LED_BUZZER, LOW);
+        delay(50);
+        digitalWrite(LED_BUZZER, HIGH);
+        delay(50);
         digitalWrite(LED_BUZZER, LOW);
         delay(1000);
       }
@@ -663,13 +686,18 @@ void requestEvent()
 {
   if (requestType != None)
   {
-    // 裝置代號
+// 裝置代號
+#ifdef WRITER_MODE
+    Wire.write(rfid.badge);
+#endif
+#ifdef READER_MODE
     for (size_t i = 0; i < 10; i++)
     {
       if (DEVICE_NAME[i] == 0)
         break;
       Wire.write(DEVICE_NAME[i]);
     }
+#endif
     readerSelected == 0 ? Wire.write("/0/") : Wire.write("/1/");
 
     // 特工代號
