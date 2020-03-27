@@ -33,10 +33,11 @@ uint8_t DATA_SIZE = 32;
 bool resetADN = false;
 bool resetStageLimit = false;
 bool check = true;
+bool unlock = true;
 int indexStage = 0;
 long timeLimit = 86400;
 
-int targetAddress = 7;
+int targetAddress = 58;
 
 void ModTime(byte year, byte month, byte date, byte DoW, byte hour, byte minute, byte second);
 
@@ -45,8 +46,18 @@ void setup()
   Wire.begin(); // join I2C bus as a Master
 
   Serial.begin(9600);
-  ModTime(20,02,26,03,17,18,00);
+  // ModTime(20,03,04,03,16,53,00);
   Serial.println("Type something to send:");
+  second = clock.getSecond();
+  minute = clock.getMinute();
+  hour = clock.getHour(h12, PM);
+  Serial.print(F("  Now Time   : ["));
+  Serial.print(hour, DEC);
+  Serial.print(':');
+  Serial.print(minute, DEC);
+  Serial.print(':');
+  Serial.print(second, DEC);
+  Serial.println(F(" ]"));
 }
 
 void loop()
@@ -84,13 +95,18 @@ void loop()
           Wire.write("Reset/\n");
           Wire.endTransmission();
         }
-        else if (check)
+         if (check)
         {
           Wire.beginTransmission(i2cAddress);
           Wire.write("Check/\n");
           Wire.endTransmission();
         }
-
+         if (unlock)
+        {
+          Wire.beginTransmission(i2cAddress);
+          Wire.write("Unlock/\n");
+          Wire.endTransmission();
+        }
         else if (resetStageLimit)
         {
           Wire.beginTransmission(i2cAddress);

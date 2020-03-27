@@ -89,7 +89,7 @@ void RFID::Initialize(byte ruby)
         badge = "Percival";
         break;
     case 6:
-        badge = "Bors";
+        badge = "Borse";
         break;
     case 7:
         badge = "Guinevere";

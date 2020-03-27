@@ -53,26 +53,9 @@ MFRC522::StatusCode status;
 MFRC522::MIFARE_Key key;           // 儲存金鑰
 byte wakakaKey[16] = "Wakaka Key"; // 最多可存入16個字元
 /****************************************************************************
- * 燒錄設定
- ****************************************************************************/
-// #define WRITER_MODE ;
-#define READER_MODE ;
-#ifdef READER_MODE
-// #define PRINTER ;
-// #define BOX ;
-#endif
-#define STAGE 0                   // 所在關卡
-#define SLAVE_ADDRESS 49          // Slave 地址 0x00~0x7F (0~127)  87 與 104 已經被 DS3231 使用
-char DEVICE_NAME[] = "DL-1000-4W"; // 讀取器名字需定義，寫入器名稱為Badge名稱
-#ifdef WRITER_MODE
-#define NUM_RUBY 2
-#endif
-#ifdef BOX
-byte title[18] = "Lancelot";
-#endif
-/****************************************************************************
  * DEFINE WRITER
  ****************************************************************************/
+// #define WRITER_MODE ;
 #ifdef WRITER_MODE
 RFID rfid;
 #define NR_OF_READERS 1
@@ -81,6 +64,7 @@ RFID rfid;
 /****************************************************************************
  * DEFINE READER
  ****************************************************************************/
+#define READER_MODE ;
 #ifdef READER_MODE
 #define NR_OF_RUBY 11
 RFID rfid[NR_OF_RUBY];
@@ -89,21 +73,9 @@ RFID rfid[NR_OF_RUBY];
 #define SS_PIN_B 9  // Slave Select Pin B
 byte ssPins[] = {SS_PIN_A, SS_PIN_B};
 /****************************************************************************
- * DEFINE PRINTER
+ * DEFINE BOX
  ****************************************************************************/
-#ifdef PRINTER
-#include "Adafruit_Thermal.h"
-#include "badget.h"
-// Here's the new syntax when using SoftwareSerial (e.g. Arduino Uno) ----
-// If using hardware serial instead, comment out or remove these lines:
-
-#include "SoftwareSerial.h"
-#define TX_PIN 6 // Arduino transmit  YELLOW WIRE  labeled RX on printer
-#define RX_PIN 5 // Arduino receive   GREEN WIRE   labeled TX on printer
-
-SoftwareSerial mySerial(RX_PIN, TX_PIN); // Declare SoftwareSerial obj first
-Adafruit_Thermal printer(&mySerial);     // Pass addr to printer constructor
-#endif                                   // DEBUG
+// #define BOX ;
 #endif
 READER reader[NR_OF_READERS];
 MFRC522 mfrc522[NR_OF_READERS]; // Create MFRC522 instance.
@@ -121,23 +93,26 @@ long timerStage, timerTrap, timerDoor;
 #define RST_PIN 8 // Reset Pin
 #define LED_BUZZER 7
 #define RELAY_LOW 6
+#define RELAY_LOW2 5
 
 /****************************************************************************
- * HC-12
+ * 燒錄設定
  ****************************************************************************/
-#include <SoftwareSerial.h>
-SoftwareSerial HC12(2, 3); // HC-12 TX Pin, HC-12 RX Pin
-bool rxHasData = false;
-uint8_t rxBuffer;
-String rxData = "";
-unsigned long feedbackTimer;
-int feedbackTime= 1000;
+#define STAGE 0                   // 所在關卡
+#define SLAVE_ADDRESS 49          // Slave 地址 0x00~0x7F (0~127)  87 與 104 已經被 DS3231 使用
+char DEVICE_NAME[] = "2-E6-E4"; // 讀取器名字需定義，寫入器名稱為Badge名稱
+#ifdef WRITER_MODE
+#define NUM_RUBY 8
+#endif
+#ifdef BOX
+byte title[18] = "Lancelot";
+#endif
 
 // I2C & DS3231
-// #include <DS3231.h> // 包含 Wire.h
-// #define I2C_BUFFER_SIZE 32
-// uint8_t i2cBuffer[I2C_BUFFER_SIZE];
-// uint8_t i2cBufferCnt = 0;
+#include <DS3231.h> // 包含 Wire.h
+#define I2C_BUFFER_SIZE 32
+uint8_t i2cBuffer[I2C_BUFFER_SIZE];
+uint8_t i2cBufferCnt = 0;
 enum RequestType
 {
   None,
@@ -149,20 +124,19 @@ enum RequestType
   Cheater,
 } requestType;
 bool hasNewMsg;
-// void receiveEvent(int howMany);
-// void requestEvent();
-// DS3231 clock;
-// bool Century = false;
-// bool h12;
-// bool PM;
-// byte ADay, AHour, AMinute, ASecond, ABits;
-// bool ADy, A12h, Apm;
-// byte year, month, date, DoW, hour, minute, second;
+void receiveEvent(int howMany);
+void requestEvent();
+DS3231 clock;
+bool Century = false;
+bool h12;
+bool PM;
+byte ADay, AHour, AMinute, ASecond, ABits;
+bool ADy, A12h, Apm;
+byte year, month, date, DoW, hour, minute, second;
 
 #define SIZE_OF_ARRAY(ary) sizeof(ary) / sizeof(*ary)
 
 String getValue(String data, char separator, int index);
-bool Clear();
 bool SetCardData(byte data[], byte _block[]);
 bool GetCardData(byte data[], byte _block[]);
 bool ClearRuby();
@@ -171,17 +145,15 @@ bool ReadData(RFID *ruby);
 void dump_byte_array(byte *buffer, byte bufferSize);
 void Fail();
 void Unlock();
-void UnlockEML();
 void AccessForbidden();
 
 void setup()
 {
-  // Wire.begin(SLAVE_ADDRESS);    // join I2C bus as a slave with address 1
-  // Wire.onReceive(receiveEvent); // register event
-  // Wire.onRequest(requestEvent); // register event
+  Wire.begin(SLAVE_ADDRESS);    // join I2C bus as a slave with address 1
+  Wire.onReceive(receiveEvent); // register event
+  Wire.onRequest(requestEvent); // register event
 
   Serial.begin(9600);
-  HC12.begin(9600); // Serial port to HC12
   SPI.begin();
   Serial.println(F("/****************************************************************************"));
   delay(100);
@@ -227,18 +199,6 @@ void setup()
   }
   Serial.println(F("] Title Challenge Box"));
 #endif
-#ifdef PRINTER
-  // This line is for compatibility with the Adafruit IotP project pack,
-  // which uses pin 7 as a spare grounding point.  You only need this if
-  // wired up the same way (w/3-pin header into pins 5/6/7):
-  pinMode(7, OUTPUT);
-  digitalWrite(7, LOW);
-
-  // NOTE: SOME PRINTERS NEED 9600 BAUD instead of 19200, check test page.
-  mySerial.begin(9600); // Initialize SoftwareSerial
-  //Serial1.begin(19200); // Use this instead if using hardware serial
-  printer.begin(); // Init printer (same regardless of serial type)
-#endif
   for (int i = 1; i < NR_OF_RUBY; i++)
   {
     // 定義 RFID 讀取區域與內容
@@ -258,18 +218,18 @@ void setup()
     {
       Serial.println(F(" * Outer Reader:"));
       // reader[i].Initialize(Wakaka);
-      reader[i].Initialize(1); // 計數密鑰
-      // reader[i].Initialize(rfid[3]); // 指定密鑰 Pass
-      // RFID *keys[] = {&rfid[3], &rfid[4], &rfid[7]}; // 擇一/多重密鑰 Pass
+      // reader[i].Initialize(2); // 計數密鑰
+      reader[i].Initialize(rfid[6]); // 指定密鑰 Pass
+      // RFID *keys[] = {&rfid[9],&rfid[8]}; // 擇一/多重密鑰 Pass
       // reader[i].Initialize(AND, keys);
     }
     else if (i == 1) // Inner 內側
     {
       Serial.println(F(" * Inner Reader:"));
       // reader[i].Initialize(Wakaka);
-      reader[i].Initialize(1); // 計數密鑰
-      // reader[i].Initialize(rfid[4]); // 指定密鑰 Pass
-      // RFID *keys[] = {&rfid[1],&rfid[8],&rfid[9]}; // 擇一/多重密鑰 Pass
+      // reader[i].Initialize(1); // 計數密鑰
+      reader[i].Initialize(rfid[4]); // 指定密鑰 Pass
+      // RFID *keys[] = {&rfid[3],&rfid[4],&rfid[5]}; // 擇一/多重密鑰 Pass
       // reader[i].Initialize(AND, keys);
     }
     // 初始化 MFRC522
@@ -281,9 +241,10 @@ void setup()
 
   pinMode(LED_BUZZER, OUTPUT);
   pinMode(RELAY_LOW, OUTPUT);
+  pinMode(RELAY_LOW2, OUTPUT);
   digitalWrite(LED_BUZZER, LOW);
   digitalWrite(RELAY_LOW, LOW);
-
+  digitalWrite(RELAY_LOW2, LOW);
   Serial.println(F(" *"));
   Serial.println(F(" * 2020-03-16_Please scan MIFARE Classic card..."));
   Serial.println(F(" ****************************************************************************/"));
@@ -291,54 +252,21 @@ void setup()
   // pinMode(RST_PIN, OUTPUT);
   // digitalWrite(RST_PIN, LOW);
 
-  // second = clock.getSecond();
-  // minute = clock.getMinute();
-  // hour = clock.getHour(h12, PM);
-  // Serial.print(F("  Now Time   : ["));
-  // Serial.print(hour, DEC);
-  // Serial.print(':');
-  // Serial.print(minute, DEC);
-  // Serial.print(':');
-  // Serial.print(second, DEC);
-  // Serial.println(F(" ]"));
+  second = clock.getSecond();
+  minute = clock.getMinute();
+  hour = clock.getHour(h12, PM);
+  Serial.print(F("  Now Time   : ["));
+  Serial.print(hour, DEC);
+  Serial.print(':');
+  Serial.print(minute, DEC);
+  Serial.print(':');
+  Serial.print(second, DEC);
+  Serial.println(F(" ]"));
 }
 String msg;
 void (*resetFunc)(void) = 0; //declare reset function at address 0
 void loop()
 {
-  while (HC12.available())
-  { // If HC-12 has data
-    rxBuffer = HC12.read();
-    if (rxBuffer == '\0' || rxBuffer == 255)
-      break;
-    rxData += (char)rxBuffer;
-    if (rxBuffer == 10) // LF character
-    {
-      String rxHead = getValue(rxData, '/', 0);
-
-      if (rxHead == "S") // Server Main Clock
-      {
-        Serial.print(rxData); // 記錄時間
-        rxHasData = true;
-        feedbackTimer = millis() + feedbackTime;
-      }
-      else if (rxHead == DEVICE_NAME) // privated
-      {
-        Serial.print(rxData);
-        String rxCommand = getValue(rxData, '/', 1);
-        if (rxCommand == "Unlock")
-          UnlockEML();
-        // Don't feedback
-      }
-      rxData = "";
-    }
-  }
-  if (millis() > feedbackTimer && rxHasData)
-  {
-    rxHasData = false;
-    HC12.println(DEVICE_NAME);
-  }
-
   // if (hasNewMsg)
   // {
   //   hasNewMsg = false;
@@ -389,9 +317,9 @@ void loop()
     if (mfrc522[readerSelected].PICC_IsNewCardPresent() && mfrc522[readerSelected].PICC_ReadCardSerial())
     {
       // 時鐘
-      // second = clock.getSecond();
-      // minute = clock.getMinute();
-      // hour = clock.getHour(h12, PM);
+      second = clock.getSecond();
+      minute = clock.getMinute();
+      hour = clock.getHour(h12, PM);
 
       // // // 特工ID 寫入
       // byte agentID[16] = "Wakaka Key";
@@ -407,20 +335,10 @@ void loop()
       //   Fail();
       //   return;
       // }
-
       // // 清除密鑰
-      // if (!Clear)
+      // if (!ClearRuby())
       // {
       //   Fail();
-      //   return;
-      // }
-      // else
-      // {
-      //   Serial.println(F("Clear"));
-      //   //   // Halt PICC
-      //   mfrc522[readerSelected].PICC_HaltA();
-      //   //   // Stop encryption on PCD
-      //   mfrc522[readerSelected].PCD_StopCrypto1();
       //   return;
       // }
 
@@ -455,109 +373,13 @@ void loop()
         }
         Serial.println(F("]"));
       }
-#ifdef PRINTER
-      int countBadget = 0;
-      printer.setDefault(); // Restore printer to defaults
-      // printer.justify('C');
-      printer.setSize('L');
-      // printer.boldOn();
-      for (size_t i = 1; i < NR_OF_RUBY; i++)
-      {
-        if (!ReadData(&(rfid[i])))
-        {
-          Fail();
-          return;
-        }
-        else
-        {
-          if (memcmp(rfid[i].buffer, rfid[i].blockData, 16) == 0)
-          {
-            Serial.println(i);
-
-            countBadget++;
-            switch (i)
-            {
-            case 1:
-              // printer.printBitmap(badget_width, badget_height, Arthur);
-              printer.print(F("A "));
-              break;
-            case 2:
-              // printer.printBitmap(badget_width, badget_height, Merlin);
-              printer.print(F("M "));
-              break;
-            case 3:
-              // printer.printBitmap(badget_width, badget_height, Lancelot);
-              printer.print(F("L "));
-              break;
-            case 4:
-              // printer.printBitmap(badget_width, badget_height, Galahad);
-              printer.print(F("GA "));
-              break;
-            case 5:
-              // printer.printBitmap(badget_width, badget_height, Percival);
-              printer.print(F("P "));
-              break;
-            case 6:
-              // printer.printBitmap(badget_width, badget_height, Borse);
-              if (countBadget > 5)
-                printer.println();
-              printer.print(F("B "));
-              break;
-            case 7:
-              // printer.printBitmap(badget_width, badget_height, Guinevere);
-              if (countBadget > 5)
-                printer.println();
-              printer.print(F("GU "));
-              break;
-            case 8:
-              // printer.printBitmap(badget_width, badget_height, Excalibur);
-              if (countBadget > 5)
-                printer.println();
-              printer.print(F("E "));
-              break;
-            case 9:
-              // printer.printBitmap(badget_width, badget_height, SwordStone);
-              if (countBadget > 5)
-                printer.println();
-              printer.print(F("S "));
-              break;
-            case 10:
-              // printer.printBitmap(badget_width, badget_height, Viviane);
-              if (countBadget > 5)
-                printer.println();
-              printer.print(F("V "));
-              break;
-            default:
-              break;
-            }
-          }
-        }
-      }
-      if (countBadget != 0)
-      {
-        // printer.boldOff();
-        printer.feed(10);
-
-        printer.sleep();      // Tell printer to sleep
-        delay(500);           // Sleep for 3 seconds
-        printer.wake();       // MUST wake() before printing again, even if reset
-        printer.setDefault(); // Restore printer to defaults
-                              // 令卡片進入停止狀態
-      }
-
-      //   // Halt PICC
-      mfrc522[readerSelected].PICC_HaltA();
-      //   // Stop encryption on PCD
-      mfrc522[readerSelected].PCD_StopCrypto1();
-      return;
-#endif
 
 #ifdef READER_MODE
       // 萬能鑰匙比對
       if (memcmp(bufferAgentID, wakakaKey, 16) == 0)
       {
         Serial.println(F("==> Hello Wakaka Agent!"));
-        digitalWrite(RELAY_LOW, HIGH);
+        readerSelected == 0 ? digitalWrite(RELAY_LOW, HIGH) : digitalWrite(RELAY_LOW2, HIGH);
         digitalWrite(LED_BUZZER, HIGH);
         delay(50);
         digitalWrite(LED_BUZZER, LOW);
@@ -566,7 +388,8 @@ void loop()
         delay(50);
         digitalWrite(LED_BUZZER, LOW);
         delay(1000);
-        digitalWrite(RELAY_LOW, LOW);
+        readerSelected == 0 ? digitalWrite(RELAY_LOW, LOW) : digitalWrite(RELAY_LOW2, LOW);
+
         // 令卡片進入停止狀態
         //   // Halt PICC
         mfrc522[readerSelected].PICC_HaltA();
@@ -1014,119 +837,85 @@ String getValue(String data, char separator, int index)
   return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
 
-// void receiveEvent(int howMany)
-// {
-//   i2cBufferCnt = 0;
-//   msg = "";
-//   while (Wire.available())
-//   {
-//     i2cBuffer[i2cBufferCnt] = Wire.read();
-//     // '\0' as NULL, 255 = unuse index
-//     if (i2cBuffer[i2cBufferCnt] == '\0' || i2cBuffer[i2cBufferCnt] == 255)
-//       break;
-//     msg += (char)i2cBuffer[i2cBufferCnt];
-//     i2cBufferCnt++;
-//   }
-//   hasNewMsg = true;
-// }
-// // function that executes whenever data is requested by master
-// void requestEvent()
-// {
-//   if (requestType != None)
-//   {
-// // 裝置代號
-// #ifdef WRITER_MODE
-//     Wire.write(rfid.badge);
-// #endif
-// #ifdef READER_MODE
-//     for (size_t i = 0; i < 10; i++)
-//     {
-//       if (DEVICE_NAME[i] == 0)
-//         break;
-//       Wire.write(DEVICE_NAME[i]);
-//     }
-// #endif
-//     readerSelected == 0 ? Wire.write("/0/") : Wire.write("/1/");
-
-//     // 特工代號
-//     for (size_t i = 0; i < 16; i++)
-//     {
-//       if (bufferAgentID[i] == 0)
-//         break;
-//       Wire.write(bufferAgentID[i]);
-//     }
-
-//     switch (requestType)
-//     {
-//     case None:
-//       break;
-//     case Cheacking:
-//       Wire.write("/Cheacking");
-//       break;
-//     case Timeout:
-//       Wire.write("/Timeout");
-//       break;
-//     case Cheater:
-//       Wire.write("/Cheater");
-//       break;
-//     case Get:
-// #ifdef WRITER_MODE
-//       Wire.write("/Get/");
-//       for (size_t i = 0; i < 16; i++)
-//       {
-//         if (rfid.blockData[i] == 0)
-//           break;
-//         Wire.write(rfid.blockData[i]);
-//       }
-// #endif
-//       break;
-//     case Pass:
-//       Wire.write("/Pass");
-//       break;
-//     case Forbidden:
-//       Wire.write("/Forbidden");
-//       break;
-//     default:
-//       Wire.write("/");
-//       break;
-//     }
-//     Wire.write("\n");
-//   }
-//   requestType = None;
-// }
-bool Clear()
+void receiveEvent(int howMany)
 {
-  byte data[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-  for (size_t _sector = 1; _sector < 16; _sector++)
+  i2cBufferCnt = 0;
+  msg = "";
+  while (Wire.available())
   {
-    for (size_t _block = 0; _block < 3; _block++)
-    {
-      byte blockNum = _sector * 4 + _block; // 計算區塊的實際編號（0~63）
-      byte trailerBlock = _sector * 4 + 3;  // 控制區塊編號
-      // 驗證金鑰
-      status = (MFRC522::StatusCode)mfrc522[readerSelected].PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, trailerBlock, &key, &(mfrc522[readerSelected].uid));
-      // 若未通過驗證…
-      if (status != MFRC522::STATUS_OK)
-      {
-        // 顯示錯誤訊息
-        Serial.print(F("PCD_Authenticate() failed: "));
-        Serial.println(mfrc522[readerSelected].GetStatusCodeName(status));
-        return false;
-      }
-
-      // 在指定區塊寫入16位元組資料
-      status = (MFRC522::StatusCode)mfrc522[readerSelected].MIFARE_Write(blockNum, data, 16);
-      // 若寫入不成功…
-      if (status != MFRC522::STATUS_OK)
-      {
-        // 顯示錯誤訊息
-        Serial.print(F("MIFARE_Write() failed: "));
-        Serial.println(mfrc522[readerSelected].GetStatusCodeName(status));
-        return false;
-      }
-    }
+    i2cBuffer[i2cBufferCnt] = Wire.read();
+    // '\0' as NULL, 255 = unuse index
+    if (i2cBuffer[i2cBufferCnt] == '\0' || i2cBuffer[i2cBufferCnt] == 255)
+      break;
+    msg += (char)i2cBuffer[i2cBufferCnt];
+    i2cBufferCnt++;
   }
-  return true;
+  hasNewMsg = true;
+}
+// function that executes whenever data is requested by master
+void requestEvent()
+{
+  if (requestType != None)
+  {
+// 裝置代號
+#ifdef WRITER_MODE
+    Wire.write(rfid.badge);
+#endif
+#ifdef READER_MODE
+    for (size_t i = 0; i < 10; i++)
+    {
+      if (DEVICE_NAME[i] == 0)
+        break;
+      Wire.write(DEVICE_NAME[i]);
+    }
+#endif
+    readerSelected == 0 ? Wire.write("/0/") : Wire.write("/1/");
+
+    // 特工代號
+    for (size_t i = 0; i < 16; i++)
+    {
+      if (bufferAgentID[i] == 0)
+        break;
+      Wire.write(bufferAgentID[i]);
+    }
+
+    switch (requestType)
+    {
+    case None:
+      break;
+    case Cheacking:
+      Wire.write("/Cheacking");
+      break;
+    case Timeout:
+      Wire.write("/Timeout");
+      break;
+    case Cheater:
+      Wire.write("/Cheater");
+      break;
+    case Get:
+#ifdef WRITER_MODE
+      Wire.write("/Get/");
+      for (size_t i = 0; i < 16; i++)
+      {
+        if (rfid.blockData[i] == 0)
+          break;
+        Wire.write(rfid.blockData[i]);
+      }
+#endif
+      break;
+    case Pass:
+      Wire.write("/Pass");
+      break;
+    case Forbidden:
+      Wire.write("/Forbidden");
+      break;
+    default:
+      Wire.write("/");
+      break;
+    }
+    Wire.write("\n");
+  }
+  requestType = None;
 }
 
 bool SetCardData(byte data[], byte _block[])
@@ -1330,29 +1119,8 @@ void Fail()
 }
 void Unlock()
 {
-  // 發送給Server確認
-  for (size_t i = 0; i < 10; i++)
-  {
-    if (DEVICE_NAME[i] == 0)
-      break;
-    HC12.print(DEVICE_NAME[i]);
-  }
-  readerSelected == 0 ? HC12.print(F("/0/")) : HC12.print(F("/1/"));
-  for (size_t i = 0; i < 16; i++)
-  {
-    if (bufferAgentID[i] == 0)
-      break;
-    HC12.print((char)bufferAgentID[i]);
-  }
-  HC12.print(F("/Unlock/")); // 最後一個斜線用與分離LF
-  HC12.println();
-  digitalWrite(LED_BUZZER, HIGH);
-  delay(50);
-  digitalWrite(LED_BUZZER, LOW);
-}
-void UnlockEML()
-{
-  digitalWrite(RELAY_LOW, HIGH);
+  requestType = Pass;
+  readerSelected == 0 ? digitalWrite(RELAY_LOW, HIGH) : digitalWrite(RELAY_LOW2, HIGH);
   digitalWrite(LED_BUZZER, HIGH);
   delay(500);
   digitalWrite(LED_BUZZER, LOW);
@@ -1369,7 +1137,7 @@ void UnlockEML()
   delay(50);
   digitalWrite(LED_BUZZER, LOW);
   delay(1000);
-  digitalWrite(RELAY_LOW, LOW);
+  readerSelected == 0 ? digitalWrite(RELAY_LOW, LOW) : digitalWrite(RELAY_LOW2, LOW);
 }
 void AccessForbidden()
 {
