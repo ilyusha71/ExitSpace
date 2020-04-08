@@ -2,14 +2,13 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
 #
-/Exit Space Server/[Ll]ibrary/
-/[Ll]ibrary/
-/[Tt]emp/
-/[Oo]bj/
-/[Bb]uild/
-/[Bb]uilds/
-/[Ll]ogs/
-/[Mm]emoryCaptures/
+Exit Space Server/[Ll]ibrary/
+Exit Space Server/[Tt]emp/
+Exit Space Server/[Oo]bj/
+Exit Space Server/[Bb]uild/
+Exit Space Server/[Bb]uilds/
+Exit Space Server/[Ll]ogs/
+Exit Space Server/[Mm]emoryCaptures/
 
 # Never ignore Asset meta data
 !/[Aa]ssets/**/*.meta
@@ -58,4 +57,3 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
-
