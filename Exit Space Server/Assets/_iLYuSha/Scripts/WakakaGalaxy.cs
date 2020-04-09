@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿// using System.Collections;
 using System.Collections.Generic;
 using ExitGames.Client.Photon;
 using Photon.Pun;
@@ -23,8 +23,10 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     private readonly string NAME_JOINED = "已进入";
     private readonly string NAME_ROOM = "行星";
     private readonly string NAME_LEFT = "撤离";
-    private readonly string NAME_FAILED = "失败";
+    private readonly string NAME_FAILED = "无法";
+
     #region Login
+    [Header ("Login Panel")]
     public GameObject panelLogin;
     public TMP_InputField inputCode;
     public GameObject tipSearchRegionServer;
@@ -40,26 +42,38 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     #endregion
 
     #region Lobby
+    [Header ("Lobby Panel")]
     public GameObject panelLobby;
-    private int roomIndex = 1;
-    private string roomName = "";
+    public GameObject windowCommand;
+    public GameObject windowOption;
+    public TMP_InputField inputRoomName;
+    public TMP_InputField inputMaxPlayers;
+    public Toggle toggleIsOpen;
+    public Toggle toggleIsVisible;
+    public RectTransform roomListContent;
+    public GameObject RoomListEntryPrefab;
+    private Dictionary<string, RoomInfo> cachedRoomList = new Dictionary<string, RoomInfo> ();
+    private Dictionary<string, GameObject> roomListEntries = new Dictionary<string, GameObject> ();
     #endregion
 
     #region Room
+    [Header ("Room Panel")]
     public GameObject panelRoom;
     public TextMeshProUGUI textRoomName;
+    public TextMeshProUGUI textMaxPlayers;
+    public GameObject roomIsOpen;
+    public GameObject roomIsVisible;
     #endregion
 
     void Awake ()
     {
+        inputCode.text = PlayerPrefs.GetString ("InputCode");
         Button[] btns = groupRegion.GetComponentsInChildren<Button> ();
         for (int i = 0; i < btns.Length; i++)
         {
             listRegionButton.Add (btns[i]);
             btns[i].gameObject.SetActive (false);
         }
-        inputCode.text = PlayerPrefs.GetString ("InputCode");
-        Resources.UnloadUnusedAssets ();
     }
 
     void New ()
@@ -75,20 +89,10 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
         if (showRegion)
         {
             showRegion = false;
-            tipSearchRegionServer.SetActive (false);
             textWarning.text = "区域" + NAME_SERVER + "已测试完成";
-            int countRegion = listRegion.Count;
-            while (listRegionButton.Count < countRegion)
+            for (int i = 0; i < listRegion.Count; i++)
             {
-                Button btn = Instantiate (listRegionButton[0], groupRegion);
-                listRegionButton.Add (btn);
-            }
-            for (int i = 0; i < countRegion; i++)
-            {
-                listRegionButton[i].gameObject.SetActive (true);
                 int ping = listRegion[i].Ping;
-                listRegionButton[i].GetComponentsInChildren<TextMeshProUGUI> () [0].text =
-                    GetRegionNameText (listRegion[i].Code);
                 listRegionButton[i].GetComponentsInChildren<TextMeshProUGUI> () [1].text =
                     ping + " ms";
                 Image pingDisplay = listRegionButton[i].GetComponentsInChildren<Image> () [2];
@@ -117,11 +121,6 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
                     pingDisplay.color = colorVeryWeak;
                     pingDisplay.fillAmount = 0.2f;
                 }
-                int indexRegion = i;
-                listRegionButton[indexRegion].onClick.AddListener (() =>
-                {
-                    OnRegionButtonClicked (listRegion[indexRegion].Code);
-                });
             }
         }
     }
@@ -206,29 +205,66 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     }
     public void OnCreateRoomButtonClicked ()
     {
-        roomName = "逃生门" + roomIndex + "号星";
-        textWarning.text = NAME_CREATE + roomName;
-        roomName = (roomName.Equals (string.Empty)) ? "Room " + Random.Range (1000, 10000) : roomName;
-
+        string roomName = inputRoomName.text;
         byte maxPlayers;
-        byte.TryParse ("10", out maxPlayers);
-        maxPlayers = (byte) Mathf.Clamp (maxPlayers, 2, 8);
-
-        RoomOptions options = new RoomOptions { MaxPlayers = maxPlayers };
-
-        PhotonNetwork.CreateRoom (roomName, options, null);
+        byte.TryParse (inputMaxPlayers.text, out maxPlayers);
+        if (!roomName.Equals (string.Empty))
+        {
+            if (maxPlayers < 0) // 0 代表无限制
+                textWarning.text = "殖民者不足";
+            else if (maxPlayers > 20)
+                textWarning.text = "殖民者过量";
+            else
+            {
+                textWarning.text = NAME_CREATE + roomName;
+                RoomOptions options = new RoomOptions
+                {
+                    MaxPlayers = maxPlayers,
+                    IsOpen = toggleIsOpen.isOn,
+                    IsVisible = toggleIsVisible.isOn
+                };
+                PhotonNetwork.CreateRoom (roomName, options, null);
+            }
+        }
+        else
+            textWarning.text = "请输入目标名称";
     }
     public void OnJoinRoomButtonClicked ()
     {
-        roomName = "逃生门" + roomIndex + "号星";
-        textWarning.text = NAME_JOIN + roomName;
-        PhotonNetwork.JoinRoom (roomName);
+        string roomName = inputRoomName.text;
+        if (!roomName.Equals (string.Empty))
+        {
+            textWarning.text = NAME_JOIN + roomName;
+            PhotonNetwork.JoinRoom (roomName);
+        }
+        else
+            textWarning.text = "请输入目标名称";
     }
     public void OnJoinOrCreateRoomButtonClicked ()
     {
-        roomName = "逃生门" + roomIndex + "号星";
-        textWarning.text = NAME_JOIN + roomName;
-        PhotonNetwork.JoinOrCreateRoom (roomName, null, null, null);
+        string roomName = inputRoomName.text;
+        byte maxPlayers;
+        byte.TryParse (inputMaxPlayers.text, out maxPlayers);
+        if (!roomName.Equals (string.Empty))
+        {
+            if (maxPlayers < 0) // 0 代表无限制
+                textWarning.text = "殖民者不足";
+            else if (maxPlayers > 20)
+                textWarning.text = "殖民者过量";
+            else
+            {
+                textWarning.text = NAME_JOIN + roomName;
+                RoomOptions options = new RoomOptions
+                {
+                    MaxPlayers = maxPlayers,
+                    IsOpen = toggleIsOpen.isOn,
+                    IsVisible = toggleIsVisible.isOn
+                };
+                PhotonNetwork.JoinOrCreateRoom (roomName, options, null);
+            }
+        }
+        else
+            textWarning.text = "请输入目标名称";
     }
     public void OnJoinRandomRoomButtonClicked ()
     {
@@ -262,8 +298,12 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
         // Debug.LogWarning ("OnConnectedToMaster");
         tipSearchRegionServer.SetActive (false);
         panelLobby.SetActive (true);
+        windowCommand.SetActive (true);
+        windowOption.SetActive (false);
         textWarning.text = NAME_CONNECTED + "主" + NAME_SERVER;
         textServer.text = GetRegionNameText (PhotonNetwork.CloudRegion) + "\n<size=23>" + PhotonNetwork.ServerAddress + "</size>";
+        if (!PhotonNetwork.InLobby)
+            PhotonNetwork.JoinLobby ();
     }
     // Called after disconnecting from the Photon server. It could be a failure or an explicit disconnect call.
     public override void OnDisconnected (DisconnectCause cause)
@@ -279,12 +319,33 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     public override void OnRegionListReceived (RegionHandler regionHandler)
     {
         // Debug.LogWarning ("OnRegionListReceived");
+        tipSearchRegionServer.SetActive (false);
         textWarning.text = "已收到区域" + NAME_SERVER + "列表";
         if (PhotonNetwork.NetworkingClient.NameServerHost == "ns.exitgames.com")
             textServer.text = "星际空间";
         else if (PhotonNetwork.NetworkingClient.NameServerHost == "ns.photonengine.cn")
             textServer.text = "本星系团";
         regionHandler.PingMinimumOfRegions (this.OnRegionPingCompleted, null);
+        listRegion = new List<Region> (regionHandler.EnabledRegions);
+        int countRegion = listRegion.Count;
+        while (listRegionButton.Count < countRegion)
+        {
+            Button btn = Instantiate (listRegionButton[0], groupRegion);
+            listRegionButton.Add (btn);
+        }
+        for (int i = 0; i < countRegion; i++)
+        {
+            listRegionButton[i].gameObject.SetActive (true);
+            listRegionButton[i].GetComponentsInChildren<TextMeshProUGUI> () [0].text =
+                GetRegionNameText (listRegion[i].Code);
+            listRegionButton[i].GetComponentsInChildren<TextMeshProUGUI> () [1].text = "Testing";
+            listRegionButton[i].GetComponentsInChildren<Image> () [2].fillAmount = 0;
+            int indexRegion = i;
+            listRegionButton[indexRegion].onClick.AddListener (() =>
+            {
+                OnRegionButtonClicked (listRegion[indexRegion].Code);
+            });
+        }
     }
     private void OnRegionPingCompleted (RegionHandler regionHandler)
     {
@@ -310,7 +371,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     // Called on entering a lobby on the Master Server. The actual room-list updates will call OnRoomListUpdate.
     public override void OnJoinedLobby ()
     {
-        Debug.LogWarning ("OnJoinedLobby");
+        // Debug.LogWarning ("OnJoinedLobby");
     }
     // Called after leaving a lobby.
     public override void OnLeftLobby ()
@@ -321,7 +382,10 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     public override void OnRoomListUpdate (List<RoomInfo> roomList)
     {
         // Debug.LogWarning ("OnRoomListUpdate");
-        textWarning.text = NAME_ROOM + "列表已更新";
+        textWarning.text = NAME_ROOM + "组织已发布最新成员" + NAME_ROOM + "列表";
+        ClearRoomListView ();
+        UpdateCachedRoomList (roomList);
+        UpdateRoomListView ();
     }
     // Called when the Master Server sent an update for the Lobby Statistics.
     public override void OnLobbyStatisticsUpdate (List<TypedLobbyInfo> lobbyStatistics)
@@ -344,8 +408,10 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     public override void OnCreateRoomFailed (short returnCode, string message)
     {
         // Debug.LogWarning ("OnCreateRoomFailed");
-        textWarning.text = NAME_CREATED + roomName + NAME_FAILED;
-        roomIndex++;
+        if (message == "A game with the specified id already exist.")
+            textWarning.text = NAME_FAILED + NAME_CREATE + "：请直接进入行星";
+        else
+            textWarning.text = NAME_FAILED + NAME_CREATE + message;
     }
     // Called when the LoadBalancingClient entered a room, no matter if this client created it or simply joined.
     public override void OnJoinedRoom ()
@@ -353,7 +419,10 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
         // Debug.LogWarning ("OnJoinedRoom");
         textWarning.text = NAME_JOINED + PhotonNetwork.CurrentRoom.Name;
         textRoomName.text = PhotonNetwork.CurrentRoom.Name;
-        roomName = PhotonNetwork.CurrentRoom.Name;
+        textMaxPlayers.gameObject.SetActive (PhotonNetwork.CurrentRoom.MaxPlayers == 0 ? false : true);
+        textMaxPlayers.text = PhotonNetwork.CurrentRoom.MaxPlayers.ToString ();
+        roomIsOpen.SetActive (PhotonNetwork.CurrentRoom.IsOpen);
+        roomIsVisible.SetActive (PhotonNetwork.CurrentRoom.IsVisible);
         panelLobby.SetActive (false);
         panelRoom.SetActive (true);
     }
@@ -361,34 +430,131 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     public override void OnJoinRoomFailed (short returnCode, string message)
     {
         // Debug.LogWarning ("OnJoinRoomFailed");
-        textWarning.text = NAME_JOIN + roomName + NAME_FAILED;
+        if (message == "Game does not exist")
+            textWarning.text = NAME_FAILED + NAME_JOIN + "：目标行星尚未殖民";
+        else if (message == "Game closed")
+            textWarning.text = NAME_FAILED + NAME_JOIN + "：未开放行星";
+        else if (message == "Game full")
+            textWarning.text = NAME_FAILED + NAME_JOIN + "：殖民者已满";
+        else
+            textWarning.text = NAME_FAILED + NAME_JOIN + message;
+
     }
     // Called when a previous OpJoinRandom call failed on the server.
     public override void OnJoinRandomFailed (short returnCode, string message)
     {
         // Debug.LogWarning ("OnJoinRandomFailed");
-        textWarning.text = NAME_JOIN + "未知行星" + NAME_FAILED;
-        OnCreateRoomButtonClicked ();
+        if (message == "No match found")
+            textWarning.text = NAME_FAILED + NAME_JOIN + "未知行星：找不到任何已殖民行星";
+        else
+            textWarning.text = NAME_FAILED + NAME_JOIN + "未知行星" + message;
+        // OnCreateRoomButtonClicked ();
     }
     // Called when the local user / client left a room, so the game 's logic can clean up it's internal state.
     public override void OnLeftRoom ()
     {
         // Debug.LogWarning ("OnLeftRoom");
-        textWarning.text = NAME_LEFT + roomName;
+        textWarning.text = NAME_LEFT;
         panelLobby.SetActive (true);
         panelRoom.SetActive (false);
     }
 
+    /// <summary>
+    /// IInRoomCallbacks Interface 房間回傳介面
+    /// </summary>
+    // Called when a remote player entered the room.This Player is already added to the playerlist.
+    public override void OnPlayerEnteredRoom (Player newPlayer)
+    {
+        Debug.LogWarning ("OnPlayerEnteredRoom");
+    }
+    // Called when a remote player left the room or became inactive.Check otherPlayer.IsInactive.
+    public override void OnPlayerLeftRoom (Player otherPlayer)
+    {
+        Debug.LogWarning ("OnPlayerLeftRoom");
+    }
+    // Called when a room 's custom properties changed. The propertiesThatChanged contains all that was set via Room.SetCustomProperties.
+    public override void OnRoomPropertiesUpdate (Hashtable propertiesThatChanged)
+    {
+        Debug.LogWarning ("OnRoomPropertiesUpdate");
+    }
+    // Called when custom player - properties are changed.Player and the changed properties are passed as object[].
+    public override void OnPlayerPropertiesUpdate (Player targetPlayer, Hashtable changedProps)
+    {
+        Debug.LogWarning ("OnPlayerPropertiesUpdate");
+    }
+    // Called after switching to a new MasterClient when the current one leaves.
+    public override void OnMasterClientSwitched (Player newMasterClient)
+    {
+        Debug.LogWarning ("OnMasterClientSwitched");
+    }
     #endregion
 
-    void CloseRegion ()
+    #region Advanced Method
+    private void CloseRegion ()
     {
         for (int i = 0; i < listRegionButton.Count; i++)
         {
             listRegionButton[i].gameObject.SetActive (false);
         }
     }
+    private void ClearRoomListView ()
+    {
+        foreach (GameObject entry in roomListEntries.Values)
+        {
+            Destroy (entry.gameObject);
+        }
 
+        roomListEntries.Clear ();
+    }
+    private void UpdateCachedRoomList (List<RoomInfo> roomList)
+    {
+        foreach (RoomInfo info in roomList)
+        {
+            // Remove room from cached room list if it got closed, became invisible or was marked as removed
+            if (!info.IsOpen || !info.IsVisible || info.RemovedFromList)
+            {
+                if (cachedRoomList.ContainsKey (info.Name))
+                {
+                    cachedRoomList.Remove (info.Name);
+                }
+
+                continue;
+            }
+
+            // Update cached room info
+            if (cachedRoomList.ContainsKey (info.Name))
+            {
+                cachedRoomList[info.Name] = info;
+            }
+            // Add new room info to cache
+            else
+            {
+                cachedRoomList.Add (info.Name, info);
+            }
+        }
+    }
+    private void UpdateRoomListView ()
+    {
+        roomListContent.sizeDelta = new Vector2 (roomListContent.sizeDelta.x, cachedRoomList.Count * 80 - 7);
+        foreach (RoomInfo info in cachedRoomList.Values)
+        {
+            GameObject entry = Instantiate (RoomListEntryPrefab, roomListContent.transform);
+            entry.transform.localScale = Vector3.one;
+            entry.GetComponent<Button> ().onClick.AddListener (() =>
+            {
+                if (PhotonNetwork.InLobby)
+                {
+                    PhotonNetwork.LeaveLobby ();
+                }
+
+                PhotonNetwork.JoinRoom (info.Name);
+            });
+            entry.GetComponentsInChildren<TextMeshProUGUI> () [0].text = info.Name;
+            entry.GetComponentsInChildren<TextMeshProUGUI> () [1].text = info.PlayerCount.ToString ();
+            entry.GetComponentsInChildren<TextMeshProUGUI> () [2].text = "/ " + (info.MaxPlayers == 0 ? "#" : info.MaxPlayers.ToString ());
+            roomListEntries.Add (info.Name, entry);
+        }
+    }
     private string GetRegionNameText (string region)
     {
         if (region.Contains ("/*"))
@@ -427,4 +593,5 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
                 return "未知星系";
         }
     }
+    #endregion
 }
