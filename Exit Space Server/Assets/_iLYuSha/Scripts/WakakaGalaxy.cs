@@ -20,9 +20,10 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     private readonly string NAME_CREATE = "殖民";
     private readonly string NAME_CREATED = "已殖民";
     private readonly string NAME_JOIN = "前往";
-    private readonly string NAME_JOINED = "已进入";
+    private readonly string NAME_JOINED = "已登陆";
     private readonly string NAME_ROOM = "行星";
-    private readonly string NAME_LEFT = "撤离";
+    private readonly string NAME_LEAVE = "撤离";
+    private readonly string NAME_LEFT = "已撤离";
     private readonly string NAME_FAILED = "无法";
 
     #region Login
@@ -48,8 +49,11 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     public GameObject windowOption;
     public TMP_InputField inputRoomName;
     public TMP_InputField inputMaxPlayers;
+    public TextMeshProUGUI tipMaxPlayers;
     public Toggle toggleIsOpen;
     public Toggle toggleIsVisible;
+    public Button settingButton;
+    [Header ("Lobby Panel - List of Room")]
     public RectTransform roomListContent;
     public GameObject RoomListEntryPrefab;
     private Dictionary<string, RoomInfo> cachedRoomList = new Dictionary<string, RoomInfo> ();
@@ -63,6 +67,10 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     public TextMeshProUGUI textMaxPlayers;
     public GameObject roomIsOpen;
     public GameObject roomIsVisible;
+    [Header ("Room Panel - List of Player")]
+    public Transform PlayerListContent;
+    public GameObject PlayerListEntryPrefab;
+    private Dictionary<string, GameObject> playerListEntries = new Dictionary<string, GameObject> ();
     #endregion
 
     void Awake ()
@@ -74,11 +82,6 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
             listRegionButton.Add (btns[i]);
             btns[i].gameObject.SetActive (false);
         }
-    }
-
-    void New ()
-    {
-        // PhotonNetwork.NetworkingClien
     }
 
     void Update ()
@@ -154,7 +157,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
         textWarning.text = "寻找区域星系列表";
         tipSearchRegionServer.SetActive (true);
         tipSearchRegionServer.GetComponent<TextMeshProUGUI> ().text = "正在建立星系传送门";
-        PhotonNetwork.PhotonServerSettings.AppSettings.AppIdRealtime = "6790855d-98ce-4acd-b64f-688c4a354ccf"; // TODO: replace with your own AppId
+        PhotonNetwork.PhotonServerSettings.AppSettings.AppIdRealtime = "84f4bc51-fb6f-4613-b4ca-1fedcb3e1151"; // TODO: replace with your own AppId
         PhotonNetwork.NetworkingClient.AppId = PhotonNetwork.PhotonServerSettings.AppSettings.AppIdRealtime;
         // 如果使用ConnectUsingSettings連線會自動在遊戲版本加入PUN版本的後綴。
         // 為確保兩種連線方式的NetworkingClient.AppVersion相同，必須加入下面這行
@@ -203,81 +206,86 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.Disconnect ();
     }
-    public void OnCreateRoomButtonClicked ()
+    public void OnMaxPlayerChange (string count)
     {
-        string roomName = inputRoomName.text;
-        byte maxPlayers;
-        byte.TryParse (inputMaxPlayers.text, out maxPlayers);
-        if (!roomName.Equals (string.Empty))
+        int valueMaxPlayer;
+        int.TryParse (count, out valueMaxPlayer);
+        if (valueMaxPlayer < 0) // 0 代表无限制
         {
-            if (maxPlayers < 0) // 0 代表无限制
-                textWarning.text = "殖民者不足";
-            else if (maxPlayers > 20)
-                textWarning.text = "殖民者过量";
-            else
-            {
-                textWarning.text = NAME_CREATE + roomName;
-                RoomOptions options = new RoomOptions
-                {
-                    MaxPlayers = maxPlayers,
-                    IsOpen = toggleIsOpen.isOn,
-                    IsVisible = toggleIsVisible.isOn
-                };
-                PhotonNetwork.CreateRoom (roomName, options, null);
-            }
+            tipMaxPlayers.text = "殖民者不足";
+            settingButton.gameObject.SetActive (false);
+        }
+        else if (valueMaxPlayer > 20)
+        {
+            tipMaxPlayers.text = "殖民者过量";
+            settingButton.gameObject.SetActive (false);
         }
         else
-            textWarning.text = "请输入目标名称";
+        {
+            tipMaxPlayers.text = "";
+            settingButton.gameObject.SetActive (true);
+        }
+    }
+    public void OnCreateRoomButtonClicked ()
+    {
+        string roomName = !inputRoomName.text.Equals (string.Empty) ? inputRoomName.text : "哇咔咔星系" + Random.Range (10000, 100000);
+        byte maxPlayers;
+        byte.TryParse (inputMaxPlayers.text, out maxPlayers);
+        if (maxPlayers < 0) // 0 代表无限制
+            textWarning.text = "殖民者不足";
+        else if (maxPlayers > 20)
+            textWarning.text = "殖民者过量";
+        else
+        {
+            textWarning.text = "准备" + NAME_CREATE + roomName;
+            RoomOptions options = new RoomOptions
+            {
+                MaxPlayers = maxPlayers,
+                IsOpen = toggleIsOpen.isOn,
+                IsVisible = toggleIsVisible.isOn
+            };
+            PhotonNetwork.CreateRoom (roomName, options, null);
+        }
     }
     public void OnJoinRoomButtonClicked ()
     {
-        string roomName = inputRoomName.text;
-        if (!roomName.Equals (string.Empty))
-        {
-            textWarning.text = NAME_JOIN + roomName;
-            PhotonNetwork.JoinRoom (roomName);
-        }
-        else
-            textWarning.text = "请输入目标名称";
+        string roomName = !inputRoomName.text.Equals (string.Empty) ? inputRoomName.text : "哇咔咔星系" + Random.Range (10000, 100000);
+        textWarning.text = "准备" + NAME_JOIN + roomName;
+        PhotonNetwork.JoinRoom (roomName);
     }
     public void OnJoinOrCreateRoomButtonClicked ()
     {
-        string roomName = inputRoomName.text;
+        string roomName = !inputRoomName.text.Equals (string.Empty) ? inputRoomName.text : "哇咔咔星系" + Random.Range (10000, 100000);
         byte maxPlayers;
         byte.TryParse (inputMaxPlayers.text, out maxPlayers);
-        if (!roomName.Equals (string.Empty))
-        {
-            if (maxPlayers < 0) // 0 代表无限制
-                textWarning.text = "殖民者不足";
-            else if (maxPlayers > 20)
-                textWarning.text = "殖民者过量";
-            else
-            {
-                textWarning.text = NAME_JOIN + roomName;
-                RoomOptions options = new RoomOptions
-                {
-                    MaxPlayers = maxPlayers,
-                    IsOpen = toggleIsOpen.isOn,
-                    IsVisible = toggleIsVisible.isOn
-                };
-                PhotonNetwork.JoinOrCreateRoom (roomName, options, null);
-            }
-        }
+        if (maxPlayers < 0) // 0 代表无限制
+            textWarning.text = "殖民者不足";
+        else if (maxPlayers > 20)
+            textWarning.text = "殖民者过量";
         else
-            textWarning.text = "请输入目标名称";
+        {
+            textWarning.text = "准备" + NAME_JOIN + roomName;
+            RoomOptions options = new RoomOptions
+            {
+                MaxPlayers = maxPlayers,
+                IsOpen = toggleIsOpen.isOn,
+                IsVisible = toggleIsVisible.isOn
+            };
+            PhotonNetwork.JoinOrCreateRoom (roomName, options, null);
+        }
     }
     public void OnJoinRandomRoomButtonClicked ()
     {
-        textWarning.text = NAME_JOIN + "未知行星";
+        textWarning.text = "准备" + NAME_JOIN + "未知行星";
         PhotonNetwork.JoinRandomRoom ();
     }
 
     /// <summary>
     /// Room Panel
     /// </summary>
-    public void OnLeftRoomButtonClicked ()
+    public void OnLeaveRoomButtonClicked ()
     {
-        textWarning.text = NAME_LEFT + PhotonNetwork.CurrentRoom.Name;
+        textWarning.text = "准备" + NAME_LEAVE + PhotonNetwork.CurrentRoom.Name;
         PhotonNetwork.LeaveRoom ();
     }
     #endregion
@@ -382,7 +390,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     public override void OnRoomListUpdate (List<RoomInfo> roomList)
     {
         // Debug.LogWarning ("OnRoomListUpdate");
-        textWarning.text = NAME_ROOM + "组织已发布最新成员" + NAME_ROOM + "列表";
+        textWarning.text = NAME_ROOM + "组织已更新成员列表。";
         ClearRoomListView ();
         UpdateCachedRoomList (roomList);
         UpdateRoomListView ();
@@ -409,7 +417,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     {
         // Debug.LogWarning ("OnCreateRoomFailed");
         if (message == "A game with the specified id already exist.")
-            textWarning.text = NAME_FAILED + NAME_CREATE + "：请直接进入行星";
+            textWarning.text = NAME_FAILED + NAME_CREATE + "：此行星已完成殖民，请直接前往。";
         else
             textWarning.text = NAME_FAILED + NAME_CREATE + message;
     }
@@ -425,27 +433,43 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
         roomIsVisible.SetActive (PhotonNetwork.CurrentRoom.IsVisible);
         panelLobby.SetActive (false);
         panelRoom.SetActive (true);
+
+        foreach (Player player in PhotonNetwork.PlayerList)
+        {
+            if (player != PhotonNetwork.LocalPlayer)
+            {
+                GameObject entry = Instantiate (PlayerListEntryPrefab, PlayerListContent);
+                entry.transform.localScale = Vector3.one;
+                playerListEntries.Add (player.NickName, entry);
+                // 以下根據遊戲需求自訂
+                object customData;
+                if (player.CustomProperties.TryGetValue ("Data", out customData))
+                {
+                    PlayerCustomData data = (PlayerCustomData) customData;
+                    entry.GetComponentsInChildren<Image> () [2].enabled = data.Fail;
+                }
+            }
+        }
     }
     // Called when a previous OpJoinRoom call failed on the server.
     public override void OnJoinRoomFailed (short returnCode, string message)
     {
         // Debug.LogWarning ("OnJoinRoomFailed");
         if (message == "Game does not exist")
-            textWarning.text = NAME_FAILED + NAME_JOIN + "：目标行星尚未殖民";
+            textWarning.text = NAME_FAILED + NAME_JOIN + "：此行星尚未殖民。";
         else if (message == "Game closed")
-            textWarning.text = NAME_FAILED + NAME_JOIN + "：未开放行星";
+            textWarning.text = NAME_FAILED + NAME_JOIN + "：此行星未开放殖民者。";
         else if (message == "Game full")
-            textWarning.text = NAME_FAILED + NAME_JOIN + "：殖民者已满";
+            textWarning.text = NAME_FAILED + NAME_JOIN + "：此行星殖民者已达上限。";
         else
             textWarning.text = NAME_FAILED + NAME_JOIN + message;
-
     }
     // Called when a previous OpJoinRandom call failed on the server.
     public override void OnJoinRandomFailed (short returnCode, string message)
     {
         // Debug.LogWarning ("OnJoinRandomFailed");
         if (message == "No match found")
-            textWarning.text = NAME_FAILED + NAME_JOIN + "未知行星：找不到任何已殖民行星";
+            textWarning.text = NAME_FAILED + NAME_JOIN + "未知行星：找不到任何已殖民行星。";
         else
             textWarning.text = NAME_FAILED + NAME_JOIN + "未知行星" + message;
         // OnCreateRoomButtonClicked ();
@@ -454,7 +478,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     public override void OnLeftRoom ()
     {
         // Debug.LogWarning ("OnLeftRoom");
-        textWarning.text = NAME_LEFT;
+        textWarning.text = NAME_LEFT + textRoomName.text;
         panelLobby.SetActive (true);
         panelRoom.SetActive (false);
     }
@@ -465,12 +489,20 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     // Called when a remote player entered the room.This Player is already added to the playerlist.
     public override void OnPlayerEnteredRoom (Player newPlayer)
     {
-        Debug.LogWarning ("OnPlayerEnteredRoom");
+        // Debug.LogWarning ("OnPlayerEnteredRoom");
+        textWarning.text = "殖民者 [" + newPlayer.NickName + "] 已登陆本行星。";
+
+        GameObject entry = Instantiate (PlayerListEntryPrefab, PlayerListContent);
+        entry.transform.localScale = Vector3.one;
+        playerListEntries.Add (newPlayer.NickName, entry);
     }
     // Called when a remote player left the room or became inactive.Check otherPlayer.IsInactive.
     public override void OnPlayerLeftRoom (Player otherPlayer)
     {
-        Debug.LogWarning ("OnPlayerLeftRoom");
+        // Debug.LogWarning ("OnPlayerLeftRoom");
+        textWarning.text = "殖民者 [" + otherPlayer.NickName + "] 已撤离本行星。";
+        Destroy (playerListEntries[otherPlayer.NickName].gameObject);
+        playerListEntries.Remove (otherPlayer.NickName);
     }
     // Called when a room 's custom properties changed. The propertiesThatChanged contains all that was set via Room.SetCustomProperties.
     public override void OnRoomPropertiesUpdate (Hashtable propertiesThatChanged)
@@ -485,7 +517,8 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     // Called after switching to a new MasterClient when the current one leaves.
     public override void OnMasterClientSwitched (Player newMasterClient)
     {
-        Debug.LogWarning ("OnMasterClientSwitched");
+        // Debug.LogWarning ("OnMasterClientSwitched");
+        textWarning.text = "殖民者 [" + newMasterClient.NickName + "] 已成为本行星元首。";
     }
     #endregion
 
@@ -592,6 +625,15 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
             default:
                 return "未知星系";
         }
+    }
+    private Player GetPlayerCustomPropetities (string code)
+    {
+        foreach (Player player in PhotonNetwork.PlayerList)
+        {
+            if (player.NickName == code)
+                return player;
+        }
+        return null;
     }
     #endregion
 }
