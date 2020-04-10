@@ -481,6 +481,12 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
         textWarning.text = NAME_LEFT + textRoomName.text;
         panelLobby.SetActive (true);
         panelRoom.SetActive (false);
+
+        foreach (GameObject entry in playerListEntries.Values)
+        {
+            Destroy (entry.gameObject);
+        }
+        playerListEntries.Clear ();
     }
 
     /// <summary>
