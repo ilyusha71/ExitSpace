@@ -61,9 +61,9 @@ byte wakakaKey[16] = "Wakaka Key"; // 最多可存入16個字元
 // #define PRINTER ;
 // #define BOX ;
 #endif
-#define STAGE 0                   // 所在關卡
-#define SLAVE_ADDRESS 49          // Slave 地址 0x00~0x7F (0~127)  87 與 104 已經被 DS3231 使用
-char DEVICE_NAME[] = "DL-1000-4W"; // 讀取器名字需定義，寫入器名稱為Badge名稱
+#define STAGE 0                    // 所在關卡
+#define SLAVE_ADDRESS 49           // Slave 地址 0x00~0x7F (0~127)  87 與 104 已經被 DS3231 使用
+char DEVICE_NAME[] = "2-A.6.2-C.3"; // 讀取器名字需定義，寫入器名稱為Badge名稱
 #ifdef WRITER_MODE
 #define NUM_RUBY 2
 #endif
@@ -131,7 +131,7 @@ bool rxHasData = false;
 uint8_t rxBuffer;
 String rxData = "";
 unsigned long feedbackTimer;
-int feedbackTime= 1000;
+int feedbackTime = 1000;
 
 // I2C & DS3231
 // #include <DS3231.h> // 包含 Wire.h
@@ -251,23 +251,131 @@ void setup()
     // Serial.println(F("]"));
   }
 
+  /****************************************************************************
+ * DEFINE READER UNLOCKE CONDITION
+ ****************************************************************************/
   for (int i = 0; i < NR_OF_READERS; i++)
   {
-    // 定義 Reader Mode
     if (i == 0) // Outer 外側
     {
       Serial.println(F(" * Outer Reader:"));
+      String outerCondition = getValue(DEVICE_NAME, '-', 1);
+
+      if (outerCondition.charAt(0) == 'C')
+      {
+        int countValue = getValue(outerCondition, '.', 1).toInt();
+        reader[i].Initialize(countValue);
+        outerCondition = outerCondition.charAt(0) + countValue;
+      }
+      else if (outerCondition.charAt(0) == 'U')
+      {
+        int unitValue = getValue(outerCondition, '.', 1).toInt();
+        reader[i].Initialize(rfid[unitValue]);
+        outerCondition = outerCondition.charAt(0) + unitValue;
+      }
+      else if (outerCondition.charAt(0) == 'A')
+      {
+        bool checkPassKeyCount = false;
+        int checPassKeyIndex = 1;
+        while (!checkPassKeyCount)
+        {
+          String n = getValue(outerCondition, '.', checPassKeyIndex);
+          if (n != "")
+          {
+            reader[i].AddPassKey(rfid[n.toInt()], checPassKeyIndex - 1);
+            checPassKeyIndex++;
+          }
+          else
+          {
+            checkPassKeyCount = true;
+          }
+        }
+        reader[i].Initialize(AND, checPassKeyIndex - 1);
+      }
+      else if (outerCondition.charAt(0) == 'R')
+      {
+        bool checkPassKeyCount = false;
+        int checPassKeyIndex = 1;
+        while (!checkPassKeyCount)
+        {
+          String n = getValue(outerCondition, '.', checPassKeyIndex);
+          if (n != "")
+          {
+            reader[i].AddPassKey(rfid[n.toInt()], checPassKeyIndex - 1);
+            checPassKeyIndex++;
+          }
+          else
+          {
+            checkPassKeyCount = true;
+          }
+        }
+        reader[i].Initialize(OR, checPassKeyIndex - 1);
+      }
+
       // reader[i].Initialize(Wakaka);
-      reader[i].Initialize(1); // 計數密鑰
+
       // reader[i].Initialize(rfid[3]); // 指定密鑰 Pass
       // RFID *keys[] = {&rfid[3], &rfid[4], &rfid[7]}; // 擇一/多重密鑰 Pass
       // reader[i].Initialize(AND, keys);
     }
     else if (i == 1) // Inner 內側
     {
+      String innerCondition = getValue(DEVICE_NAME, '-', 2);
       Serial.println(F(" * Inner Reader:"));
+
+      if (innerCondition.charAt(0) == 'C')
+      {
+        int countValue = getValue(innerCondition, '.', 1).toInt();
+        reader[i].Initialize(countValue);
+        innerCondition = innerCondition.charAt(0) + countValue;
+      }
+      else if (innerCondition.charAt(0) == 'U')
+      {
+        int unitValue = getValue(innerCondition, '.', 1).toInt();
+        reader[i].Initialize(rfid[unitValue]);
+        innerCondition = innerCondition.charAt(0) + unitValue;
+      }
+      else if (innerCondition.charAt(0) == 'A')
+      {
+        bool checkPassKeyCount = false;
+        int checPassKeyIndex = 1;
+        while (!checkPassKeyCount)
+        {
+          String n = getValue(innerCondition, '.', checPassKeyIndex);
+          if (n != "")
+          {
+            reader[i].AddPassKey(rfid[n.toInt()], checPassKeyIndex - 1);
+            checPassKeyIndex++;
+          }
+          else
+          {
+            checkPassKeyCount = true;
+          }
+        }
+        reader[i].Initialize(AND, checPassKeyIndex - 1);
+      }
+      else if (innerCondition.charAt(0) == 'R')
+      {
+        bool checkPassKeyCount = false;
+        int checPassKeyIndex = 1;
+        while (!checkPassKeyCount)
+        {
+          String n = getValue(innerCondition, '.', checPassKeyIndex);
+          if (n != "")
+          {
+            reader[i].AddPassKey(rfid[n.toInt()], checPassKeyIndex - 1);
+            checPassKeyIndex++;
+          }
+          else
+          {
+            checkPassKeyCount = true;
+          }
+        }
+        reader[i].Initialize(OR, checPassKeyIndex - 1);
+      }
+
       // reader[i].Initialize(Wakaka);
-      reader[i].Initialize(1); // 計數密鑰
+      // reader[i].Initialize(1); // 計數密鑰
       // reader[i].Initialize(rfid[4]); // 指定密鑰 Pass
       // RFID *keys[] = {&rfid[1],&rfid[8],&rfid[9]}; // 擇一/多重密鑰 Pass
       // reader[i].Initialize(AND, keys);
@@ -283,6 +391,9 @@ void setup()
   pinMode(RELAY_LOW, OUTPUT);
   digitalWrite(LED_BUZZER, LOW);
   digitalWrite(RELAY_LOW, LOW);
+
+  pinMode(4, OUTPUT);
+  digitalWrite(4, HIGH);
 
   Serial.println(F(" *"));
   Serial.println(F(" * 2020-03-16_Please scan MIFARE Classic card..."));
@@ -302,6 +413,7 @@ void setup()
   // Serial.print(second, DEC);
   // Serial.println(F(" ]"));
 }
+
 String msg;
 void (*resetFunc)(void) = 0; //declare reset function at address 0
 void loop()
@@ -326,7 +438,7 @@ void loop()
       {
         Serial.print(rxData);
         String rxCommand = getValue(rxData, '/', 1);
-        if (rxCommand == "Unlock")
+        if (rxCommand == "Unlocked")
           UnlockEML();
         // Don't feedback
       }
@@ -996,6 +1108,7 @@ void loop()
   }
 }
 
+// Split Function
 String getValue(String data, char separator, int index)
 {
   int found = 0;

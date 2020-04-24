@@ -20,6 +20,7 @@ byte year, month, date, DoW, hour, minute, second;
 unsigned long timer;
 void SetTime(byte year, byte month, byte date, byte DoW, byte hour, byte minute, byte second);
 String getValue(String data, char separator, int index);
+#define SIZE_OF_ARRAY(ary) sizeof(ary) / sizeof(*ary)
 
 void setup()
 {
@@ -31,51 +32,44 @@ void setup()
   Serial.println(F(" ****************************************************************************/"));
   // SetTime(20, 03, 26, 04, 10, 49, 00);
 }
-bool recive = false;
 
-uint8_t recBuffer;
-String mmm = "";
-
+uint8_t rxBuffer, txBuffer;
+String rxData = "", txData = "", txDataList[5];
 bool txHasData = false;
-uint8_t rxBuffer;
-String rxData = "", txData[5];
 int txIndex = 0;
 
+char msgSerial;
 void loop()
 {
   if (millis() > timer)
   {
     timer += 5000;
+
+    // 讀取 DS3231 的時間資料
     second = clock.getSecond();
     minute = clock.getMinute();
     hour = clock.getHour(h12, PM);
-    Serial.print(F("\nServer Time: ["));
-    if (hour < 10)
-      Serial.print(0);
-    Serial.print(hour, DEC);
-    Serial.print(':');
-    if (minute < 10)
-      Serial.print(0);
-    Serial.print(minute, DEC);
-    Serial.print(':');
-    if (second < 10)
-      Serial.print(0);
-    Serial.print(second, DEC);
-    Serial.println(F("]"));
-    // Serial.println((int)hour*3600+(int)minute*60+(int)second);
 
-    for (size_t i = 0; i < 5; i++)
+    Serial.print(F("Wakaka/Clock/"));
+    Serial.print(hour, DEC);
+    Serial.print(F(":"));
+    Serial.print(minute, DEC);
+    Serial.print(F(":"));
+    Serial.println(second, DEC);
+
+    // 訊息驗證 Callback
+    for (size_t i = 0; i < SIZE_OF_ARRAY(txDataList); i++)
     {
-      if (txData[i] != "" && txHasData)
+      if (txDataList[i] != "" && txHasData)
       {
-        Serial.print(F("Feedback: "));
-        Serial.println(txData[i]);
-        HC12.println(txData[i]);
-        txData[i] = "";
+        HC12.println(txDataList[i]);
+        txDataList[i] = "";
       }
     }
     txHasData = false;
     txIndex = 0;
+
+    // 發送至其他 Arduino
     HC12.print(F("S/"));
     HC12.print(hour, DEC);
     HC12.print(F(":"));
@@ -93,80 +87,38 @@ void loop()
     rxData += (char)rxBuffer;
     if (rxBuffer == 10) // LF character
     {
-      String rxHead = getValue(rxData, '/', 0);
-      String rxCommand = getValue(rxData, '/', 3);
-
-      if (rxCommand == "Unlock" && txIndex < 5)
-      {
-        Serial.println(txIndex);
-        txData[txIndex] = rxHead + "/" + rxCommand + "/"; // 最後一個斜線用與分離LF
-        txIndex++;
-        txHasData = true;
-      }
+      Serial.print(F("Wakaka/"));
       Serial.print(rxData);
       rxData = "";
     }
-
-    // Serial.write(HC12.read()); // Send the data to Serial monitor
-
-    // if (recBuffer == '\0' || recBuffer == 255)
-    //   break;
-    // mmm += (char)recBuffer;
-    // if (recBuffer == 10)
-
-    // {
-    //   recive = false;
-    //   Serial.print(mmm);
-    //   mmm = "";
-    //   Serial.print(F(" ===> "));
-    //   Serial.print(hour, DEC);
-    //   Serial.print(':');
-    //   Serial.print(minute, DEC);
-    //   Serial.print(':');
-    //   Serial.print(second, DEC);
-    //   Serial.println();
-    // }
   }
 
-  // bool sendding = false;
-  // while (Serial.available())
-  // {                            // If Serial monitor has data
-  //   HC12.write(Serial.read()); // Send that data to HC-12
-  //   sendding = true;
-  // }
-
-  // if (sendding)
-  // {
-  //   char str[8];
-  //   itoa(hour, str, 10);
-  //   for (size_t i = 0; i < 8; i++)
-  //   {
-  //     if (str[i] == 0)
-  //       break;
-  //     HC12.write(str[i]);
-  //   }
-  //   HC12.write(":");
-
-  //   itoa(minute, str, 10);
-  //   for (size_t i = 0; i < 8; i++)
-  //   {
-  //     if (str[i] == 0)
-  //       break;
-  //     HC12.write(str[i]);
-  //   }
-  //   HC12.write(":");
-
-  //   itoa(second, str, 10);
-  //   for (size_t i = 0; i < 8; i++)
-  //   {
-  //     if (str[i] == 0)
-  //       break;
-  //     HC12.write(str[i]);
-  //   }
-
-  //   HC12.write("\n");
-  // }
+  while (Serial.available())
+  { // If Serial monitor has data
+    txBuffer = Serial.read();
+    if (txBuffer == '\0' || txBuffer == 255)
+      break;
+    txData += (char)txBuffer;
+    if (txBuffer == 10) // LF character
+    {
+      txDataList[txIndex] = txData;
+      txIndex++;
+      txHasData = true;
+      txData = "";
+    }
+  }
 }
+
+// String rxHead = getValue(rxData, '/', 0);
+// String rxCommand = getValue(rxData, '/', 3);
+
+// if (rxCommand == "Unlock" && txIndex < 5)
+// {
+//   txData[txIndex] = rxHead + "/" + rxCommand + "/"; // 最後一個斜線用與分離LF
+//   txIndex++;
+//   txHasData = true;
+// }
+// 同步到Unity
 
 void SetTime(byte year, byte month, byte date, byte DoW, byte hour, byte minute, byte second)
 {

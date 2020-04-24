@@ -37,6 +37,12 @@ public:
         Show();
     }
 
+    // 2020/04/20 新方法
+    void AddPassKey(RFID &key, int index)
+    {
+        passKeys[index] = &key;
+    }
+
     // OR Mode AND Mode
     template <typename T, size_t N>
     void Initialize(PassMode mode, T (&keys)[N])
@@ -49,9 +55,10 @@ public:
         }
         Show();
     }
-    void Initialize(PassMode mode)
+    void Initialize(PassMode mode, int count)
     {
         this->mode = mode;
+        countKeys = count;
         Show();
     }
     void Show()
