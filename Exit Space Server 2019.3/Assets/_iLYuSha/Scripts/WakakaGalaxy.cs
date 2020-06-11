@@ -182,7 +182,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
         if (!inputCode.text.Equals (""))
         {
             PlayerPrefs.SetString ("InputCode", inputCode.text);
-            PhotonNetwork.LocalPlayer.NickName = "server"; //inputCode.text;
+            PhotonNetwork.LocalPlayer.NickName = inputCode.text;
             PhotonNetwork.NetworkingClient.ConnectToRegionMaster (region);
             panelLogin.SetActive (false);
             tipSearchRegionServer.SetActive (true);
@@ -297,13 +297,13 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     // Called to signal that the "low level connection" got established but before the client can call operation on the server.
     public override void OnConnected ()
     {
-        // Debug.LogWarning ("OnConnected");
+        Debug.LogWarning ("OnConnected");
         textWarning.text = NAME_CONNECTED + NAME_ONLINE;
     }
     // Called when the client is connected to the Master Server and ready for matchmaking and other tasks.
     public override void OnConnectedToMaster ()
     {
-        // Debug.LogWarning ("OnConnectedToMaster");
+        Debug.LogWarning ("OnConnectedToMaster");
         tipSearchRegionServer.SetActive (false);
         panelLobby.SetActive (true);
         windowCommand.SetActive (true);
@@ -326,7 +326,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     // Called when the Name Server provided a list of regions for your title. 
     public override void OnRegionListReceived (RegionHandler regionHandler)
     {
-        // Debug.LogWarning ("OnRegionListReceived");
+        Debug.LogWarning ("OnRegionListReceived");
         tipSearchRegionServer.SetActive (false);
         textWarning.text = "已收到区域" + NAME_SERVER + "列表";
         if (PhotonNetwork.NetworkingClient.NameServerHost == "ns.exitgames.com")

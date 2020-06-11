@@ -38,9 +38,9 @@
 // String DEVICE_NAME = "1-N.2-X";
 // String DEVICE_NAME = "3-R.1.2.3.4.5.6.7.8.9.10-A.1.2.3.4.5.6.7.8.9.10";
 // String DEVICE_NAME = "2-B.8-X";
-String DEVICE_NAME = "2-C.6-X";
+String DEVICE_NAME = "1-P.0-X";
 int callbackTime = 100;
-#define MODE 100
+#define MODE 50
 #if MODE == ENTRY_MODE
 String presents = "";
 boolean isPresent[11];
@@ -50,13 +50,13 @@ boolean isPresent[11];
  * DEFINE ENTRY or WRITER
  ****************************************************************************/
 #define NR_OF_READERS 1
-#define SS_PIN 10
+#define SS_PIN 8
 #elif MODE == PRINTER_MODE
 /****************************************************************************
  * DEFINE PRINTER
  ****************************************************************************/
 #define NR_OF_READERS 1
-#define SS_PIN 10
+#define SS_PIN 8
 #include "Adafruit_Thermal.h"
 #include "Badge.h"
 // Here's the new syntax when using SoftwareSerial (e.g. Arduino Uno) ----
@@ -73,8 +73,8 @@ Adafruit_Thermal printer(&mySerial);     // Pass addr to printer constructor
  * DEFINE READER
  ****************************************************************************/
 #define NR_OF_READERS 2
-#define SS_PIN_A 8 // Slave Select Pin A
-#define SS_PIN_B 10  // Slave Select Pin B
+#define SS_PIN_A 8  // Slave Select Pin A
+#define SS_PIN_B 10 // Slave Select Pin B
 byte ssPins[] = {SS_PIN_A, SS_PIN_B};
 #if MODE == BOX_MODE
 /****************************************************************************
@@ -858,7 +858,9 @@ void loop()
         {
           mfrc522[readerIndex].PICC_HaltA();
           Serial.println(F("==> Hello Wakaka Agent!"));
+#if MODE == READER_MODE
           UnlockForce();
+#endif
           mfrc522[readerIndex].PCD_StopCrypto1();
           digitalWrite(RST_PIN, LOW);
           return;

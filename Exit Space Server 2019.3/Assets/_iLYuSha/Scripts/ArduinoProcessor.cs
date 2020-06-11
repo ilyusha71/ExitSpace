@@ -58,9 +58,9 @@ public class ArduinoProcessor : MonoBehaviour
     {
         if (Input.GetKeyDown (KeyCode.F9))
             groundPanel.SetActive (!groundPanel.activeSelf);
-        if (Input.GetKeyDown (KeyCode.K))
+        if (Input.GetKeyDown (KeyCode.LeftBracket))
             Check ();
-        if (Input.GetKeyDown (KeyCode.L))
+        if (Input.GetKeyDown (KeyCode.RightBracket))
             Unlock ();
         countCommands = ArduinoController.queueCommand.Count;
         for (int i = 0; i < countCommands; i++)
