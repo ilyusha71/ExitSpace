@@ -519,6 +519,102 @@ void AccessForbidden()
   // digitalWrite(LED_BUZZER, LOW);
   needInit = true;
 }
+/****************************************************************************
+ * Printer
+ ****************************************************************************/
+void Print();
+void Print()
+{
+  // NOTE: SOME PRINTERS NEED 9600 BAUD instead of 19200, check test page.
+  mySerial.begin(9600); // Initialize SoftwareSerial
+  printer.begin();      // Init printer (same regardless of serial type)
+  Serial.println(F("Printer START..."));
+  bool hasKey[NR_OF_RUBY];
+  for (size_t i = 1; i < NR_OF_RUBY; i++)
+  {
+    hasKey[i] = GetCardRubyData(i);
+  }
+  mfrc522[readerIndex].PICC_HaltA();
+  int countBadge = 0;
+  String keys;
+  printer.setDefault(); // Restore printer to defaults
+  for (size_t i = 0; i < 16; i++)
+  {
+    if (bufferAgentID[i] == 0)
+      break;
+    printer.write(bufferAgentID[i]);
+  }
+  printer.println();
+  for (size_t i = 1; i < NR_OF_RUBY; i++)
+  {
+    if (hasKey[i])
+    {
+      keys += String(i) + ".";
+      countBadge++;
+      switch (i)
+      {
+      case 1:
+        // printer.printBitmap(Badge_width, Badge_height, Arthur);
+        printer.print(F("A "));
+        break;
+      case 2:
+        // printer.printBitmap(Badge_width, Badge_height, Merlin);
+        printer.print(F("M "));
+        break;
+      case 3:
+        // printer.printBitmap(Badge_width, Badge_height, Lancelot);
+        printer.print(F("L "));
+        break;
+      case 4:
+        // printer.printBitmap(Badge_width, Badge_height, Galahad);
+        printer.print(F("GA "));
+        break;
+      case 5:
+        // printer.printBitmap(Badge_width, Badge_height, Percival);
+        printer.print(F("P "));
+        break;
+      case 6:
+        // printer.printBitmap(Badge_width, Badge_height, Borse);
+        printer.print(F("B "));
+        break;
+      case 7:
+        // printer.printBitmap(Badge_width, Badge_height, Guinevere);
+        printer.print(F("GU "));
+        break;
+      case 8:
+        // printer.printBitmap(Badge_width, Badge_height, Excalibur);
+        printer.print(F("E "));
+        break;
+      case 9:
+        // printer.printBitmap(Badge_width, Badge_height, SwordStone);
+        printer.print(F("S "));
+        break;
+      case 10:
+        // printer.printBitmap(Badge_width, Badge_height, Viviane);
+        printer.print(F("V "));
+        break;
+      default:
+        break;
+      }
+      if (countBadge == 5)
+        printer.println();
+    }
+  }
+  if (countBadge != 0)
+  {
+    Serial.print(F("Printer END ===> "));
+    Serial.println(keys);
+    SendBadges(keys);
+    printer.feed(5);
+    printer.sleep();      // Tell printer to sleep
+    delay(500);           // Sleep for 3 seconds
+    printer.wake();       // MUST wake() before printing again, even if reset
+    printer.setDefault(); // Restore printer to defaults
+    delay(1000);
+  }
+  mfrc522[readerIndex].PCD_StopCrypto1();
+  digitalWrite(RST_PIN, LOW);
+}
 
 void setup()
 {
@@ -945,104 +1041,7 @@ void loop()
         return;
       }
 #elif MODE == PRINTER_MODE
-      // NOTE: SOME PRINTERS NEED 9600 BAUD instead of 19200, check test page.
-      mySerial.begin(9600); // Initialize SoftwareSerial
-      //Serial1.begin(19200); // Use this instead if using hardware serial
-      printer.begin(); // Init printer (same regardless of serial type)
-      Serial.println(F("Printer START..."));
-      bool hasKey[NR_OF_RUBY];
-      for (size_t i = 1; i < NR_OF_RUBY; i++)
-      {
-        hasKey[i] = GetCardRubyData(i);
-      }
-      mfrc522[readerIndex].PICC_HaltA();
-      int countBadge = 0;
-      String keys;
-      printer.setDefault(); // Restore printer to defaults
-      for (size_t i = 0; i < 16; i++)
-      {
-        if (bufferAgentID[i] == 0)
-          break;
-        printer.write(bufferAgentID[i]);
-      }
-      printer.println();
-      for (size_t i = 1; i < NR_OF_RUBY; i++)
-      {
-        if (hasKey[i])
-        {
-          keys += String(i) + ".";
-          countBadge++;
-          switch (i)
-          {
-          case 1:
-            // printer.printBitmap(Badge_width, Badge_height, Arthur);
-            printer.print(F("A "));
-            break;
-          case 2:
-            // printer.printBitmap(Badge_width, Badge_height, Merlin);
-            printer.print(F("M "));
-            break;
-          case 3:
-            // printer.printBitmap(Badge_width, Badge_height, Lancelot);
-            printer.print(F("L "));
-            break;
-          case 4:
-            // printer.printBitmap(Badge_width, Badge_height, Galahad);
-            printer.print(F("GA "));
-            break;
-          case 5:
-            // printer.printBitmap(Badge_width, Badge_height, Percival);
-            printer.print(F("P "));
-            break;
-          case 6:
-            // printer.printBitmap(Badge_width, Badge_height, Borse);
-            if (countBadge > 5)
-              printer.println();
-            printer.print(F("B "));
-            break;
-          case 7:
-            // printer.printBitmap(Badge_width, Badge_height, Guinevere);
-            if (countBadge > 5)
-              printer.println();
-            printer.print(F("GU "));
-            break;
-          case 8:
-            // printer.printBitmap(Badge_width, Badge_height, Excalibur);
-            if (countBadge > 5)
-              printer.println();
-            printer.print(F("E "));
-            break;
-          case 9:
-            // printer.printBitmap(Badge_width, Badge_height, SwordStone);
-            if (countBadge > 5)
-              printer.println();
-            printer.print(F("S "));
-            break;
-          case 10:
-            // printer.printBitmap(Badge_width, Badge_height, Viviane);
-            if (countBadge > 5)
-              printer.println();
-            printer.print(F("V "));
-            break;
-          default:
-            break;
-          }
-        }
-      }
-      if (countBadge != 0)
-      {
-        Serial.print(F("Printer END ===> "));
-        Serial.println(keys);
-        SendBadges(keys);
-        printer.feed(10);
-        printer.sleep();      // Tell printer to sleep
-        delay(500);           // Sleep for 3 seconds
-        printer.wake();       // MUST wake() before printing again, even if reset
-        printer.setDefault(); // Restore printer to defaults
-        delay(1000);
-      }
-      mfrc522[readerIndex].PCD_StopCrypto1();
-      digitalWrite(RST_PIN, LOW);
+      Print();
       return;
 #elif MODE >= READER_MODE
       // 讀取器
