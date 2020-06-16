@@ -41,8 +41,7 @@
         "V3-W-C7", // Room 17
         "V3-W-C7U6", // Room 17
         "H4-W-C3", // Room 17
-        "V4-C8-X", // Room 17
-        "H5-X-C2", // Room 17
+        "V4-C8-C2", // Room 17
         "V6-W-A189", // Room 18
         "H8-W-U8", // Room 18
         "V8-W-U6", // Room 18   
@@ -91,6 +90,55 @@
         "4B3-A347-T3", // Lancelot
         "4B1-A456-T4", // Galahad
         "4B2-A456-T4", // Galahad
+    };
+    public static readonly string[] LOCK = new string[]
+    {
+        "1-U1-X",
+        "2-C2-W",
+        "2-C4-W",
+        "2-C6-X",
+        "2-U3-U2",
+        "2-U7-U5",
+        "2-U7-U3",
+        "3-E6-E4",
+        "3-U1-X",
+        "H1-W-C1", // Room 15
+        "H1-W-U8", // Room 15
+        "V1-A910-W", // Room 15
+        "V1-W-C1", // Room 16
+        "H3-W-U7", // Room 16
+        "V3-W-U7", // Room 16
+        "V3-W-C7", // Room 17
+        "V3-W-C7U6", // Room 17
+        "H4-W-C3", // Room 17
+        "V4-C8-C2", // Room 17
+        "V6-W-A189", // Room 18
+        "H8-W-U8", // Room 18
+        "V8-W-U6", // Room 18   
+        "H8-W-C1", // Room 19
+        "V8-W-W", // Room 19
+        "V1-A89-C1",
+        "H2-U10-U3",
+        "H2-R610-U5",
+        "V2-U4-U5",
+        "V2-U3-A67",
+        "V2-C3-A345",
+        "H3-U4-A57",
+        "H3-A78-C2",
+        "V3-R457-C2",
+        "V3-C4-U8",
+        "H4-U9-A45",
+        "H4-C2-U3",
+        "V4-C2-C1",
+        "V4-U10-C3",
+        "H5-C2-C1",
+        "V5-U6-C4",
+        "V5-U3-C8",
+        "H6-U7-U6",
+        "V6-U5-U7",
+        "V7-U4-C3",
+        "V8-U3-C4",
+        "H9-U3-C1",
     };
     public static readonly string[] PRINTER = new string[]
     {
@@ -279,6 +327,16 @@
         for (int i = 0; i < CHALLENGE_BOX.Length; i++)
         {
             if (device == CHALLENGE_BOX[i])
+                return true;
+        }
+        return false;
+    }
+
+    public static bool IsLOCK (string device)
+    {
+        for (int i = 0; i < LOCK.Length; i++)
+        {
+            if (device == LOCK[i])
                 return true;
         }
         return false;

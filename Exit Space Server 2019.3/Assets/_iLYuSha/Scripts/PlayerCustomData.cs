@@ -9,7 +9,7 @@
     public static readonly string STAGE_4_TIME = "STAGE_4_TIME";
     public static readonly string FINISH_TIME = "FINISH_TIME";
     public static readonly string LAST_TIME = "LAST_TIME";
-    public static readonly string LAST_POS = "LAST_POS";
+    public static readonly string LAST_SITE = "LAST_SITE";
     public static readonly string CHALLENGE = "CHALLENGE";
     public static readonly string TITLE = "TITLE";
     public static readonly int STAGE_1_LIMIT = 360;
@@ -18,7 +18,7 @@
     public static readonly int STAGE_4_LIMIT = 1500;
     public static readonly int TRAP_LIMIT = 180;
     public static readonly int MAZE_LIMIT = 50;
-    public static readonly int TRAP_18_LIMIT = 360;
+    public static readonly int TRAP_18_LIMIT = 300;
     public static readonly string[] BADGE = new string[10]
     {
         "BADGE_1",

@@ -76,6 +76,9 @@ public class ArduinoProcessor : MonoBehaviour
             nowTime = commands[1];
             textNowTime.text = nowTime;
             ShowPlayerData (nowChosenPlayer);
+            if (!PhotonNetwork.IsMasterClient)
+                PhotonNetwork.SetMasterClient (PhotonNetwork.LocalPlayer);
+            PhotonNetwork.LocalPlayer.SetCustomProperties (new Hashtable { { PlayerCustomData.LAST_TIME, nowTime } });
         }
         else if (commands.Length > 1)
         {
@@ -83,14 +86,6 @@ public class ArduinoProcessor : MonoBehaviour
             {
                 if (dicAdnBtns.ContainsKey (commands[2]))
                     dicAdnBtns[commands[2]].GetComponentsInChildren<Image> () [0].color = checkColor;
-
-                // for (int i = 0; i < btnADNs.Length; i++)
-                // {
-                //     Image img = btnADNs[i].GetComponentsInChildren<Image> () [1];
-                //     img.enabled = false;
-                //     if (btnADNs[i].name == commands[2])
-                //         img.enabled = true;
-                // }
             }
             else if (commands.Length > 4)
             {
@@ -99,36 +94,65 @@ public class ArduinoProcessor : MonoBehaviour
                 // 確認關卡
                 // 確認時間
 
+                string nowSite = commands[1] + ":" + commands[2];
                 Hashtable props = new Hashtable ();
-                string pos = commands[1] + ":" + commands[2];
-                if (commands[4] == "Unlock")
+                props.Add (PlayerCustomData.LAST_TIME, nowTime);
+                props.Add (PlayerCustomData.LAST_SITE, nowSite);
+
+                /*********************************************************************
+                 * Z/2-U9-C7/0/KGB-952/Reset/1.2.3.4./
+                 * commands[1] = 2-U9-C7
+                 * commands[2] = 0
+                 * commands[3] = KGB-952
+                 * commands[4] = Reset
+                 * commands[5] = Badge#
+                 **********************************************************************/
+                if (commands[4] == "Reset")
+                {
+                    props.Add (PlayerCustomData.STAGE_1_TIME, nowTime);
+                    int countBadge = commands[5].Split ('.').Length;
+                    for (int i = 0; i < countBadge - 1; i++)
+                    {
+                        props.Add (PlayerCustomData.BADGE[int.Parse (commands[5].Split ('.') [i]) - 1], true);
+                    }
+                }
+                /*********************************************************************
+                 * Z/2-U9-C7/0/KGB-952/Badge/1.2.3.4./
+                 * commands[1] = 2-U9-C7
+                 * commands[2] = 0
+                 * commands[3] = KGB-952
+                 * commands[4] = Badge
+                 * commands[5] = Badge#
+                 **********************************************************************/
+                else if (commands[4] == "Badge")
+                {
+                    int countBadge = commands[5].Split ('.').Length;
+                    for (int i = 0; i < countBadge - 1; i++)
+                    {
+                        props.Add (PlayerCustomData.BADGE[int.Parse (commands[5].Split ('.') [i]) - 1], true);
+                    }
+                }
+                /*********************************************************************
+                 * Z/2-U9-C7/0/KGB-952/Unlock/
+                 * commands[1] = 2-U9-C7
+                 * commands[2] = 0
+                 * commands[3] = KGB-952
+                 * commands[4] = Unlock
+                 **********************************************************************/
+                else if (commands[4] == "Unlock")
                 {
                     if (ExitSpaceData.IsMerlinCabinet (commands[1]))
-                    {
-                    props = new Hashtable
-                    { { PlayerCustomData.LAST_TIME, nowTime }, { PlayerCustomData.LAST_POS, pos }
-                        };
                         ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked_1_U1_X/");
-                    }
                     else if (ExitSpaceData.IsDoor (commands[1]))
-                    {
-                        props = new Hashtable
-                        { { PlayerCustomData.LAST_TIME, nowTime }, { PlayerCustomData.LAST_POS, pos }
-                        };
                         ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/IsDoor/");
-                    }
                     else if (ExitSpaceData.IsStage2Entry (commands[1]))
                     {
-                        props = new Hashtable
-                        { { PlayerCustomData.STAGE_2_TIME, nowTime }, { PlayerCustomData.LAST_TIME, nowTime }, { PlayerCustomData.LAST_POS, pos }
-                        };
+                        props.Add (PlayerCustomData.STAGE_2_TIME, nowTime);
                         ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/IsStage2Entry/");
                     }
                     else if (ExitSpaceData.IsStage3Entry (commands[1]))
                     {
-                        props = new Hashtable
-                        { { PlayerCustomData.STAGE_3_TIME, nowTime }, { PlayerCustomData.MAZE_TIME, "Pause" }, { PlayerCustomData.TRAP_TIME, "Pause" }, { PlayerCustomData.LAST_TIME, nowTime }, { PlayerCustomData.LAST_POS, pos }
-                        };
+                        props.Add (PlayerCustomData.STAGE_3_TIME, nowTime);
                         if (commands[1] == "3-E6-E4")
                             ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked_3_E6_E4/" + commands[2] + "/");
                         else if (commands[1] == "3-U1-X")
@@ -136,83 +160,59 @@ public class ArduinoProcessor : MonoBehaviour
                     }
                     else if (ExitSpaceData.IsUnlockTrapDoor (commands[1]))
                     {
-                        props = new Hashtable
-                        { { PlayerCustomData.MAZE_TIME, "Pause" }, { PlayerCustomData.TRAP_TIME, nowTime }, { PlayerCustomData.LAST_TIME, nowTime }, { PlayerCustomData.LAST_POS, pos }
-                        };
+                        props.Add (PlayerCustomData.MAZE_TIME, "Pause");
+                        props.Add (PlayerCustomData.TRAP_TIME, nowTime);
                         ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/IsUnlockTrapDoor/");
                     }
                     else if (ExitSpaceData.IsUnlockMazeDoor (commands[1]))
                     {
-                        props = new Hashtable
-                        { { PlayerCustomData.MAZE_TIME, nowTime }, { PlayerCustomData.TRAP_TIME, "Pause" }, { PlayerCustomData.LAST_TIME, nowTime }, { PlayerCustomData.LAST_POS, pos }
-                        };
+                        props.Add (PlayerCustomData.MAZE_TIME, nowTime);
+                        props.Add (PlayerCustomData.TRAP_TIME, "Pause");
                         ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/IsUnlockMazeDoor/");
                     }
                     else if (ExitSpaceData.IsStage4Entry (commands[1]))
                     {
-                        props = new Hashtable
-                        { { PlayerCustomData.STAGE_4_TIME, nowTime }, { PlayerCustomData.MAZE_TIME, "Pause" }, { PlayerCustomData.TRAP_TIME, "Pause" }, { PlayerCustomData.LAST_TIME, nowTime }, { PlayerCustomData.LAST_POS, pos }
-                        };
+                        props.Add (PlayerCustomData.STAGE_4_TIME, nowTime);
+                        props.Add (PlayerCustomData.MAZE_TIME, "Pause");
+                        props.Add (PlayerCustomData.TRAP_TIME, "Pause");
                         ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/IsStage4Entry/");
                     }
                     else if (ExitSpaceData.IsChallengeBox (commands[1]))
                     {
                         string title = ExitSpaceData.GetTitle (commands[1].Split ('-') [2]);
-                        props = new Hashtable
-                        { { PlayerCustomData.LAST_TIME, nowTime }, { PlayerCustomData.LAST_POS, pos }, { PlayerCustomData.CHALLENGE, title }
-                        };
+                        props.Add (PlayerCustomData.CHALLENGE, title);
                         ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/IsBox/");
                     }
                     else
+                    {
+                        Debug.LogWarning ("Site: " + commands[1]);
                         ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/");
+                    }
                 }
+                /*********************************************************************
+                 * Z/4B1-A345-T1/0/KGB-952/Confer/
+                 * commands[1] = 4B1-A345-T1
+                 * commands[2] = 0
+                 * commands[3] = KGB-952
+                 * commands[4] = Confer
+                 **********************************************************************/
                 else if (commands[4] == "Confer")
                 {
                     string title = ExitSpaceData.GetTitle (commands[1].Split ('-') [2]);
-                    props = new Hashtable
-                    { { PlayerCustomData.FINISH_TIME, nowTime }, { PlayerCustomData.TITLE, title },
-                    };
+                    props.Add (PlayerCustomData.TITLE, title);
+                    props.Add (PlayerCustomData.FINISH_TIME, nowTime);
                     ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Conferred/");
-                }
-                else if (commands[4] == "Badge")
-                {
-                    props = new Hashtable
-                    { { PlayerCustomData.LAST_TIME, nowTime }, { PlayerCustomData.LAST_POS, pos }
-                    };
-                    int countBadge = commands[5].Split ('.').Length;
-                    for (int i = 0; i < countBadge - 1; i++)
-                    {
-                        props.Add (PlayerCustomData.BADGE[int.Parse (commands[5].Split ('.') [i]) - 1], true);
-                    }
-                    // ArduinoController.ArduinoConnector.WriteLine ("Z/"+commands[1] + "/Reset/");
-                }
-                else if (commands[4] == "Reset")
-                {
-                    props = new Hashtable
-                    { { PlayerCustomData.STAGE_1_TIME, nowTime }, { PlayerCustomData.LAST_TIME, nowTime }, { PlayerCustomData.LAST_POS, pos }
-                    };
-                    int countBadge = commands[5].Split ('.').Length;
-                    for (int i = 0; i < countBadge - 1; i++)
-                    {
-                        props.Add (PlayerCustomData.BADGE[int.Parse (commands[5].Split ('.') [i]) - 1], true);
-                    }
-                }
-                else if (ExitSpaceData.IsChallengeBox (commands[1]))
-                {
-                    props = new Hashtable
-                    { { PlayerCustomData.FINISH_TIME, nowTime }, { PlayerCustomData.MAZE_TIME, "Pause" }, { PlayerCustomData.TRAP_TIME, "Pause" }, { PlayerCustomData.LAST_TIME, nowTime }, { PlayerCustomData.LAST_POS, pos }
-                    };
                 }
                 // 地圖標記
                 foreach (Player player in PhotonNetwork.PlayerList)
                 {
                     if (player.NickName == commands[3])
                     {
-                        object dddd;
-                        if (props.TryGetValue (PlayerCustomData.LAST_TIME, out dddd))
-                        {
-                            Debug.Log (dddd);
-                        }
+                        // object dddd;
+                        // if (props.TryGetValue (PlayerCustomData.LAST_TIME, out dddd))
+                        // {
+                        //     Debug.Log (dddd);
+                        // }
                         player.SetCustomProperties (props);
                     }
                 }
@@ -232,7 +232,7 @@ public class ArduinoProcessor : MonoBehaviour
                 object customData;
                 if (player.CustomProperties.TryGetValue (PlayerCustomData.LAST_TIME, out customData))
                     textLastTime.text = (string) customData;
-                if (player.CustomProperties.TryGetValue (PlayerCustomData.LAST_POS, out customData))
+                if (player.CustomProperties.TryGetValue (PlayerCustomData.LAST_SITE, out customData))
                     textLastPos.text = (string) customData;
                 string lastPos = (string) customData;
                 if (player.CustomProperties.TryGetValue (PlayerCustomData.STAGE_1_TIME, out customData))

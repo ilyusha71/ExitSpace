@@ -526,8 +526,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     // Called when custom player - properties are changed.Player and the changed properties are passed as object[].
     public override void OnPlayerPropertiesUpdate (Player targetPlayer, Hashtable changedProps)
     {
-        Debug.LogWarning ("OnPlayerPropertiesUpdate");
-        FindObjectOfType<ArduinoProcessor> ().ShowPlayerData (targetPlayer.NickName);
+        // Debug.LogWarning ("OnPlayerPropertiesUpdate");
     }
     // Called after switching to a new MasterClient when the current one leaves.
     public override void OnMasterClientSwitched (Player newMasterClient)

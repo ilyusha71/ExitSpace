@@ -35,12 +35,12 @@
 /****************************************************************************
  * 燒錄設定
  ****************************************************************************/
-// String DEVICE_NAME = "1-N.2-X";
+String DEVICE_NAME = "1-N.2-X";
 // String DEVICE_NAME = "3-R.1.2.3.4.5.6.7.8.9.10-A.1.2.3.4.5.6.7.8.9.10";
 // String DEVICE_NAME = "2-B.8-X";
-String DEVICE_NAME = "1-P.0-X";
+// String DEVICE_NAME = "2-C.2-W";
 int callbackTime = 100;
-#define MODE 50
+#define MODE 1
 #if MODE == ENTRY_MODE
 String presents = "";
 boolean isPresent[11];
@@ -323,9 +323,11 @@ void ConferNewTitle() // 一長三短
 /****************************************************************************
  * Ruby Data Processor
  ****************************************************************************/
+void Fail();
+void AccessForbidden();
 #if MODE == ENTRY_MODE
-void ResetNewAgent();
-void ResetNewAgent()
+bool ResetNewAgent();
+bool ResetNewAgent()
 {
   byte data[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
   for (size_t _sector = 1; _sector < 16; _sector++)
@@ -340,7 +342,7 @@ void ResetNewAgent()
       if (status != MFRC522::STATUS_OK)
       {
         Fail();
-        return;
+        return false;
       }
 
       int index = (15 - _sector) * 3 + _block + 1;
@@ -354,7 +356,7 @@ void ResetNewAgent()
           if (status != MFRC522::STATUS_OK)
           {
             Fail();
-            return;
+            return false;
           }
           continue;
         }
@@ -363,12 +365,12 @@ void ResetNewAgent()
       if (status != MFRC522::STATUS_OK)
       {
         Fail();
-        return;
+        return false;
       }
     }
   }
   Serial.println(F("CLEAR"));
-  delay(300);
+  return true;
 }
 #endif
 bool SetCardData(byte data[], byte _block[]);
@@ -376,8 +378,6 @@ bool GetCardData(byte data[], byte _block[]);
 bool GetCardRubyData(int index);
 bool SetCardRubyData(int index);
 int GetAllCardRubyData();
-void Fail();
-void AccessForbidden();
 bool SetCardData(byte data[], byte _block[])
 {
   byte blockNum = _block[0] * 4 + _block[1]; // 計算區塊的實際編號（0~63）
@@ -522,6 +522,7 @@ void AccessForbidden()
 /****************************************************************************
  * Printer
  ****************************************************************************/
+#if MODE == PRINTER_MODE
 void Print();
 void Print()
 {
@@ -615,6 +616,7 @@ void Print()
   mfrc522[readerIndex].PCD_StopCrypto1();
   digitalWrite(RST_PIN, LOW);
 }
+#endif
 
 void setup()
 {
@@ -928,13 +930,13 @@ void loop()
         return;
       }
 #endif
-      // // // 特工ID 寫入
-      // byte agentID[16] = "Wakaka Key";
-      // if (!SetCardData(agentID, blockID))
-      // {
-      //   Fail();
-      //   return;
-      // }
+      // // 特工ID 寫入
+      byte agentID[16] = "KOC-707";
+      if (!SetCardData(agentID, blockID))
+      {
+        Fail();
+        return;
+      }
       // // 如果是記錄點，寫入時間
       // byte time[16] = {hour, minute, second};
       // if (!SetCardData(time, blockTime))
@@ -996,9 +998,10 @@ void loop()
         Serial.println(F("]"));
       }
 #if MODE == ENTRY_MODE
-      ResetNewAgent();
-      SendResetEvent(presents);
+      if (ResetNewAgent())
+        SendResetEvent(presents);
       mfrc522[readerIndex].PICC_HaltA();
+      delay(300);
       mfrc522[readerIndex].PCD_StopCrypto1();
       digitalWrite(RST_PIN, LOW);
 #elif MODE == WRITER_MODE || MODE == VIVIANE_MODE

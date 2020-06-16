@@ -31,13 +31,72 @@ public class WakakaFriends : MonoBehaviourPunCallbacks
     public TextMeshProUGUI textAgentCode, textServerCode;
     #endregion
 
-    public TextMeshProUGUI textData;
+    [Header ("Language")]
+    public Toggle[] btnLang;
+    public TextMeshProUGUI[] textCountdown, textFate, textChance, textBadge;
+    public TextMeshProUGUI[] textLogin, textTimeout, textGet, textOpen, textTrial, textTitle;
+    private int chooseLang;
+    public TextMeshProUGUI textVersion;
+
+    [Header ("Sound")]
+    public AudioClip sfxStart;
+    public AudioClip sfxDingDong;
+    private AudioSource audioSource;
+    [Header ("Data")]
+    public Image[] checkBadge;
+    public TextMeshProUGUI textCountdownMin, textCountdownSec, textFateSec, textChanceMin, textChanceSec;
+    public int SERVER_TIME, STAGE_1_TIME, STAGE_2_TIME, STAGE_3_TIME, STAGE_4_TIME;
+
+    [Header ("Window")]
+    public GameObject windowLogin, windowTimeout, windowGet, windowOpen, windowTrial, windowTitle;
+    public float timer;
 
     void Awake ()
     {
+        textVersion.text = "v" + Application.version;
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+        audioSource = GetComponent<AudioSource> ();
+
         textAgentCode.text = "";
         textServerCode.text = "";
         inputCode.text = PlayerPrefs.GetString ("AgentCode");
+
+        textCountdownMin.text = "-";
+        textCountdownSec.text = "-";
+        textFateSec.text = "-";
+        textChanceMin.text = "-";
+        textChanceSec.text = "-";
+        for (int i = 0; i < checkBadge.Length; i++)
+        {
+            checkBadge[i].enabled = false;
+        }
+
+        for (int i = 0; i < btnLang.Length; i++)
+        {
+            int index = i;
+            btnLang[index].onValueChanged.AddListener ((isOn) =>
+            {
+                if (isOn)
+                {
+                    audioSource.PlayOneShot (sfxDingDong);
+                    chooseLang = index;
+                }
+                textCountdown[index].enabled = isOn;
+                textFate[index].enabled = isOn;
+                textChance[index].enabled = isOn;
+                textBadge[index].enabled = isOn;
+                textLogin[index].enabled = isOn;
+                textTimeout[index].enabled = isOn;
+                textGet[index].enabled = isOn;
+                textOpen[index].enabled = isOn;
+                textTrial[index].enabled = isOn;
+                textTitle[index].enabled = isOn;
+            });
+        }
+    }
+    public void UpdateAPK ()
+    {
+        Application.OpenURL ("https://github.com/ilyusha71/ExitSpace/blob/master/Exit2019.apk/");
     }
 
     #region UI EVENTS
@@ -107,21 +166,108 @@ public class WakakaFriends : MonoBehaviourPunCallbacks
     }
     public override void OnPlayerPropertiesUpdate (Player targetPlayer, Hashtable changedProps)
     {
-        Debug.LogWarning ("OnPlayerPropertiesUpdate");
-        // if (targetPlayer == PhotonNetwork.LocalPlayer)
-        // {
-        //     object timeInfo;
-        //     object posInfo;
-        //     if (changedProps.TryGetValue (PlayerCustomData.LAST_TIME, out timeInfo))
-        //     {
-        //         if (changedProps.TryGetValue (PlayerCustomData.LAST_POS, out posInfo))
-        //         {
-        //             textData.text = timeInfo.ToString () + " / " + posInfo.ToString ();
-        //         }
+        if (targetPlayer == PhotonNetwork.MasterClient)
+        {
+            // Debug.LogWarning ("On MasterClient Properties Update");
+            object data;
+            if (changedProps.TryGetValue (PlayerCustomData.LAST_TIME, out data))
+            {
+                SERVER_TIME =
+                    int.Parse (data.ToString ().Split (':') [0]) * 3600 +
+                    int.Parse (data.ToString ().Split (':') [1]) * 60 +
+                    int.Parse (data.ToString ().Split (':') [2]);
 
-        //     }
+                if (Time.time > timer)
+                {
+                    windowGet.SetActive (false);
+                    windowOpen.SetActive (false);
+                    windowTrial.SetActive (false);
+                }
 
-        // }
+                int countdown = 0;
+                if (STAGE_1_TIME != 0)
+                {
+                    if (STAGE_2_TIME != 0)
+                    {
+                        if (STAGE_3_TIME != 0)
+                        {
+                            if (STAGE_4_TIME != 0) countdown = Mathf.Max (0, STAGE_1_TIME + PlayerCustomData.STAGE_4_LIMIT - SERVER_TIME);
+                            else
+                                countdown = Mathf.Max (0, STAGE_1_TIME + PlayerCustomData.STAGE_3_LIMIT - SERVER_TIME);
+                        }
+                        else
+                            countdown = Mathf.Max (0, STAGE_1_TIME + PlayerCustomData.STAGE_2_LIMIT - SERVER_TIME);
+                    }
+                    else
+                        countdown = Mathf.Max (0, STAGE_1_TIME + PlayerCustomData.STAGE_1_LIMIT - SERVER_TIME);
+                    int min = Mathf.FloorToInt ((float) countdown / 60.0f);
+                    int sec = countdown % 60;
+                    textCountdownMin.text = string.Format ("{0:d2}", min);
+                    textCountdownSec.text = string.Format ("{0:d2}", sec);
+                }
+            }
+        }
+        else if (targetPlayer == PhotonNetwork.LocalPlayer)
+        {
+            // Debug.LogWarning ("On LocalPlayer Properties Update");
+            object data;
+            if (changedProps.TryGetValue (PlayerCustomData.LAST_SITE, out data))
+            {
+                Debug.Log ("Has LAST_POS " + data.ToString ());
+                string pos = data.ToString ().Split (':') [0];
+                if (ExitSpaceData.IsLocK (pos))
+                {
+                    audioSource.PlayOneShot (sfxDingDong);
+                    windowOpen.SetActive (true);
+                    timer = Time.time + 5f;
+                }
+                if (ExitSpaceData.IsWriter (pos))
+                {
+                    audioSource.PlayOneShot (sfxDingDong);
+                    windowGet.SetActive (true);
+                    timer = Time.time + 3f;
+                }
+            }
+            if (changedProps.TryGetValue (PlayerCustomData.LAST_TIME, out data))
+            {
+                // Debug.Log ("Has LAST_TIME");
+                SERVER_TIME =
+                    int.Parse (data.ToString ().Split (':') [0]) * 3600 +
+                    int.Parse (data.ToString ().Split (':') [1]) * 60 +
+                    int.Parse (data.ToString ().Split (':') [2]);
+            }
+            if (changedProps.TryGetValue (PlayerCustomData.STAGE_1_TIME, out data))
+            {
+                // Debug.Log ("Has STAGE_1_TIME");
+                STAGE_1_TIME =
+                    int.Parse (data.ToString ().Split (':') [0]) * 3600 +
+                    int.Parse (data.ToString ().Split (':') [1]) * 60 +
+                    int.Parse (data.ToString ().Split (':') [2]);
+                for (int i = 0; i < checkBadge.Length; i++)
+                {
+                    checkBadge[i].enabled = false;
+                }
+                audioSource.clip = sfxStart;
+                audioSource.Play ();
+                windowLogin.SetActive (false);
+            }
+            if (changedProps.TryGetValue (PlayerCustomData.STAGE_2_TIME, out data))
+            {
+                // Debug.Log ("Has STAGE_2_TIME");
+                STAGE_2_TIME =
+                    int.Parse (data.ToString ().Split (':') [0]) * 3600 +
+                    int.Parse (data.ToString ().Split (':') [1]) * 60 +
+                    int.Parse (data.ToString ().Split (':') [2]);
+            }
+            for (int i = 0; i < checkBadge.Length; i++)
+            {
+                if (changedProps.TryGetValue (PlayerCustomData.BADGE[i], out data))
+                {
+                    checkBadge[i].enabled = (bool) data;
+                    Debug.LogWarning (i + " is " + (bool) data);
+                }
+            }
+        }
     }
     public override void OnMasterClientSwitched (Player newMasterClient)
     {

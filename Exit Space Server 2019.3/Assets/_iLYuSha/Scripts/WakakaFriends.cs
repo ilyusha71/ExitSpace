@@ -183,7 +183,7 @@ public class WakakaFriends : MonoBehaviourPunCallbacks
             object posInfo;
             if (changedProps.TryGetValue (PlayerCustomData.LAST_TIME, out timeInfo))
             {
-                if (changedProps.TryGetValue (PlayerCustomData.LAST_POS, out posInfo))
+                if (changedProps.TryGetValue (PlayerCustomData.LAST_SITE, out posInfo))
                 {
                     textData.text = timeInfo.ToString () + " / " +  posInfo.ToString ();
                 }

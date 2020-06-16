@@ -145,8 +145,8 @@ public class ArduinoPanel : MonoBehaviour
 
     public void AddNewMsg (string msg)
     {
-        if (string.IsNullOrEmpty (msg))
-            return;
+        if (msg.Contains ("Clock")) return;
+        if (string.IsNullOrEmpty (msg)) return;
         byte[] byteArray = System.Text.Encoding.Unicode.GetBytes (msg);
         if (byteArray.Length < 1)
             Debug.LogWarning ("QQ");
