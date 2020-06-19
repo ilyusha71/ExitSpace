@@ -127,7 +127,7 @@ public class ArduinoPanel : MonoBehaviour
             timesPressDelete = 0;
 
         // 開啟Arduino監控窗
-        if (Input.GetKeyDown (KeyCode.F10) || Input.GetKeyDown (KeyCode.KeypadMinus))
+        if (Input.GetKeyDown (KeyCode.F10))
             panel.SetActive (!panel.activeSelf);
 
         // 重啟遊戲

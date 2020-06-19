@@ -23,13 +23,14 @@ public class ArduinoProcessor : MonoBehaviour
     private int countCommands;
 
     [Header ("Ground Server")]
+    public bool timeoutSwitch;
     public GameObject groundPanel;
     public Transform groupAdnBtns;
     private Dictionary<string, Button> dicAdnBtns = new Dictionary<string, Button> ();
     private string ADN;
     private string[] ADNs;
     public Toggle[] tglPresents;
-    public TMP_InputField customCallbackTime;
+    public TMP_InputField customCallbackTime, writeID;
     public Color32 clearColor, checkColor, readColor;
 
     void Awake ()
@@ -377,5 +378,9 @@ public class ArduinoProcessor : MonoBehaviour
         }
         Debug.Log (presents);
         ArduinoController.ArduinoConnector.WriteLine ("Z/" + ADN + "/Present/" + presents + "/");
+    }
+    public void WriteNewAgentID ()
+    {
+        ArduinoController.ArduinoConnector.WriteLine ("Z/" + ADN + "/ID/" + writeID.text + "/");
     }
 }

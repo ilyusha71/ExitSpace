@@ -35,7 +35,7 @@
 /****************************************************************************
  * 燒錄設定
  ****************************************************************************/
-String DEVICE_NAME = "1-N.2-X";
+String DEVICE_NAME = "1-N.1-X";
 // String DEVICE_NAME = "3-R.1.2.3.4.5.6.7.8.9.10-A.1.2.3.4.5.6.7.8.9.10";
 // String DEVICE_NAME = "2-B.8-X";
 // String DEVICE_NAME = "2-C.2-W";
@@ -44,6 +44,8 @@ int callbackTime = 100;
 #if MODE == ENTRY_MODE
 String presents = "";
 boolean isPresent[11];
+byte writeAgentID[8];
+boolean hasNewAgentID;
 #endif
 #if MODE == ENTRY_MODE || MODE == WRITER_MODE
 /****************************************************************************
@@ -879,6 +881,11 @@ void loop()
           presents = getValue(rxData, '/', 3);
           Present();
         }
+        else if (rxCommand == "ID")
+        {
+          hasNewAgentID = true;
+          getValue(rxData, '/', 3).getBytes(writeAgentID, 8);
+        }
 #elif MODE == READER_MODE
         else if (rxCommand == "UnlockForce")
           UnlockForce();
@@ -930,13 +937,6 @@ void loop()
         return;
       }
 #endif
-      // // 特工ID 寫入
-      byte agentID[16] = "KOC-707";
-      if (!SetCardData(agentID, blockID))
-      {
-        Fail();
-        return;
-      }
       // // 如果是記錄點，寫入時間
       // byte time[16] = {hour, minute, second};
       // if (!SetCardData(time, blockTime))
@@ -998,6 +998,20 @@ void loop()
         Serial.println(F("]"));
       }
 #if MODE == ENTRY_MODE
+      /****************************************************************************
+       * Agent ID Write
+       * 需透過Serve開啟
+       ****************************************************************************/
+      if (hasNewAgentID)
+      {
+        if (!SetCardData(writeAgentID, blockID))
+        {
+          Fail();
+          return;
+        }
+        else
+          hasNewAgentID = false;
+      }
       if (ResetNewAgent())
         SendResetEvent(presents);
       mfrc522[readerIndex].PICC_HaltA();

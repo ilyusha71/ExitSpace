@@ -10,6 +10,7 @@ using UnityEngine.UI;
 
 public class WakakaFriends : MonoBehaviourPunCallbacks
 {
+    public Image KGB, CIA;
     private string regionNameText;
     private readonly string NAME_CONNECTED = "已进入";
     private readonly string NAME_DISCONNECTED = "已逃离";
@@ -42,6 +43,7 @@ public class WakakaFriends : MonoBehaviourPunCallbacks
     public AudioClip sfxStart;
     public AudioClip sfxDingDong;
     private AudioSource audioSource;
+
     [Header ("Data")]
     public Image[] checkBadge;
     public TextMeshProUGUI textCountdownMin, textCountdownSec, textFateSec, textChanceMin, textChanceSec;
@@ -149,6 +151,11 @@ public class WakakaFriends : MonoBehaviourPunCallbacks
         panelRoom.SetActive (true);
         textAgentCode.text = PhotonNetwork.LocalPlayer.NickName;
         textServerCode.text = PhotonNetwork.MasterClient.NickName;
+
+        if (PhotonNetwork.LocalPlayer.NickName.Contains ("KGB"))
+            KGB.enabled = true;
+        else if (PhotonNetwork.LocalPlayer.NickName.Contains ("CIA"))
+            CIA.enabled = true;
     }
     public override void OnJoinRoomFailed (short returnCode, string message)
     {
