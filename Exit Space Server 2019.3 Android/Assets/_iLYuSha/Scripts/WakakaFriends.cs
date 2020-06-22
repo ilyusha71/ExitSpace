@@ -140,6 +140,7 @@ public class WakakaFriends : MonoBehaviourPunCallbacks
     public override void OnDisconnected (DisconnectCause cause)
     {
         panelLogin.SetActive (true);
+        panelRoom.SetActive (false);
     }
     public override void OnJoinedLobby ()
     {

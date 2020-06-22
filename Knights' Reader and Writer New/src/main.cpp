@@ -2,17 +2,17 @@
  * Arduino Pin Setting
  * Pin      Work 
  * Pin  2 : RX = HC12 TX
- * Pin  3~: TX = HC12 RX
- * Pin  4 : SETUP = HC12 SETUP
+ * Pin  3~: TX = HC12 RX          
+ * Pin  4 : SETUP = HC12 SETUP    白
  * Pin  5~: X
  * Pin  6~: Relay trigger in
- * Pin  7 : Buzz
- * Pin  8 : RST
- * Pin  9~: SS 2
- * Pin 10~: SS 1
- * Pin 11~: MOSI
- * Pin 12 : MISO
- * Pin 13 : SCK
+ * Pin  7 : Buzz    紅
+ * Pin  8 : SS 1    紫
+ * Pin  9~: RST     白
+ * Pin 10~: SS 2    藍
+ * Pin 11~: MOSI    綠
+ * Pin 12 : MISO    黃
+ * Pin 13 : SCK     橘
  * pin A4 : SDA
  * pin A5 : SCL
  * 5V     : Vcc
@@ -35,12 +35,12 @@
 /****************************************************************************
  * 燒錄設定
  ****************************************************************************/
-String DEVICE_NAME = "1-N.1-X";
+String DEVICE_NAME = "2-U.3-U.2";
 // String DEVICE_NAME = "3-R.1.2.3.4.5.6.7.8.9.10-A.1.2.3.4.5.6.7.8.9.10";
 // String DEVICE_NAME = "2-B.8-X";
 // String DEVICE_NAME = "2-C.2-W";
 int callbackTime = 100;
-#define MODE 1
+#define MODE 100
 #if MODE == ENTRY_MODE
 String presents = "";
 boolean isPresent[11];
