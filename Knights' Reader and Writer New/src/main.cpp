@@ -35,10 +35,10 @@
 /****************************************************************************
  * 燒錄設定
  ****************************************************************************/
-String DEVICE_NAME = "2-U.3-U.2";
+String DEVICE_NAME = "V6-W-A.1.8.9";
 // String DEVICE_NAME = "3-R.1.2.3.4.5.6.7.8.9.10-A.1.2.3.4.5.6.7.8.9.10";
 // String DEVICE_NAME = "2-B.8-X";
-// String DEVICE_NAME = "2-C.2-W";
+// String DEVICE_NAME = "1-N.1-X";
 int callbackTime = 100;
 #define MODE 100
 #if MODE == ENTRY_MODE
@@ -651,142 +651,66 @@ void setup()
    ****************************************************************************/
   for (int i = 0; i < NR_OF_READERS; i++)
   {
-    if (i == 0) // Outer 外側
-    {
+    if (i == 0)
       Serial.print(F(" * Outer Reader: "));
-      String condition = getValue(DEVICE_NAME, '-', 1);
-      Serial.println(condition);
-      if (condition.charAt(0) == 'C')
-      {
-        int keyCount = getValue(condition, '.', 1).toInt();
-        reader[i].SetKeyCount(keyCount);
-      }
-      else if (condition.charAt(0) == 'U')
-      {
-        int key = getValue(condition, '.', 1).toInt();
-        reader[i].SetSpecificKey(key);
-      }
-      else if (condition.charAt(0) == 'R')
-      {
-        bool checkPassKeyCount = false;
-        int checPassKeyIndex = 1;
-        while (!checkPassKeyCount)
-        {
-          String n = getValue(condition, '.', checPassKeyIndex);
-          if (n != "")
-          {
-            reader[i].AddPassKey(n.toInt(), checPassKeyIndex - 1);
-            checPassKeyIndex++;
-          }
-          else
-            checkPassKeyCount = true;
-        }
-        reader[i].SetMode(OR, checPassKeyIndex - 1);
-      }
-      else if (condition.charAt(0) == 'A')
-      {
-        bool checkPassKeyCount = false;
-        int checPassKeyIndex = 1;
-        while (!checkPassKeyCount)
-        {
-          String n = getValue(condition, '.', checPassKeyIndex);
-          if (n != "")
-          {
-            reader[i].AddPassKey(n.toInt(), checPassKeyIndex - 1);
-            checPassKeyIndex++;
-          }
-          else
-            checkPassKeyCount = true;
-        }
-        reader[i].SetMode(AND, checPassKeyIndex - 1);
-      }
-      else if (condition.charAt(0) == 'E')
-      {
-        int key = getValue(condition, '.', 1).toInt();
-        reader[i].SetSpecificKey(Special, key);
-      }
-      else if (condition.charAt(0) == 'W')
-        reader[i].SetMode(Wakaka, 0);
-
-      else if (condition.charAt(0) == 'X')
-        reader[i].SetMode(Disable, 0);
-    }
-    else if (i == 1) // Inner 內側
-    {
+    else if (i == 1)
       Serial.print(F(" * Inner Reader: "));
-      String condition = getValue(DEVICE_NAME, '-', 2);
-      Serial.println(condition);
-      if (condition.charAt(0) == 'C')
-      {
-        int keyCount = getValue(condition, '.', 1).toInt();
-        reader[i].SetKeyCount(keyCount);
-      }
-      else if (condition.charAt(0) == 'U')
-      {
-        int key = getValue(condition, '.', 1).toInt();
-        reader[i].SetSpecificKey(key);
-      }
-      else if (condition.charAt(0) == 'R')
-      {
-        bool checkPassKeyCount = false;
-        int checPassKeyIndex = 1;
-        while (!checkPassKeyCount)
-        {
-          String n = getValue(condition, '.', checPassKeyIndex);
-          if (n != "")
-          {
-            reader[i].AddPassKey(n.toInt(), checPassKeyIndex - 1);
-            checPassKeyIndex++;
-          }
-          else
-            checkPassKeyCount = true;
-        }
-        reader[i].SetMode(OR, checPassKeyIndex - 1);
-      }
-      else if (condition.charAt(0) == 'A')
-      {
-        bool checkPassKeyCount = false;
-        int checPassKeyIndex = 1;
-        while (!checkPassKeyCount)
-        {
-          String n = getValue(condition, '.', checPassKeyIndex);
-          if (n != "")
-          {
-            reader[i].AddPassKey(n.toInt(), checPassKeyIndex - 1);
-            checPassKeyIndex++;
-          }
-          else
-            checkPassKeyCount = true;
-        }
-        reader[i].SetMode(AND, checPassKeyIndex - 1);
-      }
-      else if (condition.charAt(0) == 'E')
-      {
-        int key = getValue(condition, '.', 1).toInt();
-        reader[i].SetSpecificKey(Special, key);
-      }
-      else if (condition.charAt(0) == 'W')
-        reader[i].SetMode(Wakaka, 0);
 
-      else if (condition.charAt(0) == 'X')
-        reader[i].SetMode(Disable, 0);
-#if MODE == BOX_MODE
-      else if (condition.charAt(0) == 'T')
+    String condition = getValue(DEVICE_NAME, '-', i + 1);
+    Serial.println(condition);
+    bool checkPassKeyCount = false;
+    int checPassKeyIndex = 1;
+    while (!checkPassKeyCount)
+    {
+      String n = getValue(condition, '.', checPassKeyIndex);
+      if (n != "")
       {
-        int name = getValue(condition, '.', 1).toInt();
-
-        reader[i].SetTitle(title, name);
-        Serial.print(F(" *   Target ==> ["));
-        for (size_t i = 0; i < 16; i++)
-        {
-          if (title[i] == 0)
-            break;
-          Serial.write(title[i]);
-        }
-        Serial.println(F("]"));
+        reader[i].AddPassKey(n.toInt());
+        checPassKeyIndex++;
       }
-#endif
+      else
+        checkPassKeyCount = true;
     }
+
+    switch (condition.charAt(0))
+    {
+#if MODE == BOX_MODE
+    case 'T':
+      int name = getValue(condition, '.', 1).toInt();
+      reader[i].SetTitle(title, name);
+      Serial.print(F(" *   Target ==> ["));
+      for (size_t i = 0; i < 16; i++)
+      {
+        if (title[i] == 0)
+          break;
+        Serial.write(title[i]);
+      }
+      Serial.println(F("]"));
+      break;
+#endif
+    case 'C':
+      reader[i].SetKeyCount(getValue(condition, '.', 1).toInt());
+      break;
+    case 'W':
+      reader[i].SetMode(Wakaka);
+      break;
+    case 'X':
+      reader[i].SetMode(Disable);
+      break;
+    case 'U':
+      reader[i].SetMode(Specify);
+      break;
+    case 'E':
+      reader[i].SetMode(Special);
+      break;
+    case 'R':
+      reader[i].SetMode(OR);
+      break;
+    case 'A':
+      reader[i].SetMode(AND);
+      break;
+    }
+
     if (reader[i].mode != Disable)
     {
       // 初始化 MFRC522
@@ -838,7 +762,7 @@ void setup()
 void loop()
 {
 #if MODE == READER_MODE
-  if (DEVICE_NAME == "1-U1-X")
+  if (DEVICE_NAME == "1-U1-X") // 磁簧復位
   {
     if (digitalRead(5) == 0)
       digitalWrite(RELAY_LOW, LOW);
@@ -1110,14 +1034,11 @@ void loop()
         break;
       }
       case Specify:
+      case Special:
         Serial.print(F("  Target ==> [Ruby"));
         if (reader[index].specificKey < 10)
-        {
           Serial.print(F("0"));
-          Serial.print(reader[index].specificKey);
-        }
-        else
-          Serial.print(reader[index].specificKey);
+        Serial.print(reader[index].specificKey);
         if (GetCardRubyData(reader[index].specificKey))
         {
           Serial.println(F("] ==> Match"));
@@ -1132,17 +1053,15 @@ void loop()
       case OR:
       {
         int countMatch = 0;
-        for (int i = 0; i < reader[index].countKeys; i++)
+        for (int key = 1; key < NR_OF_RUBY; key++)
         {
-          int key = reader[index].passKeys[i];
-          if (hasRuby[key])
+          if (!reader[index].passKeys[key] || hasRuby[key])
             continue;
           hasRuby[key] = GetCardRubyData(key);
         }
-        for (int i = 0; i < reader[index].countKeys; i++)
+        for (int key = 1; key < NR_OF_RUBY; key++)
         {
-          int key = reader[index].passKeys[i];
-          if (hasRuby[key])
+          if (reader[index].passKeys[key] && hasRuby[key])
           {
             countMatch++;
             Serial.print(F("  Target ==> [Ruby"));
@@ -1173,17 +1092,15 @@ void loop()
       case AND:
       {
         int countMatch = 0;
-        for (int i = 0; i < reader[index].countKeys; i++)
+        for (int key = 1; key < NR_OF_RUBY; key++)
         {
-          int key = reader[index].passKeys[i];
-          if (hasRuby[key])
+          if (!reader[index].passKeys[key] || hasRuby[key])
             continue;
           hasRuby[key] = GetCardRubyData(key);
         }
-        for (int i = 0; i < reader[index].countKeys; i++)
+        for (int key = 1; key < NR_OF_RUBY; key++)
         {
-          int key = reader[index].passKeys[i];
-          if (hasRuby[key])
+          if (reader[index].passKeys[key] && hasRuby[key])
           {
             countMatch++;
             Serial.print(F("  Target ==> [Ruby"));
@@ -1272,26 +1189,6 @@ void loop()
       case Wakaka:
         Serial.println(F("You aren't Wakaka"));
         AccessForbidden();
-        break;
-      case Special:
-        Serial.print(F("  Target ==> [Ruby"));
-        if (reader[index].specificKey < 10)
-        {
-          Serial.print(F("0"));
-          Serial.print(reader[index].specificKey);
-        }
-        else
-          Serial.print(reader[index].specificKey);
-        if (GetCardRubyData(reader[index].specificKey))
-        {
-          Serial.println(F("] ==> Match"));
-          SendUnlockEvent();
-        }
-        else
-        {
-          Serial.println(F("] ==> Incorrect"));
-          AccessForbidden();
-        }
         break;
       case Title:
 #if MODE == BOX_MODE

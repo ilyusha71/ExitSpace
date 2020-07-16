@@ -105,6 +105,14 @@ public class WakakaFriends : MonoBehaviourPunCallbacks
     /// <summary>
     /// Login Panel
     /// </summary>
+    public void RegionASIA ()
+    {
+        PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = "asia";
+    }
+    public void RegionKR ()
+    {
+        PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = "kr";
+    }
     public void OnFastLoginButtonClicked ()
     {
         if (!inputCode.text.Equals (""))

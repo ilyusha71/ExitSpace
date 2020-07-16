@@ -424,6 +424,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     // Called when the LoadBalancingClient entered a room, no matter if this client created it or simply joined.
     public override void OnJoinedRoom ()
     {
+        PhotonNetwork.SetMasterClient (PhotonNetwork.LocalPlayer);
         // Debug.LogWarning ("OnJoinedRoom");
         textWarning.text = NAME_JOINED + PhotonNetwork.CurrentRoom.Name;
         textRoomName.text = PhotonNetwork.CurrentRoom.Name;

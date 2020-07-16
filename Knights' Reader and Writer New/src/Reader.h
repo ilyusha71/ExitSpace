@@ -17,8 +17,8 @@ class READER
 {
 public:
     PassMode mode = Wakaka;
-    int countKeys;
-    int passKeys[];
+    int countKeys = 0;
+    bool passKeys[11];
     int specificKey;
     // String modeName[8]; // 刪掉就當機，原因不明
     char const *Pass(PassMode value)
@@ -34,29 +34,41 @@ public:
         countKeys = count;
         Show();
     }
-    void SetSpecificKey(int key)
+    // void SetSpecificKey(int key)
+    // {
+    //     mode = Specify;
+    //     specificKey = key;
+    //     Show();
+    // }
+    // void SetSpecificKey(PassMode useMode, int key)
+    // {
+    //     mode = useMode;
+    //     specificKey = key;
+    //     Show();
+    // }
+    // 2020/06/30 新方法
+    void AddPassKey(int key)
     {
-        mode = Specify;
+        countKeys++;
         specificKey = key;
-        Show();
+        passKeys[key] = true;
     }
-    void SetSpecificKey(PassMode useMode, int key)
+    void SetMode(PassMode useMode)
     {
         mode = useMode;
-        specificKey = key;
         Show();
     }
     // 2020/04/20 新方法
-    void AddPassKey(int key, int index)
-    {
-        passKeys[index] = key;
-    }
-    void SetMode(PassMode useMode, int count)
-    {
-        mode = useMode;
-        countKeys = count;
-        Show();
-    }
+    // void AddPassKey(int key, int index)
+    // {
+    //     passKeys[index] = key;
+    // }
+    // void SetMode(PassMode useMode, int count)
+    // {
+    //     mode = useMode;
+    //     countKeys = count;
+    //     Show();
+    // }
     void SetTitle(byte *title, int name)
     {
         mode = Title;
@@ -109,57 +121,22 @@ public:
             Serial.println(countKeys);
             break;
         case Specify:
-            Serial.print(F(" *   Target ==> [Ruby"));
-            if (specificKey < 10)
-            {
-                Serial.print(F("0"));
-                Serial.print(specificKey);
-            }
-            else
-                Serial.print(specificKey);
-            Serial.println(F("]"));
-            break;
         case OR:
-            for (int i = 0; i < countKeys; i++)
-            {
-                Serial.print(F(" *   Target ==> [Ruby"));
-                if (passKeys[i] < 10)
-                {
-                    Serial.print(F("0"));
-                    Serial.print(passKeys[i]);
-                }
-                else
-                    Serial.print(passKeys[i]);
-                Serial.println(F("]"));
-            }
-            break;
         case AND:
-            for (int i = 0; i < countKeys; i++)
+        case Special:
+            for (int i = 1; i < 11; i++)
             {
-                Serial.print(F(" *   Target ==> [Ruby"));
-                if (passKeys[i] < 10)
+                if (passKeys[i])
                 {
-                    Serial.print(F("0"));
-                    Serial.print(passKeys[i]);
+                    Serial.print(F(" *   Target ==> [Ruby"));
+                    if (i < 10)
+                        Serial.print(F("0"));
+                    Serial.print(i);
+                    Serial.println(F("]"));
                 }
-                else
-                    Serial.print(passKeys[i]);
-                Serial.println(F("]"));
             }
             break;
         case Wakaka:
-            // Serial.println();
-            break;
-        case Special:
-            Serial.print(F(" *   Target ==> [Ruby"));
-            if (specificKey < 10)
-            {
-                Serial.print(F("0"));
-                Serial.print(specificKey);
-            }
-            else
-                Serial.print(specificKey);
-            Serial.println(F("]"));
             break;
         default:
             break;
