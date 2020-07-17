@@ -24,6 +24,7 @@ public class WakakaFriends : MonoBehaviourPunCallbacks
     [Header ("Login Panel")]
     public GameObject panelLogin;
     public TMP_InputField inputCode;
+    public TextMeshProUGUI showRegion;
     #endregion
 
     #region Room
@@ -105,13 +106,10 @@ public class WakakaFriends : MonoBehaviourPunCallbacks
     /// <summary>
     /// Login Panel
     /// </summary>
-    public void RegionASIA ()
+    public void SetRegion (string region)
     {
-        PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = "asia";
-    }
-    public void RegionKR ()
-    {
-        PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = "kr";
+        PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = region;
+        showRegion.text = PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion;
     }
     public void OnFastLoginButtonClicked ()
     {
