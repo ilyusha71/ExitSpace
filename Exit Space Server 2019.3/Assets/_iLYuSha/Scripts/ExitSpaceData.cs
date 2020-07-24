@@ -24,60 +24,84 @@
     {
         "1-U1-X",
     };
-    public static readonly string[] DOORS = new string[]
+    public static readonly string[] STAGE_2_DOORS = new string[]
     {
         "2-U3-U2",
         "2-U7-U5",
         "2-U7-U3",
     };
-    public static readonly string[] TRAP_DOORS = new string[]
-    {
-        "H1-W-C1", // Room 15
-        "H1-W-U8", // Room 15
-        "V1-A910-W", // Room 15
-        "V1-W-C1", // Room 16
-        "H3-W-U7", // Room 16
-        "V3-W-U7", // Room 16
+    public static readonly string[] CHANCE_DOORS = new string[]
+    { // 14 Doors
+        "H1-W-C1", // Room 15 Entry
+        "H1-W-U8", // Room 15 Entry & Exit
+        "V1-A910-W", // Room 15 Exit
+        "V1-W-C1", // Room 16 Entry
+        "H3-W-U7", // Room 16 Entry & Exit
+        "V3-W-U7", // Room 16 Entry & Exit
         "V3-W-C7", // Room 17
-        "V3-W-C7U6", // Room 17
+        "V3-W-C7U6", // Room 17 = V3-W-C7
         "H4-W-C3", // Room 17
-        "V4-C8-C2", // Room 17
+        "H5-C8-C2", // Room 17
         "V6-W-A189", // Room 18
         "H8-W-U8", // Room 18
         "V8-W-U6", // Room 18   
-        "H8-W-C1", // Room 19
-        "V8-W-W", // Room 19
+        "18-W-C1", // Room 18 to Room 19
+        "19-W-W", // Room 19
     };
-    public static readonly string[] MAZE_DOORS = new string[]
+    public static readonly string[] FATE_DOORS = new string[]
     {
-        "V1-A89-C1",
-        "H2-U10-U3",
-        "H2-R610-U5",
-        "V2-U4-U5",
-        "V2-U3-A67",
-        "V2-C3-A345",
-        "H3-U4-A57",
-        "H3-A78-C2",
-        "V3-R457-C2",
-        "V3-C4-U8",
-        "H4-U9-A45",
-        "H4-C2-U3",
-        "V4-C2-C1",
-        "V4-U10-C3",
-        "H5-C2-C1",
-        "V5-U6-C4",
-        "V5-U3-C8",
-        "H6-U7-U6",
-        "V6-U5-U7",
-        "V7-U4-C3",
-        "V8-U3-C4",
-        "H9-U3-C1",
+        "V1-A89-C1", // Region 1
+        "H2-U10-U3", // Region 2
+        "H2-R610-U5", // Region 2
+        "V2-U4-U5", // Region 2
+        "V2-U3-A67", // Region 2
+        "V2-C3-A345", // Region 2
+        "H3-U4-A57", // Region 3
+        "H3-A78-C2", // Region 3
+        "V3-R457-C2", // Region 3
+        "V3-C4-U8", // Region 3
+        "H4-U9-A45", // Region 4
+        "H4-C2-U3", // Region 4
+        "V4-C2-C1", // Region 4
+        "V4-U10-C3", // Region 4
+        "H5-C2-C1", // Region 5
+        "V5-U6-C4", // Region 5
+        "V5-U3-C8", // Region 5
+        "H6-U7-U6", // Region 6
+        "V6-U5-U7", // Region 6
+        "V7-U4-C3", // Region 7
+        "V8-U3-C4", // Region 8
+        "H9-U3-C1", // Region 9
     };
-    public static readonly string[] TRAP_18_DOORS = new string[]
+    public static readonly string[] CHANCE_15_DOORS = new string[]
     {
-        "V6-W-A189", // Room 18
-        "H8-W-U8", // Room 18
-        "V8-W-U6", // Room 18
+        "H1-W-C1", // North
+        "H1-W-U8", // South
+        "V1-A910-W", // West
+    };
+    public static readonly string[] CHANCE_16_DOORS = new string[]
+    {
+        "V1-W-C1", // East
+        "H3-W-U7", // North
+        "V3-W-U7", // West
+    };
+    public static readonly string[] CHANCE_17_DOORS = new string[]
+    {
+        "V3-W-C7", // East
+        "H4-W-C3", // Southeast
+        "H5-C8-C2", // South
+    };
+    public static readonly string[] CHANCE_18_DOORS = new string[]
+    {
+        "V6-W-A189", // East
+        "H8-W-U8", // South
+        "V8-W-U6", // West
+        "18-W-C1", // Northwest
+    };
+    public static readonly string[] CHANCE_19_DOORS = new string[]
+    {
+        "18-W-C1", // Southeast
+        "19-W-W", // Northeast
     };
     public static readonly string[] CHALLENGE_BOX = new string[]
     {
@@ -282,41 +306,41 @@
         return false;
     }
 
-    public static bool IsDoor (string device)
+    public static bool IsStage2Door (string device)
     {
-        for (int i = 0; i < DOORS.Length; i++)
+        for (int i = 0; i < STAGE_2_DOORS.Length; i++)
         {
-            if (device == DOORS[i])
+            if (device == STAGE_2_DOORS[i])
                 return true;
         }
         return false;
     }
 
-    public static bool IsUnlockTrapDoor (string device)
+    public static bool IsChanceDoor (string device)
     {
-        for (int i = 0; i < TRAP_DOORS.Length; i++)
+        for (int i = 0; i < CHANCE_DOORS.Length; i++)
         {
-            if (device == TRAP_DOORS[i])
+            if (device == CHANCE_DOORS[i])
                 return true;
         }
         return false;
     }
 
-    public static bool IsUnlockMazeDoor (string device)
+    public static bool IsFateDoor (string device)
     {
-        for (int i = 0; i < MAZE_DOORS.Length; i++)
+        for (int i = 0; i < FATE_DOORS.Length; i++)
         {
-            if (device == MAZE_DOORS[i])
+            if (device == FATE_DOORS[i])
                 return true;
         }
         return false;
     }
 
-    public static bool IsTrap18Door (string device)
+    public static bool IsChance18Door (string device)
     {
-        for (int i = 0; i < TRAP_18_DOORS.Length; i++)
+        for (int i = 0; i < CHANCE_18_DOORS.Length; i++)
         {
-            if (device == TRAP_18_DOORS[i])
+            if (device == CHANCE_18_DOORS[i])
                 return true;
         }
         return false;

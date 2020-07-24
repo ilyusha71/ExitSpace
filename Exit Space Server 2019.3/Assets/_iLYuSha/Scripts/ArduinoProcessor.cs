@@ -27,8 +27,9 @@ public class ArduinoProcessor : MonoBehaviour
     public GameObject groundPanel;
     public Transform groupAdnBtns;
     private Dictionary<string, Button> dicAdnBtns = new Dictionary<string, Button> ();
+    public Transform groupXtdBtns;
+    private Dictionary<string, Button> dicXtdBtns = new Dictionary<string, Button> ();
     private string ADN;
-    private string[] ADNs;
     public Toggle[] tglPresents;
     public TMP_InputField customCallbackTime, writeID;
     public Color32 clearColor, checkColor, readColor;
@@ -40,18 +41,26 @@ public class ArduinoProcessor : MonoBehaviour
 
         Button[] btnADNs = groupAdnBtns.GetComponentsInChildren<Button> ();
         int countBtns = btnADNs.Length;
-        ADNs = new string[countBtns];
         for (int i = 0; i < countBtns; i++)
         {
             btnADNs[i].GetComponentsInChildren<Image> () [0].color = clearColor;
             string adn = btnADNs[i].name;
-            dicAdnBtns.Add (adn, btnADNs[i]);
-            ADNs[i] = adn;
+            if (!dicAdnBtns.ContainsKey (adn))
+                dicAdnBtns.Add (adn, btnADNs[i]);
             btnADNs[i].onClick.AddListener (() =>
             {
                 ADN = adn;
                 Debug.Log (ADN);
             });
+        }
+
+        btnADNs = groupXtdBtns.GetComponentsInChildren<Button> ();
+        countBtns = btnADNs.Length;
+        for (int i = 0; i < countBtns; i++)
+        {
+            string adn = btnADNs[i].name;
+            if (!dicXtdBtns.ContainsKey (adn))
+                dicXtdBtns.Add (adn, btnADNs[i]);
         }
     }
 
@@ -87,11 +96,15 @@ public class ArduinoProcessor : MonoBehaviour
             {
                 if (dicAdnBtns.ContainsKey (commands[2]))
                     dicAdnBtns[commands[2]].GetComponentsInChildren<Image> () [0].color = checkColor;
+                if (dicXtdBtns.ContainsKey (commands[2]))
+                    dicXtdBtns[commands[2]].GetComponentsInChildren<Image> () [0].color = checkColor;
             }
             else if (commands.Length > 4)
             {
                 if (dicAdnBtns.ContainsKey (commands[1]))
                     dicAdnBtns[commands[1]].GetComponentsInChildren<Image> () [0].color = readColor;
+                if (dicXtdBtns.ContainsKey (commands[1]))
+                    dicXtdBtns[commands[1]].GetComponentsInChildren<Image> () [0].color = readColor;
                 // 確認關卡
                 // 確認時間
 
@@ -100,7 +113,7 @@ public class ArduinoProcessor : MonoBehaviour
                 props.Add (PlayerCustomData.LAST_TIME, nowTime);
                 props.Add (PlayerCustomData.LAST_SITE, nowSite);
 
-                /*********************************************************************
+                /**********************************************************************
                  * Z/2-U9-C7/0/KGB-952/Reset/1.2.3.4./
                  * commands[1] = 2-U9-C7
                  * commands[2] = 0
@@ -117,7 +130,7 @@ public class ArduinoProcessor : MonoBehaviour
                         props.Add (PlayerCustomData.BADGE[int.Parse (commands[5].Split ('.') [i]) - 1], true);
                     }
                 }
-                /*********************************************************************
+                /**********************************************************************
                  * Z/2-U9-C7/0/KGB-952/Badge/1.2.3.4./
                  * commands[1] = 2-U9-C7
                  * commands[2] = 0
@@ -133,7 +146,7 @@ public class ArduinoProcessor : MonoBehaviour
                         props.Add (PlayerCustomData.BADGE[int.Parse (commands[5].Split ('.') [i]) - 1], true);
                     }
                 }
-                /*********************************************************************
+                /**********************************************************************
                  * Z/2-U9-C7/0/KGB-952/Unlock/
                  * commands[1] = 2-U9-C7
                  * commands[2] = 0
@@ -144,8 +157,8 @@ public class ArduinoProcessor : MonoBehaviour
                 {
                     if (ExitSpaceData.IsMerlinCabinet (commands[1]))
                         ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked_1_U1_X/");
-                    else if (ExitSpaceData.IsDoor (commands[1]))
-                        ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/IsDoor/");
+                    else if (ExitSpaceData.IsStage2Door (commands[1]))
+                        ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/IsStage2Door/");
                     else if (ExitSpaceData.IsStage2Entry (commands[1]))
                     {
                         props.Add (PlayerCustomData.STAGE_2_TIME, nowTime);
@@ -155,21 +168,21 @@ public class ArduinoProcessor : MonoBehaviour
                     {
                         props.Add (PlayerCustomData.STAGE_3_TIME, nowTime);
                         if (commands[1] == "3-E6-E4")
-                            ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked_3_E6_E4/" + commands[2] + "/");
+                            ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked_3_E6_E4/IsStage3Entry/" + commands[2] + "/");
                         else if (commands[1] == "3-U1-X")
-                            ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/");
+                            ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/IsStage3Entry/");
                     }
-                    else if (ExitSpaceData.IsUnlockTrapDoor (commands[1]))
+                    else if (ExitSpaceData.IsChanceDoor (commands[1]))
                     {
                         props.Add (PlayerCustomData.MAZE_TIME, "Pause");
                         props.Add (PlayerCustomData.TRAP_TIME, nowTime);
-                        ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/IsUnlockTrapDoor/");
+                        ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/IsChanceDoor/");
                     }
-                    else if (ExitSpaceData.IsUnlockMazeDoor (commands[1]))
+                    else if (ExitSpaceData.IsFateDoor (commands[1]))
                     {
                         props.Add (PlayerCustomData.MAZE_TIME, nowTime);
                         props.Add (PlayerCustomData.TRAP_TIME, "Pause");
-                        ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/IsUnlockMazeDoor/");
+                        ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/IsFateDoor/");
                     }
                     else if (ExitSpaceData.IsStage4Entry (commands[1]))
                     {
@@ -187,10 +200,10 @@ public class ArduinoProcessor : MonoBehaviour
                     else
                     {
                         Debug.LogWarning ("Site: " + commands[1]);
-                        ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/");
+                        ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/Unknown");
                     }
                 }
-                /*********************************************************************
+                /**********************************************************************
                  * Z/4B1-A345-T1/0/KGB-952/Confer/
                  * commands[1] = 4B1-A345-T1
                  * commands[2] = 0
@@ -269,7 +282,7 @@ public class ArduinoProcessor : MonoBehaviour
                                     textTrap.text = trapTime;
                                     if (trapTime != "Pause")
                                     {
-                                        if (ExitSpaceData.IsTrap18Door (lastPos))
+                                        if (ExitSpaceData.IsChance18Door (lastPos))
                                             textTrapCountdown.text = GetCountdown (trapTime, PlayerCustomData.TRAP_18_LIMIT).ToString ();
                                         else
                                             textTrapCountdown.text = GetCountdown (trapTime, PlayerCustomData.TRAP_LIMIT).ToString ();
@@ -359,15 +372,6 @@ public class ArduinoProcessor : MonoBehaviour
             btn.GetComponentsInChildren<Image> () [0].color = clearColor;
         }
     }
-    public void CheckingStart ()
-    {
-        ArduinoController.ArduinoConnector.WriteLine ("Galaxy/CheckingStart/" + ADNs.Length + "/");
-    }
-
-    public void CheckingEnd ()
-    {
-        ArduinoController.ArduinoConnector.WriteLine ("Galaxy/CheckingEnd/" + ADNs.Length + "/");
-    }
     public void SendBadgePresents ()
     {
         if (!ExitSpaceData.IsStage1Entry (ADN)) return;
@@ -383,4 +387,9 @@ public class ArduinoProcessor : MonoBehaviour
     {
         ArduinoController.ArduinoConnector.WriteLine ("Z/" + ADN + "/ID/" + writeID.text + "/");
     }
+
+    /**********************************************************************
+     * Dashboard Command
+     **********************************************************************/
+
 }

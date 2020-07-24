@@ -35,7 +35,7 @@
 /****************************************************************************
  * 燒錄設定
  ****************************************************************************/
-String DEVICE_NAME = "V7-U.4-C.3";
+String DEVICE_NAME = "3-E.6-E.4";
 // String DEVICE_NAME = "3-R.1.2.3.4.5.6.7.8.9.10-A.1.2.3.4.5.6.7.8.9.10";
 // String DEVICE_NAME = "2-B.8-X";
 // String DEVICE_NAME = "1-N.1-X";
@@ -702,6 +702,8 @@ void setup()
       break;
     case 'E':
       reader[i].SetMode(Special);
+      pinMode(5, OUTPUT);
+      digitalWrite(5, LOW);
       break;
     case 'R':
       reader[i].SetMode(OR);
