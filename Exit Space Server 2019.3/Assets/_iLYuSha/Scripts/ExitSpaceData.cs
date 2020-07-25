@@ -1,5 +1,78 @@
 ﻿public class ExitSpaceData
 {
+    public static readonly string[] DEVICES = new string[]
+    {
+        "1-N1-X",
+        "1-N2-X",
+        "1-U1-X",
+        "1-P0-X",
+        "1-B1-X",
+        "1-B2-X",
+        "1-B3-X",
+        "1-B4-X",
+        "1-B5-X",
+        "1-B6-X",
+        "1-B7-X",
+
+        "2-C2-W",
+        "2-C4-W",
+        "2-C6-X",
+        "2-U3-U2",
+        "2-U7-U5",
+        "2-U7-U3",
+        "2-B8-X",
+        "2-B9-X",
+        "2-B10-X",
+
+        "3-E6-E4",
+        "3-U1-X",
+        "3-P1-X",
+        "3-P2-X",
+        "3-P3-X",
+
+        "H1-W-C1",
+        "H1-W-U8",
+        "V1-A89-C1",
+        "V1-A910-W",
+        "V1-W-C1",
+
+        "H2-U10-U3",
+        "H2-R610-U5",
+        "V2-U4-U5",
+        "V2-U3-A67",
+        "V2-C3-A345",
+
+        "H3-U4-A57",
+        "H3-A78-C2",
+        "H3-W-U7",
+        "V3-W-C7",
+        "V3-R457-C2",
+        "V3-C4-U8",
+        "V3-W-U7",
+
+        "H4-W-C3",
+        "H4-U9-A45",
+        "H4-C2-U3",
+        "V4-C2-C1",
+        "V4-U10-C3",
+
+        "H5-C8-C2",
+        "H5-C2-C1",
+        "V5-U6-C4",
+        "V5-U3-C8",
+
+        "H6-U7-U6",
+        "V6-W-A189",
+        "V6-U5-U7",
+
+        "V7-U4-C3",
+        "H8-W-U8",
+        "V8-W-U6",
+        "V8-U3-C4",
+        "H9-U3-C1",
+        "18-W-C1",
+        "19-W-W",
+    };
     public static readonly string[] STAGE_1_ENTRY = new string[]
     {
         "1-N1-X",

@@ -94,6 +94,11 @@ public class ArduinoPanel : MonoBehaviour
 
     void Update ()
     {
+        if (Input.GetKey (KeyCode.LeftControl) && Input.GetKey (KeyCode.LeftAlt))
+        {
+            if (Input.GetKeyDown (KeyCode.Slash))
+                ArduinoController.ConnectArduino ();
+        }
         if (ArduinoController.isRecieving) timeRecieve = (int) Time.time;
         ArduinoController.isRecieving = false;
         textKeyword.text = ArduinoController.Keyword;

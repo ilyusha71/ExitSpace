@@ -23,6 +23,7 @@ public class ArduinoProcessor : MonoBehaviour
     private int countCommands;
 
     [Header ("Ground Server")]
+    public TextMeshProUGUI textVersion;
     public bool timeoutSwitch;
     public GameObject groundPanel;
     public Transform groupAdnBtns;
@@ -33,9 +34,22 @@ public class ArduinoProcessor : MonoBehaviour
     public Toggle[] tglPresents;
     public TMP_InputField customCallbackTime, writeID;
     public Color32 clearColor, checkColor, readColor;
+    public AudioSource asDingDong;
+    public AudioClip acDingDong;
+
+    public Transform content;
+
+    [Header ("Auto Checking")]
+    public Toggle isChecking;
+    public Animator TimedStupidityBomb, Timespace;
+    public TextMeshProUGUI textDevice, textCountdown;
+    public string autoCheckingTarget;
+    public float nextCheckingTime;
+    public int indexChecking;
 
     void Awake ()
     {
+        textVersion.text = Application.version;
         textNowTime.text = "";
         Clear ();
 
@@ -62,10 +76,39 @@ public class ArduinoProcessor : MonoBehaviour
             if (!dicXtdBtns.ContainsKey (adn))
                 dicXtdBtns.Add (adn, btnADNs[i]);
         }
+
+        // Auto Checking
+        isChecking.onValueChanged.AddListener ((isOn) =>
+        {
+            if (isOn)
+            {
+                textDevice.text = ExitSpaceData.DEVICES[indexChecking];
+                TimedStupidityBomb.speed = 0;
+                Timespace.speed = 1;
+            }
+            else
+            {
+                textDevice.text = "Pause";
+                TimedStupidityBomb.speed = 1;
+                Timespace.speed = 0;
+            }
+        });
+        DisableAutoChecking ();
+    }
+
+    void DisableAutoChecking ()
+    {
+        isChecking.enabled = false;
+        isChecking.isOn = false;
+        textDevice.text = "Disconnected";
+        TimedStupidityBomb.speed = 0;
+        Timespace.speed = 0;
     }
 
     void Update ()
     {
+        content.Translate (new Vector3 (Input.GetAxis ("Horizontal") * -5.0f, Input.GetAxis ("Vertical") * -5.0f, 0));
+
         if (Input.GetKeyDown (KeyCode.F9))
             groundPanel.SetActive (!groundPanel.activeSelf);
         if (Input.GetKeyDown (KeyCode.LeftBracket))
@@ -77,6 +120,32 @@ public class ArduinoProcessor : MonoBehaviour
         {
             Processing (ArduinoController.queueCommand.Dequeue ());
         }
+
+        if (ArduinoController.Status == ArduinoStatus.Connected)
+        {
+            if (!isChecking.enabled)
+            {
+                nextCheckingTime = Time.time + 4.0f;
+                indexChecking = ExitSpaceData.DEVICES.Length - 1;
+                isChecking.enabled = true;
+                isChecking.isOn = true;
+                textDevice.text = "Are U Ready?";
+            }
+            if (isChecking.isOn)
+            {
+                if (Time.time > nextCheckingTime)
+                {
+                    nextCheckingTime = Time.time + 10.0f;
+                    indexChecking = (int) Mathf.Repeat (++indexChecking, ExitSpaceData.DEVICES.Length);
+                    ArduinoController.ArduinoConnector.WriteLine ("Z/" + ExitSpaceData.DEVICES[indexChecking] + "/Checking/100/");
+                    textDevice.text = ExitSpaceData.DEVICES[indexChecking];
+                }
+                textCountdown.text = ((int) (nextCheckingTime - Time.time)).ToString ();
+
+            }
+        }
+        else
+            DisableAutoChecking ();
     }
 
     public void Processing (string[] commands)
@@ -95,16 +164,29 @@ public class ArduinoProcessor : MonoBehaviour
             if (commands[1] == "Callback")
             {
                 if (dicAdnBtns.ContainsKey (commands[2]))
+                {
                     dicAdnBtns[commands[2]].GetComponentsInChildren<Image> () [0].color = checkColor;
+                    dicAdnBtns[commands[2]].GetComponentsInChildren<Image> () [1].enabled = true;
+                    asDingDong.PlayOneShot (acDingDong);
+                    nextCheckingTime = Time.time;
+                }
                 if (dicXtdBtns.ContainsKey (commands[2]))
+                {
                     dicXtdBtns[commands[2]].GetComponentsInChildren<Image> () [0].color = checkColor;
+                    dicXtdBtns[commands[2]].GetComponentsInChildren<Image> () [1].enabled = true;
+                    asDingDong.PlayOneShot (acDingDong);
+                    nextCheckingTime = Time.time;
+                }
             }
             else if (commands.Length > 4)
             {
-                if (dicAdnBtns.ContainsKey (commands[1]))
-                    dicAdnBtns[commands[1]].GetComponentsInChildren<Image> () [0].color = readColor;
-                if (dicXtdBtns.ContainsKey (commands[1]))
-                    dicXtdBtns[commands[1]].GetComponentsInChildren<Image> () [0].color = readColor;
+                if (commands[2] != "Checking")
+                {
+                    if (dicAdnBtns.ContainsKey (commands[1]))
+                        dicAdnBtns[commands[1]].GetComponentsInChildren<Image> () [0].color = readColor;
+                    if (dicXtdBtns.ContainsKey (commands[1]))
+                        dicXtdBtns[commands[1]].GetComponentsInChildren<Image> () [0].color = readColor;
+                }
                 // 確認關卡
                 // 確認時間
 
@@ -350,6 +432,24 @@ public class ArduinoProcessor : MonoBehaviour
             (int.Parse (nowTime.Split (':') [2]) - int.Parse (time.Split (':') [2])));
     }
 
+    /**********************************************************************
+     * Dashboard Command
+     **********************************************************************/
+    public void WriteNewAgentID ()
+    {
+        ArduinoController.ArduinoConnector.WriteLine ("Z/" + ADN + "/ID/" + writeID.text + "/");
+    }
+    public void SendBadgePresents ()
+    {
+        if (!ExitSpaceData.IsStage1Entry (ADN)) return;
+        string presents = "";
+        for (int i = 0; i < tglPresents.Length; i++)
+        {
+            presents += tglPresents[i].isOn ? ((i + 1) + ".") : "";
+        }
+        Debug.Log (presents);
+        ArduinoController.ArduinoConnector.WriteLine ("Z/" + ADN + "/Present/" + presents + "/");
+    }
     public void Unlock ()
     {
         ArduinoController.ArduinoConnector.WriteLine ("Z/" + ADN + "/UnlockForce/");
@@ -370,26 +470,18 @@ public class ArduinoProcessor : MonoBehaviour
         foreach (Button btn in dicAdnBtns.Values)
         {
             btn.GetComponentsInChildren<Image> () [0].color = clearColor;
+            btn.GetComponentsInChildren<Image> () [1].enabled = false;
         }
-    }
-    public void SendBadgePresents ()
-    {
-        if (!ExitSpaceData.IsStage1Entry (ADN)) return;
-        string presents = "";
-        for (int i = 0; i < tglPresents.Length; i++)
+        foreach (Button btn in dicXtdBtns.Values)
         {
-            presents += tglPresents[i].isOn ? ((i + 1) + ".") : "";
+            btn.GetComponentsInChildren<Image> () [0].color = clearColor;
+            btn.GetComponentsInChildren<Image> () [1].enabled = false;
         }
-        Debug.Log (presents);
-        ArduinoController.ArduinoConnector.WriteLine ("Z/" + ADN + "/Present/" + presents + "/");
     }
-    public void WriteNewAgentID ()
+    public void Plus (int num)
     {
-        ArduinoController.ArduinoConnector.WriteLine ("Z/" + ADN + "/ID/" + writeID.text + "/");
+        indexChecking += num;
+        indexChecking = (int) Mathf.Repeat (indexChecking, ExitSpaceData.DEVICES.Length);
+        nextCheckingTime = Time.time;
     }
-
-    /**********************************************************************
-     * Dashboard Command
-     **********************************************************************/
-
 }

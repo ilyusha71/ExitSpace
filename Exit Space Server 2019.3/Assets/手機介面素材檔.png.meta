@@ -7,34 +7,34 @@ TextureImporter:
     second: "\u624B\u6A5F\u4ECB\u9762\u7D20\u6750\u6A94_0"
   - first:
       213: -4705130621777408729
-    second: "\u624B\u6A5F\u4ECB\u9762\u7D20\u6750\u6A94_1"
+    second: 09
   - first:
       213: -3863154153925866640
-    second: "\u624B\u6A5F\u4ECB\u9762\u7D20\u6750\u6A94_2"
+    second: 05
   - first:
       213: -4261999112991241527
-    second: "\u624B\u6A5F\u4ECB\u9762\u7D20\u6750\u6A94_3"
+    second: 02
   - first:
       213: -6295863275639490697
-    second: "\u624B\u6A5F\u4ECB\u9762\u7D20\u6750\u6A94_4"
+    second: 03
   - first:
       213: 2442309044273015638
-    second: "\u624B\u6A5F\u4ECB\u9762\u7D20\u6750\u6A94_5"
+    second: 08
   - first:
       213: -491807477212879222
-    second: "\u624B\u6A5F\u4ECB\u9762\u7D20\u6750\u6A94_6"
+    second: 06
   - first:
       213: -4896854232726642125
-    second: "\u624B\u6A5F\u4ECB\u9762\u7D20\u6750\u6A94_7"
+    second: 01
   - first:
       213: -7356516495296120235
-    second: "\u624B\u6A5F\u4ECB\u9762\u7D20\u6750\u6A94_8"
+    second: 10
   - first:
       213: 2105068702940944454
-    second: "\u624B\u6A5F\u4ECB\u9762\u7D20\u6750\u6A94_9"
+    second: 07
   - first:
       213: 6249661129386181320
-    second: "\u624B\u6A5F\u4ECB\u9762\u7D20\u6750\u6A94_10"
+    second: 04
   - first:
       213: -7190570193986706846
     second: "\u624B\u6A5F\u4ECB\u9762\u7D20\u6750\u6A94_11"
@@ -174,7 +174,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "\u624B\u6A5F\u4ECB\u9762\u7D20\u6750\u6A94_1"
+      name: 09
       rect:
         serializedVersion: 2
         x: 0
@@ -195,7 +195,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "\u624B\u6A5F\u4ECB\u9762\u7D20\u6750\u6A94_2"
+      name: 05
       rect:
         serializedVersion: 2
         x: 128
@@ -216,7 +216,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "\u624B\u6A5F\u4ECB\u9762\u7D20\u6750\u6A94_3"
+      name: 02
       rect:
         serializedVersion: 2
         x: 256
@@ -237,7 +237,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "\u624B\u6A5F\u4ECB\u9762\u7D20\u6750\u6A94_4"
+      name: 03
       rect:
         serializedVersion: 2
         x: 384
@@ -258,7 +258,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "\u624B\u6A5F\u4ECB\u9762\u7D20\u6750\u6A94_5"
+      name: 08
       rect:
         serializedVersion: 2
         x: 0
@@ -279,7 +279,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "\u624B\u6A5F\u4ECB\u9762\u7D20\u6750\u6A94_6"
+      name: 06
       rect:
         serializedVersion: 2
         x: 128
@@ -300,7 +300,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "\u624B\u6A5F\u4ECB\u9762\u7D20\u6750\u6A94_7"
+      name: 01
       rect:
         serializedVersion: 2
         x: 256
@@ -321,7 +321,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "\u624B\u6A5F\u4ECB\u9762\u7D20\u6750\u6A94_8"
+      name: 10
       rect:
         serializedVersion: 2
         x: 384
@@ -342,7 +342,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "\u624B\u6A5F\u4ECB\u9762\u7D20\u6750\u6A94_9"
+      name: 07
       rect:
         serializedVersion: 2
         x: 0
@@ -363,7 +363,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "\u624B\u6A5F\u4ECB\u9762\u7D20\u6750\u6A94_10"
+      name: 04
       rect:
         serializedVersion: 2
         x: 0
