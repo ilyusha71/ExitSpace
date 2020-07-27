@@ -1,0 +1,668 @@
+fileFormatVersion: 2
+guid: 80828d60cb0a5964780f09ef48d5bfea
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3858525690221334962
+    second: Atlas_UIWorldObject_0
+  - first:
+      213: -2994234030159798508
+    second: Atlas_UIWorldObject_1
+  - first:
+      213: -2989999660707424824
+    second: Atlas_UIWorldObject_2
+  - first:
+      213: 7804272256779354271
+    second: Atlas_UIWorldObject_3
+  - first:
+      213: -6573470078433616770
+    second: Atlas_UIWorldObject_4
+  - first:
+      213: 5161997163545320605
+    second: Atlas_UIWorldObject_5
+  - first:
+      213: -9116893158298779920
+    second: Atlas_UIWorldObject_6
+  - first:
+      213: 5408211362543556541
+    second: Atlas_UIWorldObject_7
+  - first:
+      213: 4714988629266987349
+    second: Atlas_UIWorldObject_8
+  - first:
+      213: -3821305550618637403
+    second: Atlas_UIWorldObject_9
+  - first:
+      213: -8610010848993468710
+    second: Atlas_UIWorldObject_10
+  - first:
+      213: 2900590577052926731
+    second: Atlas_UIWorldObject_11
+  - first:
+      213: -2322851845563520522
+    second: Atlas_UIWorldObject_12
+  - first:
+      213: -1128946695327379496
+    second: Atlas_UIWorldObject_13
+  - first:
+      213: 1346763549817976702
+    second: Atlas_UIWorldObject_14
+  - first:
+      213: -5365915690301883894
+    second: Atlas_UIWorldObject_15
+  - first:
+      213: 3555016090104202260
+    second: Atlas_UIWorldObject_16
+  - first:
+      213: 2605127224452103400
+    second: Atlas_UIWorldObject_17
+  - first:
+      213: -1820867423579020333
+    second: Atlas_UIWorldObject_18
+  - first:
+      213: 4394683215285949015
+    second: Atlas_UIWorldObject_19
+  - first:
+      213: -1156024348806324553
+    second: Atlas_UIWorldObject_20
+  - first:
+      213: 3546635588724859339
+    second: Atlas_UIWorldObject_21
+  - first:
+      213: -177550302389233148
+    second: Atlas_UIWorldObject_22
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: -1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_0
+      rect:
+        serializedVersion: 2
+        x: 279
+        y: 214
+        width: 38
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b19c520cac3c8530800000000000000
+      internalID: 3858525690221334962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_1
+      rect:
+        serializedVersion: 2
+        x: 321
+        y: 235
+        width: 37
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 41f50f183085276d0800000000000000
+      internalID: -2994234030159798508
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_2
+      rect:
+        serializedVersion: 2
+        x: 423
+        y: 232
+        width: 34
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c5def876236186d0800000000000000
+      internalID: -2989999660707424824
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_3
+      rect:
+        serializedVersion: 2
+        x: 459
+        y: 232
+        width: 36
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f9005cbc4485e4c60800000000000000
+      internalID: 7804272256779354271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_4
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 0
+        width: 217
+        height: 209
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e7c1e499ac756c4a0800000000000000
+      internalID: -6573470078433616770
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_5
+      rect:
+        serializedVersion: 2
+        x: 223
+        y: 168
+        width: 52
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d9c51b0221913a740800000000000000
+      internalID: 5161997163545320605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_6
+      rect:
+        serializedVersion: 2
+        x: 284
+        y: 153
+        width: 53
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0fe7964d9f94a7180800000000000000
+      internalID: -9116893158298779920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_7
+      rect:
+        serializedVersion: 2
+        x: 340
+        y: 192
+        width: 40
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db7d3ae8493dd0b40800000000000000
+      internalID: 5408211362543556541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_8
+      rect:
+        serializedVersion: 2
+        x: 383
+        y: 191
+        width: 38
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 559f67f5d210f6140800000000000000
+      internalID: 4714988629266987349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_9
+      rect:
+        serializedVersion: 2
+        x: 434
+        y: 188
+        width: 32
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5abc52d09def7fac0800000000000000
+      internalID: -3821305550618637403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_10
+      rect:
+        serializedVersion: 2
+        x: 477
+        y: 180
+        width: 33
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ade1c7920c8138880800000000000000
+      internalID: -8610010848993468710
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_11
+      rect:
+        serializedVersion: 2
+        x: 223
+        y: 104
+        width: 59
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b03c51803c7f04820800000000000000
+      internalID: 2900590577052926731
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_12
+      rect:
+        serializedVersion: 2
+        x: 339
+        y: 153
+        width: 14
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f9635fad8293cfd0800000000000000
+      internalID: -2322851845563520522
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_13
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 126
+        width: 59
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8df09a646fc2550f0800000000000000
+      internalID: -1128946695327379496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_14
+      rect:
+        serializedVersion: 2
+        x: 425
+        y: 126
+        width: 52
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e773857205aa0b210800000000000000
+      internalID: 1346763549817976702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_15
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 80
+        width: 68
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a0a7cd80c107885b0800000000000000
+      internalID: -5365915690301883894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_16
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 81
+        width: 96
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 41485757c44f55130800000000000000
+      internalID: 3555016090104202260
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_17
+      rect:
+        serializedVersion: 2
+        x: 479
+        y: 101
+        width: 30
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ecba287865472420800000000000000
+      internalID: 2605127224452103400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_18
+      rect:
+        serializedVersion: 2
+        x: 223
+        y: 0
+        width: 69
+        height: 101
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d3ed72c9bafab6e0800000000000000
+      internalID: -1820867423579020333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_19
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 0
+        width: 78
+        height: 78
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7529d7ba91d0dfc30800000000000000
+      internalID: 4394683215285949015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_20
+      rect:
+        serializedVersion: 2
+        x: 374
+        y: 0
+        width: 77
+        height: 79
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7be52b9caf9f4ffe0800000000000000
+      internalID: -1156024348806324553
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_21
+      rect:
+        serializedVersion: 2
+        x: 463
+        y: 59
+        width: 40
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc124bde64e283130800000000000000
+      internalID: 3546635588724859339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIWorldObject_22
+      rect:
+        serializedVersion: 2
+        x: 453
+        y: 0
+        width: 54
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40a9350d0f6398df0800000000000000
+      internalID: -177550302389233148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: e37d62861efa966449c0aee4e0afe8d5
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

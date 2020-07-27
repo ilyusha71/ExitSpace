@@ -4,7 +4,9 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using UnityEngine;
+
 using UnityEngine.SceneManagement;
+
 using UnityEngine.UI;
 
 public class ArduinoProcessor : MonoBehaviour
@@ -24,8 +26,6 @@ public class ArduinoProcessor : MonoBehaviour
 
     [Header ("Ground Server")]
     public TextMeshProUGUI textVersion;
-    public bool timeoutSwitch;
-    public GameObject groundPanel;
     public Transform groupAdnBtns;
     private Dictionary<string, Button> dicAdnBtns = new Dictionary<string, Button> ();
     public Transform groupXtdBtns;
@@ -36,8 +36,6 @@ public class ArduinoProcessor : MonoBehaviour
     public Color32 clearColor, checkColor, readColor;
     public AudioSource asDingDong;
     public AudioClip acDingDong;
-
-    public Transform content;
 
     [Header ("Auto Checking")]
     public Toggle isChecking;
@@ -107,10 +105,6 @@ public class ArduinoProcessor : MonoBehaviour
 
     void Update ()
     {
-        content.Translate (new Vector3 (Input.GetAxis ("Horizontal") * -5.0f, Input.GetAxis ("Vertical") * -5.0f, 0));
-
-        if (Input.GetKeyDown (KeyCode.F9))
-            groundPanel.SetActive (!groundPanel.activeSelf);
         if (Input.GetKeyDown (KeyCode.LeftBracket))
             Check ();
         if (Input.GetKeyDown (KeyCode.RightBracket))
@@ -138,6 +132,7 @@ public class ArduinoProcessor : MonoBehaviour
                     nextCheckingTime = Time.time + 10.0f;
                     indexChecking = (int) Mathf.Repeat (++indexChecking, ExitSpaceData.DEVICES.Length);
                     ArduinoController.ArduinoConnector.WriteLine ("Z/" + ExitSpaceData.DEVICES[indexChecking] + "/Checking/100/");
+                    ArduinoDashboard.Instance.arduinoTransmittedMessage.AddMessage (ExitSpaceData.DEVICES[indexChecking] + "/Checking/100/");
                     textDevice.text = ExitSpaceData.DEVICES[indexChecking];
                 }
                 textCountdown.text = ((int) (nextCheckingTime - Time.time)).ToString ();
@@ -237,53 +232,56 @@ public class ArduinoProcessor : MonoBehaviour
                  **********************************************************************/
                 else if (commands[4] == "Unlock")
                 {
+                    string unlockCommand = "";
                     if (ExitSpaceData.IsMerlinCabinet (commands[1]))
-                        ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked_1_U1_X/");
+                        unlockCommand = ("Z/" + commands[1] + "/Unlocked_1_U1_X/");
                     else if (ExitSpaceData.IsStage2Door (commands[1]))
-                        ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/IsStage2Door/");
+                        unlockCommand = ("Z/" + commands[1] + "/Unlocked/IsStage2Door/");
                     else if (ExitSpaceData.IsStage2Entry (commands[1]))
                     {
                         props.Add (PlayerCustomData.STAGE_2_TIME, nowTime);
-                        ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/IsStage2Entry/");
+                        unlockCommand = ("Z/" + commands[1] + "/Unlocked/IsStage2Entry/");
                     }
                     else if (ExitSpaceData.IsStage3Entry (commands[1]))
                     {
                         props.Add (PlayerCustomData.STAGE_3_TIME, nowTime);
                         if (commands[1] == "3-E6-E4")
-                            ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked_3_E6_E4/IsStage3Entry/" + commands[2] + "/");
+                            unlockCommand = ("Z/" + commands[1] + "/Unlocked_3_E6_E4/IsStage3Entry/" + commands[2] + "/");
                         else if (commands[1] == "3-U1-X")
-                            ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/IsStage3Entry/");
+                            unlockCommand = ("Z/" + commands[1] + "/Unlocked/IsStage3Entry/");
                     }
                     else if (ExitSpaceData.IsChanceDoor (commands[1]))
                     {
                         props.Add (PlayerCustomData.MAZE_TIME, "Pause");
                         props.Add (PlayerCustomData.TRAP_TIME, nowTime);
-                        ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/IsChanceDoor/");
+                        unlockCommand = ("Z/" + commands[1] + "/Unlocked/IsChanceDoor/");
                     }
                     else if (ExitSpaceData.IsFateDoor (commands[1]))
                     {
                         props.Add (PlayerCustomData.MAZE_TIME, nowTime);
                         props.Add (PlayerCustomData.TRAP_TIME, "Pause");
-                        ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/IsFateDoor/");
+                        unlockCommand = ("Z/" + commands[1] + "/Unlocked/IsFateDoor/");
                     }
                     else if (ExitSpaceData.IsStage4Entry (commands[1]))
                     {
                         props.Add (PlayerCustomData.STAGE_4_TIME, nowTime);
                         props.Add (PlayerCustomData.MAZE_TIME, "Pause");
                         props.Add (PlayerCustomData.TRAP_TIME, "Pause");
-                        ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/IsStage4Entry/");
+                        unlockCommand = ("Z/" + commands[1] + "/Unlocked/IsStage4Entry/");
                     }
                     else if (ExitSpaceData.IsChallengeBox (commands[1]))
                     {
                         string title = ExitSpaceData.GetTitle (commands[1].Split ('-') [2]);
                         props.Add (PlayerCustomData.CHALLENGE, title);
-                        ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/IsBox/");
+                        unlockCommand = ("Z/" + commands[1] + "/Unlocked/IsBox/");
                     }
                     else
                     {
                         Debug.LogWarning ("Site: " + commands[1]);
-                        ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Unlocked/Unknown");
+                        unlockCommand = ("Z/" + commands[1] + "/Unlocked/Unknown");
                     }
+                    ArduinoController.ArduinoConnector.WriteLine (unlockCommand);
+                    ArduinoDashboard.Instance.arduinoTransmittedMessage.AddMessage (unlockCommand);
                 }
                 /**********************************************************************
                  * Z/4B1-A345-T1/0/KGB-952/Confer/
@@ -298,6 +296,7 @@ public class ArduinoProcessor : MonoBehaviour
                     props.Add (PlayerCustomData.TITLE, title);
                     props.Add (PlayerCustomData.FINISH_TIME, nowTime);
                     ArduinoController.ArduinoConnector.WriteLine ("Z/" + commands[1] + "/Conferred/");
+                    ArduinoDashboard.Instance.arduinoTransmittedMessage.AddMessage (commands[1] + "/Conferred/");
                 }
                 // 地圖標記
                 foreach (Player player in PhotonNetwork.PlayerList)
@@ -438,6 +437,7 @@ public class ArduinoProcessor : MonoBehaviour
     public void WriteNewAgentID ()
     {
         ArduinoController.ArduinoConnector.WriteLine ("Z/" + ADN + "/ID/" + writeID.text + "/");
+        ArduinoDashboard.Instance.arduinoTransmittedMessage.AddMessage (ADN + "/ID/" + writeID.text + "/");
     }
     public void SendBadgePresents ()
     {
@@ -449,10 +449,12 @@ public class ArduinoProcessor : MonoBehaviour
         }
         Debug.Log (presents);
         ArduinoController.ArduinoConnector.WriteLine ("Z/" + ADN + "/Present/" + presents + "/");
+        ArduinoDashboard.Instance.arduinoTransmittedMessage.AddMessage (ADN + "/Present/" + presents + "/");
     }
     public void Unlock ()
     {
         ArduinoController.ArduinoConnector.WriteLine ("Z/" + ADN + "/UnlockForce/");
+        ArduinoDashboard.Instance.arduinoTransmittedMessage.AddMessage (ADN + "/UnlockForce/");
     }
     public void Check ()
     {
@@ -464,6 +466,7 @@ public class ArduinoProcessor : MonoBehaviour
         if (callback == "2000")
             callback = customCallbackTime.text;
         ArduinoController.ArduinoConnector.WriteLine ("Z/" + ADN + "/Checking/" + callback + "/");
+        ArduinoDashboard.Instance.arduinoTransmittedMessage.AddMessage (ADN + "/Checking/" + callback + "/");
     }
     public void CheckRestart ()
     {

@@ -1,0 +1,1028 @@
+fileFormatVersion: 2
+guid: 25a78c5af9da9d64ba0fee48ff42ffdf
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4557716230922115013
+    second: Atlas_UIDoramiEvent_0
+  - first:
+      213: 3491769521328301568
+    second: Atlas_UIDoramiEvent_1
+  - first:
+      213: -535256945033202779
+    second: Atlas_UIDoramiEvent_2
+  - first:
+      213: -2405048255450307340
+    second: Atlas_UIDoramiEvent_3
+  - first:
+      213: -924438470707145538
+    second: Atlas_UIDoramiEvent_4
+  - first:
+      213: 6170162622576917346
+    second: Atlas_UIDoramiEvent_5
+  - first:
+      213: -3201197056281857010
+    second: Atlas_UIDoramiEvent_6
+  - first:
+      213: 2876143930237336244
+    second: Atlas_UIDoramiEvent_7
+  - first:
+      213: -6495140888278283059
+    second: Atlas_UIDoramiEvent_8
+  - first:
+      213: 3095720043246624422
+    second: Atlas_UIDoramiEvent_9
+  - first:
+      213: 2568051317650371192
+    second: Atlas_UIDoramiEvent_10
+  - first:
+      213: -711037564007567901
+    second: Atlas_UIDoramiEvent_11
+  - first:
+      213: -6275676711097843384
+    second: Atlas_UIDoramiEvent_12
+  - first:
+      213: -228478400187286143
+    second: Atlas_UIDoramiEvent_13
+  - first:
+      213: 5880223166640770028
+    second: Atlas_UIDoramiEvent_14
+  - first:
+      213: -7790475699040604316
+    second: Atlas_UIDoramiEvent_15
+  - first:
+      213: 6492555437407902252
+    second: Atlas_UIDoramiEvent_16
+  - first:
+      213: 6701146697203226358
+    second: Atlas_UIDoramiEvent_17
+  - first:
+      213: -5502526687242042400
+    second: Atlas_UIDoramiEvent_18
+  - first:
+      213: 8411291072894370020
+    second: Atlas_UIDoramiEvent_19
+  - first:
+      213: 2909583958908168143
+    second: Atlas_UIDoramiEvent_20
+  - first:
+      213: -5862807245173466319
+    second: Atlas_UIDoramiEvent_21
+  - first:
+      213: 8478976996832273806
+    second: Atlas_UIDoramiEvent_22
+  - first:
+      213: -5820056773550985872
+    second: Atlas_UIDoramiEvent_23
+  - first:
+      213: 7899868318329589982
+    second: Atlas_UIDoramiEvent_24
+  - first:
+      213: 5307505324122390826
+    second: Atlas_UIDoramiEvent_25
+  - first:
+      213: 8492498653728912226
+    second: Atlas_UIDoramiEvent_26
+  - first:
+      213: 7081278879365643595
+    second: Atlas_UIDoramiEvent_27
+  - first:
+      213: 5964764278744155756
+    second: Atlas_UIDoramiEvent_28
+  - first:
+      213: -6853980849665809970
+    second: Atlas_UIDoramiEvent_29
+  - first:
+      213: -3555671877547673899
+    second: Atlas_UIDoramiEvent_30
+  - first:
+      213: 2663543315917172846
+    second: Atlas_UIDoramiEvent_31
+  - first:
+      213: 5492830239971454490
+    second: Atlas_UIDoramiEvent_32
+  - first:
+      213: 4569472866011554921
+    second: Atlas_UIDoramiEvent_33
+  - first:
+      213: 5579405843511351120
+    second: Atlas_UIDoramiEvent_34
+  - first:
+      213: 2743767518343739994
+    second: Atlas_UIDoramiEvent_35
+  - first:
+      213: 8833860920518030666
+    second: Atlas_UIDoramiEvent_36
+  - first:
+      213: -6529595152085472628
+    second: Atlas_UIDoramiEvent_37
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: -1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 508
+        width: 58
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b38eadc5c3dbfb0c0800000000000000
+      internalID: -4557716230922115013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_1
+      rect:
+        serializedVersion: 2
+        x: 140
+        y: 475
+        width: 37
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0062f4421e1457030800000000000000
+      internalID: 3491769521328301568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 428
+        width: 42
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a33cb7f4a26298f0800000000000000
+      internalID: -535256945033202779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_3
+      rect:
+        serializedVersion: 2
+        x: 44
+        y: 472
+        width: 44
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f4263aaa5d8f9ed0800000000000000
+      internalID: -2405048255450307340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_4
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 475
+        width: 48
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eb49bc8db1cbb23f0800000000000000
+      internalID: -924438470707145538
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_5
+      rect:
+        serializedVersion: 2
+        x: 180
+        y: 427
+        width: 52
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 26bf61dd632d0a550800000000000000
+      internalID: 6170162622576917346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_6
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 432
+        width: 37
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e043b4cec301393d0800000000000000
+      internalID: -3201197056281857010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_7
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 428
+        width: 15
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ba31b48aad1ae720800000000000000
+      internalID: 2876143930237336244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_8
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 427
+        width: 63
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dccce0c56cf9cd5a0800000000000000
+      internalID: -6495140888278283059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_9
+      rect:
+        serializedVersion: 2
+        x: 251
+        y: 398
+        width: 60
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ae95cd3af436fa20800000000000000
+      internalID: 3095720043246624422
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_10
+      rect:
+        serializedVersion: 2
+        x: 313
+        y: 398
+        width: 54
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8723689311d83a320800000000000000
+      internalID: 2568051317650371192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_11
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 394
+        width: 112
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3edae5f4a13e126f0800000000000000
+      internalID: -711037564007567901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_12
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 394
+        width: 22
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 84142ddf74158e8a0800000000000000
+      internalID: -6275676711097843384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_13
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 325
+        width: 101
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 18dbcf50b1844dcf0800000000000000
+      internalID: -228478400187286143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_14
+      rect:
+        serializedVersion: 2
+        x: 399
+        y: 292
+        width: 83
+        height: 113
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ceb45a7b0dfba9150800000000000000
+      internalID: 5880223166640770028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_15
+      rect:
+        serializedVersion: 2
+        x: 782
+        y: 292
+        width: 60
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46f2f5f90aba2e390800000000000000
+      internalID: -7790475699040604316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 145
+        height: 199
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c2a9a3375c03a1a50800000000000000
+      internalID: 6492555437407902252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_17
+      rect:
+        serializedVersion: 2
+        x: 251
+        y: 325
+        width: 35
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f6949aba614ffc50800000000000000
+      internalID: 6701146697203226358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_18
+      rect:
+        serializedVersion: 2
+        x: 299
+        y: 303
+        width: 92
+        height: 83
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0e3c4dfa12913a3b0800000000000000
+      internalID: -5502526687242042400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_19
+      rect:
+        serializedVersion: 2
+        x: 488
+        y: 262
+        width: 128
+        height: 87
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e088467aa8eab470800000000000000
+      internalID: 8411291072894370020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_20
+      rect:
+        serializedVersion: 2
+        x: 618
+        y: 292
+        width: 162
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc765eae13be06820800000000000000
+      internalID: 2909583958908168143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_21
+      rect:
+        serializedVersion: 2
+        x: 845
+        y: 292
+        width: 46
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 13b59dc7fdf13aea0800000000000000
+      internalID: -5862807245173466319
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_22
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 192
+        width: 143
+        height: 131
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e8565e2b7a06ba570800000000000000
+      internalID: 8478976996832273806
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_23
+      rect:
+        serializedVersion: 2
+        x: 904
+        y: 286
+        width: 22
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 07d23ef43310b3fa0800000000000000
+      internalID: -5820056773550985872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_24
+      rect:
+        serializedVersion: 2
+        x: 925
+        y: 298
+        width: 22
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ed0d5665168f1ad60800000000000000
+      internalID: 7899868318329589982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_25
+      rect:
+        serializedVersion: 2
+        x: 948
+        y: 298
+        width: 24
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a214fcfc8fb08a940800000000000000
+      internalID: 5307505324122390826
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_26
+      rect:
+        serializedVersion: 2
+        x: 971
+        y: 221
+        width: 33
+        height: 86
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 263bef6c78a6bd570800000000000000
+      internalID: 8492498653728912226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_27
+      rect:
+        serializedVersion: 2
+        x: 314
+        y: 0
+        width: 172
+        height: 290
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4db0106f91c54260800000000000000
+      internalID: 7081278879365643595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_28
+      rect:
+        serializedVersion: 2
+        x: 488
+        y: 99
+        width: 173
+        height: 161
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c660c73428917c250800000000000000
+      internalID: 5964764278744155756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_29
+      rect:
+        serializedVersion: 2
+        x: 663
+        y: 188
+        width: 113
+        height: 102
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec1e65e2bb4c1e0a0800000000000000
+      internalID: -6853980849665809970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_30
+      rect:
+        serializedVersion: 2
+        x: 778
+        y: 187
+        width: 113
+        height: 103
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d6bce02447b7aec0800000000000000
+      internalID: -3555671877547673899
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_31
+      rect:
+        serializedVersion: 2
+        x: 893
+        y: 221
+        width: 32
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e60fb15a88ec6f420800000000000000
+      internalID: 2663543315917172846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_32
+      rect:
+        serializedVersion: 2
+        x: 919
+        y: 217
+        width: 59
+        height: 80
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1ea50140047a3c40800000000000000
+      internalID: 5492830239971454490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_33
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 312
+        height: 190
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 964a76d8c570a6f30800000000000000
+      internalID: 4569472866011554921
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_34
+      rect:
+        serializedVersion: 2
+        x: 663
+        y: 99
+        width: 233
+        height: 86
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0579b30cd080e6d40800000000000000
+      internalID: 5579405843511351120
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_35
+      rect:
+        serializedVersion: 2
+        x: 898
+        y: 99
+        width: 123
+        height: 116
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a5a32255502d31620800000000000000
+      internalID: 2743767518343739994
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_36
+      rect:
+        serializedVersion: 2
+        x: 488
+        y: 0
+        width: 460
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a45bea214bd289a70800000000000000
+      internalID: 8833860920518030666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atlas_UIDoramiEvent_37
+      rect:
+        serializedVersion: 2
+        x: 950
+        y: 0
+        width: 41
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8a25d0fdc73265a0800000000000000
+      internalID: -6529595152085472628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

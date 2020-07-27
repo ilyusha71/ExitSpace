@@ -26,8 +26,8 @@ public static class ArduinoController
     // Arduino 連線參數與設定
     private static readonly string PREFS_PORT = "Arduino Port"; // COM10以上無法連接，請通過【裝置管理員】更改COM的編號
     private static readonly string PREFS_RATE = "Arduino Rate";
-    private static readonly string[] valueCOM = new string[] { "Unknown", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9" };
-    private static readonly int[] valueBaud = new int[] { 0, 9600, 19200, 38400 };
+    private static readonly string[] valueCOM = new string[] { "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9" };
+    private static readonly int[] valueBaud = new int[] { 9600, 19200, 38400 };
     public static string SerialPort { get; private set; }
     public static int SerialRate { get; private set; }
     public static int Port
@@ -68,8 +68,7 @@ public static class ArduinoController
     public static bool safetyOff = false;
     // Arduino 連線狀態
     public static ArduinoStatus Status = ArduinoStatus.Unconnected;
-    public static int timeBoot { get; private set; } //, timeUnload;
-    public static bool isRecieving { get; set; }
+    public static string timeBoot, timeLastReceived;
     public static string Keyword { get; private set; }
     // Arduino 訊息接收
     private static string ArduinoMessages;
@@ -86,22 +85,22 @@ public static class ArduinoController
         if (Status == ArduinoStatus.Unconnected)
         {
             Status = ArduinoStatus.Connecting;
-            Keyword = "<color=Yellow>開始連接Arduino</color> <color=white>" + SerialPort + " " + SerialRate + "</color>";
+            Keyword = "[Control]Arduino is connecting... " + SerialPort + " " + SerialRate;
             queueMsg.Enqueue (Keyword);
-            Debug.Log (Keyword);
+            // Debug.Log (Keyword);
         }
         else if (Status == ArduinoStatus.Connected)
         {
-            Keyword = "<color=Yellow>已連接Arduino</color> <color=white>" + ArduinoConnector.PortName + " " + ArduinoConnector.BaudRate + "</color>";
+            Keyword = "[Control]Arduino has connected. " + ArduinoConnector.PortName + " " + ArduinoConnector.BaudRate;
             queueMsg.Enqueue (Keyword);
-            Debug.LogWarning (Keyword);
+            // Debug.LogWarning (Keyword);
             return;
         }
         else if (Status == ArduinoStatus.Aborting)
         {
-            Keyword = "<color=Yellow>請等待Arduino完成中斷後再重新連接</color>";
+            Keyword = "[Control]Arduino is aborting... ";
             queueMsg.Enqueue (Keyword);
-            Debug.LogWarning (Keyword);
+            // Debug.LogWarning (Keyword);
             return;
         }
 
@@ -115,17 +114,17 @@ public static class ArduinoController
         catch (Exception ex)
         {
             Status = ArduinoStatus.Unconnected;
-            Keyword = "<color=#FF8989>Arduino連接失敗</color>：" + ex.Message;
+            Keyword = "[Control]Arduino connection failed: " + ex.Message;
             queueMsg.Enqueue (Keyword);
-            Debug.LogWarning (Keyword);
+            // Debug.LogWarning (Keyword);
         }
     }
 
     private static void GetArduino ()
     {
-        Keyword = "<color=Yellow>執行緒開始</color> <color=white>GetArduino</color>";
+        Keyword = "[Control]Try to get Arduino messages...";
         queueMsg.Enqueue (Keyword);
-        Debug.LogWarning (Keyword);
+        // Debug.LogWarning (Keyword);
         while (ArduinoThread.IsAlive && Status != ArduinoStatus.Aborting)
         {
             if (ArduinoConnector.IsOpen)
@@ -135,15 +134,17 @@ public static class ArduinoController
                     ArduinoMessages = ArduinoConnector.ReadLine ();
                     if (string.IsNullOrEmpty (ArduinoMessages)) Debug.LogWarning ("empty");
                     string check = ArduinoMessages.Split ('/') [0];
-                    if (check == "ArduinoCallback") queueMsg.Enqueue ("<color=orange>Arduino Callback - 雙向通訊已完成，哇咔咔</color>");
+                    if (check == "ArduinoCallback") queueMsg.Enqueue ("[Control]Double check completed.");
                     else
                     {
                         if (ArduinoMessages.Contains ("ArduinoCallback"))
-                            queueMsg.Enqueue ("<color=orange>Arduino Callback - 雙向通訊已完成，哇咔咔卡</color>");
+                            queueMsg.Enqueue ("[Control]Double check completed.");
                     }
                     if (check == "Wakaka")
                     {
-                        isRecieving = true;
+                        timeLastReceived = String.Format ("{0:00}", DateTime.Now.Hour) + ":" +
+                            String.Format ("{0:00}", DateTime.Now.Minute) + ":" +
+                            String.Format ("{0:00}", DateTime.Now.Second);
                         WakakaMessages = ArduinoMessages.Replace ("Wakaka/", "");
                         queueMsg.Enqueue (WakakaMessages);
 
@@ -166,15 +167,15 @@ public static class ArduinoController
                 }
                 catch (Exception ex)
                 {
-                    Keyword = "<color=#FF8989>Arduino訊息接收錯誤</color>：" + ex.Message;
+                    Keyword = "[Control]Arduino receive failed: " + ex.Message;
                     queueMsg.Enqueue (Keyword);
-                    Debug.LogWarning (Keyword);
+                    // Debug.LogWarning (Keyword);
                 }
             }
         }
-        Keyword = "<color=Yellow>執行緒結束</color> <color=white>GetArduino</color>";
+        Keyword = "[Control]Thread end.";
         queueMsg.Enqueue (Keyword);
-        Debug.LogWarning (Keyword);
+        // Debug.LogWarning (Keyword);
     }
 
     public static void DisconnectArduino ()
@@ -182,9 +183,9 @@ public static class ArduinoController
         if (Status == ArduinoStatus.Connected)
         {
             Status = ArduinoStatus.Aborting;
-            Keyword = "<color=Yellow>開始中斷Arduino</color> <color=white>" + ArduinoConnector.PortName + " " + ArduinoConnector.BaudRate + "</color>";
+            Keyword = "[Control]Disconnect Arduino... " + ArduinoConnector.PortName + " " + ArduinoConnector.BaudRate;
             queueMsg.Enqueue (Keyword);
-            Debug.LogWarning (Keyword);
+            // Debug.LogWarning (Keyword);
         }
         else if (Status == ArduinoStatus.Unconnected || Status == ArduinoStatus.Connecting)
         {
@@ -200,9 +201,9 @@ public static class ArduinoController
                 Aborting ();
             else
             {
-                Keyword = "<color=#FF8989>執行緒未開啟</color>";
+                Keyword = "[Control]Thread is not opened.";
                 queueMsg.Enqueue (Keyword);
-                Debug.LogWarning (Keyword);
+                // Debug.LogWarning (Keyword);
             }
         }
     }
@@ -213,24 +214,28 @@ public static class ArduinoController
         ArduinoConnector.Close ();
         Thread.Sleep (1000);
         ArduinoThread.Abort ();
-        Keyword = "<color=Yellow>執行緒正在斷開，當前執行緒狀態</color> <color=white>" + ArduinoThread.IsAlive + "</color>";
+        Keyword = "[Control]Thread is aborting... IsAlive? " + ArduinoThread.IsAlive;
         queueMsg.Enqueue (Keyword);
-        Debug.Log (Keyword);
+        // Debug.Log (Keyword);
     }
 
-    public static void CheckStatus ()
+    public static ArduinoStatus CheckStatus ()
     {
         if (Status == ArduinoStatus.Connecting)
         {
             if (ArduinoThread.IsAlive)
             {
+                timeBoot = String.Format ("{0:00}", DateTime.Now.Hour) + ":" +
+                    String.Format ("{0:00}", DateTime.Now.Minute) + ":" +
+                    String.Format ("{0:00}", DateTime.Now.Second);
+
                 Status = ArduinoStatus.Connected;
-                Keyword = "<color=lime>已成功連接Arduino</color> <color=white>at " + (int) Time.time + "</color>";
+                Keyword = "[Control]Arduino has booted at " + timeBoot;
                 queueMsg.Enqueue (Keyword);
-                Debug.Log (Keyword);
+                // Debug.Log (Keyword);
 
                 // Arduino Callback
-                timeBoot = (int) Time.time;
+
                 ArduinoConnector.WriteLine ("R");
             }
             else
@@ -268,20 +273,25 @@ public static class ArduinoController
             else
             {
                 Status = ArduinoStatus.Unconnected;
-                Keyword = "<color=lime>已成功中斷Arduino</color> <color=white>at " + (int) Time.time + "</color>";
+                Keyword = "[Control]Arduino has disconnected at " + String.Format ("{0:00}", DateTime.Now.Hour) + ":" +
+                    String.Format ("{0:00}", DateTime.Now.Minute) + ":" +
+                    String.Format ("{0:00}", DateTime.Now.Second);
                 queueMsg.Enqueue (Keyword);
-                Debug.Log (Keyword);
+                // Debug.Log (Keyword);
 
                 if (safetyOff)
                     Application.Quit ();
             }
         }
+        return Status;
     }
 
     #endregion
 
     public static void SafetyOff ()
     {
+        if (Status == ArduinoStatus.Unconnected)
+            Application.Quit ();
         safetyOff = true;
         DisconnectArduino ();
     }
