@@ -297,7 +297,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     // Called to signal that the "low level connection" got established but before the client can call operation on the server.
     public override void OnConnected ()
     {
-        // Debug.LogWarning ("OnConnected");
+        Debug.LogWarning ("OnConnected: " + PhotonNetwork.GameVersion);
         textWarning.text = NAME_CONNECTED + NAME_ONLINE;
     }
     // Called when the client is connected to the Master Server and ready for matchmaking and other tasks.

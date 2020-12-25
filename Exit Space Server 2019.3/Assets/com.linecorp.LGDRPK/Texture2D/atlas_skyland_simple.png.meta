@@ -1,0 +1,4004 @@
+fileFormatVersion: 2
+guid: 470a2c9decd6eb74aaaa3bf9f638eea9
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5698671147244515977
+    second: atlas_skyland_simple_0
+  - first:
+      213: 3803867048439882854
+    second: atlas_skyland_simple_1
+  - first:
+      213: 7945610380698320328
+    second: atlas_skyland_simple_2
+  - first:
+      213: 340457499315052958
+    second: atlas_skyland_simple_3
+  - first:
+      213: 2088700903970982786
+    second: atlas_skyland_simple_4
+  - first:
+      213: 7356896023691014087
+    second: atlas_skyland_simple_5
+  - first:
+      213: 4889706428861811273
+    second: atlas_skyland_simple_6
+  - first:
+      213: 3094046766904046429
+    second: atlas_skyland_simple_7
+  - first:
+      213: -2852459692280101945
+    second: atlas_skyland_simple_8
+  - first:
+      213: -6071771617191107907
+    second: atlas_skyland_simple_9
+  - first:
+      213: -6152991998083213939
+    second: atlas_skyland_simple_10
+  - first:
+      213: 342895704567738166
+    second: atlas_skyland_simple_11
+  - first:
+      213: -7885762505991483445
+    second: atlas_skyland_simple_12
+  - first:
+      213: 3359696113594392326
+    second: atlas_skyland_simple_13
+  - first:
+      213: 2050972512163025919
+    second: atlas_skyland_simple_14
+  - first:
+      213: 6139828501652276580
+    second: atlas_skyland_simple_15
+  - first:
+      213: -9081190941688394677
+    second: atlas_skyland_simple_16
+  - first:
+      213: -4147795056434653936
+    second: atlas_skyland_simple_17
+  - first:
+      213: -4084532242127919670
+    second: atlas_skyland_simple_18
+  - first:
+      213: -2834960270398257532
+    second: atlas_skyland_simple_19
+  - first:
+      213: 669710294457081237
+    second: atlas_skyland_simple_20
+  - first:
+      213: -2465560021459987818
+    second: atlas_skyland_simple_21
+  - first:
+      213: 6021131052442060334
+    second: atlas_skyland_simple_22
+  - first:
+      213: 6634112789483311905
+    second: atlas_skyland_simple_23
+  - first:
+      213: 7991788459941552169
+    second: atlas_skyland_simple_24
+  - first:
+      213: -1697201693544486892
+    second: atlas_skyland_simple_25
+  - first:
+      213: 4589686194318206460
+    second: atlas_skyland_simple_26
+  - first:
+      213: 3127179933368706779
+    second: atlas_skyland_simple_27
+  - first:
+      213: -2466363334801041906
+    second: atlas_skyland_simple_28
+  - first:
+      213: -2239133778116096753
+    second: atlas_skyland_simple_29
+  - first:
+      213: 2698395617826385775
+    second: atlas_skyland_simple_30
+  - first:
+      213: 1417444207449115465
+    second: atlas_skyland_simple_31
+  - first:
+      213: 4053555699893498100
+    second: atlas_skyland_simple_32
+  - first:
+      213: 5504645197154420194
+    second: atlas_skyland_simple_33
+  - first:
+      213: 1694451277855190540
+    second: atlas_skyland_simple_34
+  - first:
+      213: 3181166076703336626
+    second: atlas_skyland_simple_35
+  - first:
+      213: -867913043123994954
+    second: atlas_skyland_simple_36
+  - first:
+      213: -677058554504401389
+    second: atlas_skyland_simple_37
+  - first:
+      213: 4532733015968282259
+    second: atlas_skyland_simple_38
+  - first:
+      213: -1888820356387995939
+    second: atlas_skyland_simple_39
+  - first:
+      213: 1334754617107296205
+    second: atlas_skyland_simple_40
+  - first:
+      213: -6974718434140950287
+    second: atlas_skyland_simple_41
+  - first:
+      213: 893500735039355374
+    second: atlas_skyland_simple_42
+  - first:
+      213: -6251734902959743530
+    second: atlas_skyland_simple_43
+  - first:
+      213: 3109214427260063541
+    second: atlas_skyland_simple_44
+  - first:
+      213: -2782928190982244996
+    second: atlas_skyland_simple_45
+  - first:
+      213: -8594088074682427683
+    second: atlas_skyland_simple_46
+  - first:
+      213: -343728433699167650
+    second: atlas_skyland_simple_47
+  - first:
+      213: -6155785226838724716
+    second: atlas_skyland_simple_48
+  - first:
+      213: -364778876059178355
+    second: atlas_skyland_simple_49
+  - first:
+      213: -2141654320010872486
+    second: atlas_skyland_simple_50
+  - first:
+      213: 1153912958703645596
+    second: atlas_skyland_simple_51
+  - first:
+      213: -7143330609711365852
+    second: atlas_skyland_simple_52
+  - first:
+      213: 8041898740747455779
+    second: atlas_skyland_simple_53
+  - first:
+      213: 1359512858277894135
+    second: atlas_skyland_simple_54
+  - first:
+      213: -7731481798259799766
+    second: atlas_skyland_simple_55
+  - first:
+      213: 8218662666209310417
+    second: atlas_skyland_simple_56
+  - first:
+      213: 8117060481641015504
+    second: atlas_skyland_simple_57
+  - first:
+      213: -8268428386123810510
+    second: atlas_skyland_simple_58
+  - first:
+      213: 5219133912707114908
+    second: atlas_skyland_simple_59
+  - first:
+      213: -938477755576437032
+    second: atlas_skyland_simple_60
+  - first:
+      213: -5085505702857955830
+    second: atlas_skyland_simple_61
+  - first:
+      213: -9026673514838253546
+    second: atlas_skyland_simple_62
+  - first:
+      213: 1923115060671713895
+    second: atlas_skyland_simple_63
+  - first:
+      213: 7530701702767541759
+    second: atlas_skyland_simple_64
+  - first:
+      213: -6372990598023984441
+    second: atlas_skyland_simple_65
+  - first:
+      213: -1799450470306081174
+    second: atlas_skyland_simple_66
+  - first:
+      213: -4907410920505851639
+    second: atlas_skyland_simple_67
+  - first:
+      213: -8355624262874035661
+    second: atlas_skyland_simple_68
+  - first:
+      213: 3205567580180094186
+    second: atlas_skyland_simple_69
+  - first:
+      213: 904913727374836591
+    second: atlas_skyland_simple_70
+  - first:
+      213: 7411063554242075810
+    second: atlas_skyland_simple_71
+  - first:
+      213: 6622824127124193666
+    second: atlas_skyland_simple_72
+  - first:
+      213: 5831661710804017080
+    second: atlas_skyland_simple_73
+  - first:
+      213: 2580909180643557591
+    second: atlas_skyland_simple_74
+  - first:
+      213: -1454460697972086464
+    second: atlas_skyland_simple_75
+  - first:
+      213: -5788520191023117236
+    second: atlas_skyland_simple_76
+  - first:
+      213: -1734357146158603916
+    second: atlas_skyland_simple_77
+  - first:
+      213: -6891614053505311457
+    second: atlas_skyland_simple_78
+  - first:
+      213: -447316445128930240
+    second: atlas_skyland_simple_79
+  - first:
+      213: -9025271994413910207
+    second: atlas_skyland_simple_80
+  - first:
+      213: 6516973728889138439
+    second: atlas_skyland_simple_81
+  - first:
+      213: 3214991883581573126
+    second: atlas_skyland_simple_82
+  - first:
+      213: -424150420867515908
+    second: atlas_skyland_simple_83
+  - first:
+      213: 4171350873333928295
+    second: atlas_skyland_simple_84
+  - first:
+      213: -1618573624545785517
+    second: atlas_skyland_simple_85
+  - first:
+      213: -7171541891559968084
+    second: atlas_skyland_simple_86
+  - first:
+      213: -3886586889710481412
+    second: atlas_skyland_simple_87
+  - first:
+      213: 4589820151819789365
+    second: atlas_skyland_simple_88
+  - first:
+      213: 3461082081201349501
+    second: atlas_skyland_simple_89
+  - first:
+      213: -3321403667424364737
+    second: atlas_skyland_simple_90
+  - first:
+      213: 6915594847085350939
+    second: atlas_skyland_simple_91
+  - first:
+      213: -5266260679898992056
+    second: atlas_skyland_simple_92
+  - first:
+      213: -5900608376826567111
+    second: atlas_skyland_simple_93
+  - first:
+      213: -1383639211828859732
+    second: atlas_skyland_simple_94
+  - first:
+      213: 1079609900851645821
+    second: atlas_skyland_simple_95
+  - first:
+      213: -8217879938581430781
+    second: atlas_skyland_simple_96
+  - first:
+      213: -7060785967231017218
+    second: atlas_skyland_simple_97
+  - first:
+      213: -650263944772953554
+    second: atlas_skyland_simple_98
+  - first:
+      213: 7248800994466307662
+    second: atlas_skyland_simple_99
+  - first:
+      213: 3263225232345217079
+    second: atlas_skyland_simple_100
+  - first:
+      213: -6760017015306844160
+    second: atlas_skyland_simple_101
+  - first:
+      213: 6131622433040732696
+    second: atlas_skyland_simple_102
+  - first:
+      213: 5815536992402377360
+    second: atlas_skyland_simple_103
+  - first:
+      213: 5024908466548196588
+    second: atlas_skyland_simple_104
+  - first:
+      213: 9155082256463617626
+    second: atlas_skyland_simple_105
+  - first:
+      213: 9144839670492991510
+    second: atlas_skyland_simple_106
+  - first:
+      213: -7781180337112771943
+    second: atlas_skyland_simple_107
+  - first:
+      213: -6437420261652576683
+    second: atlas_skyland_simple_108
+  - first:
+      213: -6027888391605923163
+    second: atlas_skyland_simple_109
+  - first:
+      213: 4884259133134579670
+    second: atlas_skyland_simple_110
+  - first:
+      213: 1003102327499615876
+    second: atlas_skyland_simple_111
+  - first:
+      213: 7020239302744297400
+    second: atlas_skyland_simple_112
+  - first:
+      213: 186296865120101681
+    second: atlas_skyland_simple_113
+  - first:
+      213: 2789661988026610102
+    second: atlas_skyland_simple_114
+  - first:
+      213: 8932588320568486755
+    second: atlas_skyland_simple_115
+  - first:
+      213: -6608156435390265881
+    second: atlas_skyland_simple_116
+  - first:
+      213: 5008688273084038072
+    second: atlas_skyland_simple_117
+  - first:
+      213: 5656159887242897950
+    second: atlas_skyland_simple_118
+  - first:
+      213: 7252014651009669431
+    second: atlas_skyland_simple_119
+  - first:
+      213: -5551161246558827976
+    second: atlas_skyland_simple_120
+  - first:
+      213: 996770325173414242
+    second: atlas_skyland_simple_121
+  - first:
+      213: -5928684767279976667
+    second: atlas_skyland_simple_122
+  - first:
+      213: -4227114159730107732
+    second: atlas_skyland_simple_123
+  - first:
+      213: -7027783696445047732
+    second: atlas_skyland_simple_124
+  - first:
+      213: -1576552319336897784
+    second: atlas_skyland_simple_125
+  - first:
+      213: -5671151066283760962
+    second: atlas_skyland_simple_126
+  - first:
+      213: 2851611365884444131
+    second: atlas_skyland_simple_127
+  - first:
+      213: -1674633796716873049
+    second: atlas_skyland_simple_128
+  - first:
+      213: -6836956411798762756
+    second: atlas_skyland_simple_129
+  - first:
+      213: 640471831359830342
+    second: atlas_skyland_simple_130
+  - first:
+      213: 107075524408715153
+    second: atlas_skyland_simple_131
+  - first:
+      213: -1510327000685578173
+    second: atlas_skyland_simple_132
+  - first:
+      213: -4567211004019561636
+    second: atlas_skyland_simple_133
+  - first:
+      213: 5008256765756436047
+    second: atlas_skyland_simple_134
+  - first:
+      213: -5530706632501569670
+    second: atlas_skyland_simple_135
+  - first:
+      213: 6555078555792777053
+    second: atlas_skyland_simple_136
+  - first:
+      213: 225437012937911805
+    second: atlas_skyland_simple_137
+  - first:
+      213: -7140812801140577131
+    second: atlas_skyland_simple_138
+  - first:
+      213: 2172545075755346437
+    second: atlas_skyland_simple_139
+  - first:
+      213: -5829939255938799740
+    second: atlas_skyland_simple_140
+  - first:
+      213: 590063775561355499
+    second: atlas_skyland_simple_141
+  - first:
+      213: -6201089521555602372
+    second: atlas_skyland_simple_142
+  - first:
+      213: -787656175000559838
+    second: atlas_skyland_simple_143
+  - first:
+      213: 2419705456796241185
+    second: atlas_skyland_simple_144
+  - first:
+      213: 2319100953034843205
+    second: atlas_skyland_simple_145
+  - first:
+      213: -6224407998804060701
+    second: atlas_skyland_simple_146
+  - first:
+      213: 7229761905311147803
+    second: atlas_skyland_simple_147
+  - first:
+      213: 6685116945665393764
+    second: atlas_skyland_simple_148
+  - first:
+      213: -9215464560935719200
+    second: atlas_skyland_simple_149
+  - first:
+      213: 3133684792857611108
+    second: atlas_skyland_simple_150
+  - first:
+      213: 3267368062699871420
+    second: atlas_skyland_simple_151
+  - first:
+      213: 1927041232519315416
+    second: atlas_skyland_simple_152
+  - first:
+      213: -4594112450554086890
+    second: atlas_skyland_simple_153
+  - first:
+      213: 420712298770811166
+    second: atlas_skyland_simple_154
+  - first:
+      213: -9009682360759032636
+    second: atlas_skyland_simple_155
+  - first:
+      213: 7400515919791823457
+    second: atlas_skyland_simple_156
+  - first:
+      213: -8536083989587196856
+    second: atlas_skyland_simple_157
+  - first:
+      213: 4627718321887731108
+    second: atlas_skyland_simple_158
+  - first:
+      213: -6815293727966670732
+    second: atlas_skyland_simple_159
+  - first:
+      213: -368585616423218054
+    second: atlas_skyland_simple_160
+  - first:
+      213: -299964988648318784
+    second: atlas_skyland_simple_161
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: -1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: atlas_skyland_simple_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1421
+        width: 1032
+        height: 473
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 982f64f273fb51f40800000000000000
+      internalID: 5698671147244515977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_1
+      rect:
+        serializedVersion: 2
+        x: 1215
+        y: 1225
+        width: 423
+        height: 237
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 664a2134dec0ac430800000000000000
+      internalID: 3803867048439882854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_2
+      rect:
+        serializedVersion: 2
+        x: 1649
+        y: 1233
+        width: 373
+        height: 268
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8cdfd292b8a744e60800000000000000
+      internalID: 7945610380698320328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_3
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 1111
+        width: 315
+        height: 215
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e91aac3ba4c89b400800000000000000
+      internalID: 340457499315052958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_4
+      rect:
+        serializedVersion: 2
+        x: 331
+        y: 1134
+        width: 290
+        height: 230
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 28b4a3fd76e8cfc10800000000000000
+      internalID: 2088700903970982786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_5
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 1146
+        width: 290
+        height: 230
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7cf269d74f1f81660800000000000000
+      internalID: 7356896023691014087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_6
+      rect:
+        serializedVersion: 2
+        x: 921
+        y: 1188
+        width: 290
+        height: 230
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94a804c171abbd340800000000000000
+      internalID: 4889706428861811273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_7
+      rect:
+        serializedVersion: 2
+        x: 1295
+        y: 992
+        width: 281
+        height: 213
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d53f2cb342340fa20800000000000000
+      internalID: 3094046766904046429
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_8
+      rect:
+        serializedVersion: 2
+        x: 1579
+        y: 1011
+        width: 415
+        height: 210
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c34689d5070a68d0800000000000000
+      internalID: -2852459692280101945
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_9
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 879
+        width: 181
+        height: 183
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db2660042ebbcbba0800000000000000
+      internalID: -6071771617191107907
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_10
+      rect:
+        serializedVersion: 2
+        x: 236
+        y: 890
+        width: 103
+        height: 211
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d85dd60b06e2c9aa0800000000000000
+      internalID: -6152991998083213939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_11
+      rect:
+        serializedVersion: 2
+        x: 351
+        y: 894
+        width: 103
+        height: 197
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 63f64c993d532c400800000000000000
+      internalID: 342895704567738166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_12
+      rect:
+        serializedVersion: 2
+        x: 458
+        y: 917
+        width: 281
+        height: 213
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bcf884708c4209290800000000000000
+      internalID: -7885762505991483445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_13
+      rect:
+        serializedVersion: 2
+        x: 750
+        y: 1018
+        width: 29
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 60fdd0c90d900ae20800000000000000
+      internalID: 3359696113594392326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_14
+      rect:
+        serializedVersion: 2
+        x: 791
+        y: 922
+        width: 215
+        height: 221
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ff3519f12a4867c10800000000000000
+      internalID: 2050972512163025919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_15
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 971
+        width: 281
+        height: 213
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4658dc6fd7d053550800000000000000
+      internalID: 6139828501652276580
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_16
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 951
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4c0b27e3f029f180800000000000000
+      internalID: -9081190941688394677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_17
+      rect:
+        serializedVersion: 2
+        x: 202
+        y: 928
+        width: 35
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01557144f521076c0800000000000000
+      internalID: -4147795056434653936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_18
+      rect:
+        serializedVersion: 2
+        x: 1023
+        y: 800
+        width: 189
+        height: 163
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac5e55a0193d057c0800000000000000
+      internalID: -4084532242127919670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_19
+      rect:
+        serializedVersion: 2
+        x: 1216
+        y: 798
+        width: 194
+        height: 165
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 486019287a238a8d0800000000000000
+      internalID: -2834960270398257532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_20
+      rect:
+        serializedVersion: 2
+        x: 1418
+        y: 813
+        width: 186
+        height: 172
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 59d598be6f94b4900800000000000000
+      internalID: 669710294457081237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_21
+      rect:
+        serializedVersion: 2
+        x: 1612
+        y: 826
+        width: 181
+        height: 183
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 692197c393298cdd0800000000000000
+      internalID: -2465560021459987818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_22
+      rect:
+        serializedVersion: 2
+        x: 1803
+        y: 826
+        width: 191
+        height: 183
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e2602e67aca5f8350800000000000000
+      internalID: 6021131052442060334
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_23
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 739
+        width: 294
+        height: 133
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1235709de6a111c50800000000000000
+      internalID: 6634112789483311905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_24
+      rect:
+        serializedVersion: 2
+        x: 310
+        y: 736
+        width: 158
+        height: 152
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 920e1e2134988ee60800000000000000
+      internalID: 7991788459941552169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_25
+      rect:
+        serializedVersion: 2
+        x: 470
+        y: 761
+        width: 283
+        height: 152
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 418e6184d045278e0800000000000000
+      internalID: -1697201693544486892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_26
+      rect:
+        serializedVersion: 2
+        x: 758
+        y: 760
+        width: 259
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cf5e9dac647d1bf30800000000000000
+      internalID: 4589686194318206460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_27
+      rect:
+        serializedVersion: 2
+        x: 1023
+        y: 641
+        width: 167
+        height: 152
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd6eb25b499f56b20800000000000000
+      internalID: 3127179933368706779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_28
+      rect:
+        serializedVersion: 2
+        x: 1194
+        y: 656
+        width: 293
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e06d2264d97b5cdd0800000000000000
+      internalID: -2466363334801041906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_29
+      rect:
+        serializedVersion: 2
+        x: 1498
+        y: 673
+        width: 292
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f0dcfc631bffce0e0800000000000000
+      internalID: -2239133778116096753
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_30
+      rect:
+        serializedVersion: 2
+        x: 1795
+        y: 670
+        width: 166
+        height: 152
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f6f23088480a27520800000000000000
+      internalID: 2698395617826385775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_31
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 578
+        width: 149
+        height: 136
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94b80f92ff5cba310800000000000000
+      internalID: 1417444207449115465
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_32
+      rect:
+        serializedVersion: 2
+        x: 170
+        y: 605
+        width: 415
+        height: 126
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f07961be6f114830800000000000000
+      internalID: 4053555699893498100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_33
+      rect:
+        serializedVersion: 2
+        x: 602
+        y: 627
+        width: 412
+        height: 127
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2e503f654ad646c40800000000000000
+      internalID: 5504645197154420194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_34
+      rect:
+        serializedVersion: 2
+        x: 1090
+        y: 510
+        width: 128
+        height: 125
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c0ee3c9a576e38710800000000000000
+      internalID: 1694451277855190540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_35
+      rect:
+        serializedVersion: 2
+        x: 1223
+        y: 526
+        width: 423
+        height: 113
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b8ec6531b5c52c20800000000000000
+      internalID: 3181166076703336626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_36
+      rect:
+        serializedVersion: 2
+        x: 1675
+        y: 561
+        width: 61
+        height: 107
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6be7aa88fad84f3f0800000000000000
+      internalID: -867913043123994954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_37
+      rect:
+        serializedVersion: 2
+        x: 1787
+        y: 534
+        width: 226
+        height: 124
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 31e20a6f4da9a96f0800000000000000
+      internalID: -677058554504401389
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_38
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 458
+        width: 237
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 396797e99a087ee30800000000000000
+      internalID: 4532733015968282259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_39
+      rect:
+        serializedVersion: 2
+        x: 241
+        y: 505
+        width: 352
+        height: 89
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dde77fca4ef89c5e0800000000000000
+      internalID: -1888820356387995939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_40
+      rect:
+        serializedVersion: 2
+        x: 606
+        y: 494
+        width: 111
+        height: 112
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dcf2efe9040068210800000000000000
+      internalID: 1334754617107296205
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_41
+      rect:
+        serializedVersion: 2
+        x: 734
+        y: 503
+        width: 107
+        height: 117
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f0f8aca982d43f90800000000000000
+      internalID: -6974718434140950287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_42
+      rect:
+        serializedVersion: 2
+        x: 852
+        y: 515
+        width: 98
+        height: 99
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ee9329e3f2a566c00800000000000000
+      internalID: 893500735039355374
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_43
+      rect:
+        serializedVersion: 2
+        x: 967
+        y: 507
+        width: 115
+        height: 106
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6dd5c279a306d39a0800000000000000
+      internalID: -6251734902959743530
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_44
+      rect:
+        serializedVersion: 2
+        x: 1500
+        y: 424
+        width: 352
+        height: 94
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53f0b5b5c06262b20800000000000000
+      internalID: 3109214427260063541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_45
+      rect:
+        serializedVersion: 2
+        x: 1857
+        y: 417
+        width: 148
+        height: 112
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c75351d0e8d0169d0800000000000000
+      internalID: -2782928190982244996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_46
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 350
+        width: 105
+        height: 98
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd61224fd6aabb880800000000000000
+      internalID: -8594088074682427683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_47
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 353
+        width: 105
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e52e82a8fc4da3bf0800000000000000
+      internalID: -343728433699167650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_48
+      rect:
+        serializedVersion: 2
+        x: 234
+        y: 356
+        width: 105
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49f2ea073f1429aa0800000000000000
+      internalID: -6155785226838724716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_49
+      rect:
+        serializedVersion: 2
+        x: 347
+        y: 375
+        width: 161
+        height: 106
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d8a2dee7b8b00faf0800000000000000
+      internalID: -364778876059178355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_50
+      rect:
+        serializedVersion: 2
+        x: 516
+        y: 412
+        width: 36
+        height: 75
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a5932103eb05742e0800000000000000
+      internalID: -2141654320010872486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_51
+      rect:
+        serializedVersion: 2
+        x: 638
+        y: 391
+        width: 54
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c933045e8b5830010800000000000000
+      internalID: 1153912958703645596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_52
+      rect:
+        serializedVersion: 2
+        x: 773
+        y: 402
+        width: 44
+        height: 73
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 421cafe48aacddc90800000000000000
+      internalID: -7143330609711365852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_53
+      rect:
+        serializedVersion: 2
+        x: 831
+        y: 422
+        width: 36
+        height: 75
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 32dc9e10c409a9f60800000000000000
+      internalID: 8041898740747455779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_54
+      rect:
+        serializedVersion: 2
+        x: 953
+        y: 401
+        width: 54
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f7da39ddb5fdd210800000000000000
+      internalID: 1359512858277894135
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_55
+      rect:
+        serializedVersion: 2
+        x: 1087
+        y: 414
+        width: 45
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a298353844244b490800000000000000
+      internalID: -7731481798259799766
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_56
+      rect:
+        serializedVersion: 2
+        x: 1143
+        y: 412
+        width: 352
+        height: 82
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1d6bb2c862e8e0270800000000000000
+      internalID: 8218662666209310417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_57
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 250
+        width: 129
+        height: 93
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0d8e294808795a070800000000000000
+      internalID: 8117060481641015504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_58
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 253
+        width: 128
+        height: 93
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 239755ad034a04d80800000000000000
+      internalID: -8268428386123810510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_59
+      rect:
+        serializedVersion: 2
+        x: 286
+        y: 257
+        width: 101
+        height: 91
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c972a1634a61e6840800000000000000
+      internalID: 5219133912707114908
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_60
+      rect:
+        serializedVersion: 2
+        x: 403
+        y: 275
+        width: 103
+        height: 91
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d6b24d147bd9f2f0800000000000000
+      internalID: -938477755576437032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_61
+      rect:
+        serializedVersion: 2
+        x: 522
+        y: 287
+        width: 104
+        height: 91
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a06ade5e187ac69b0800000000000000
+      internalID: -5085505702857955830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_62
+      rect:
+        serializedVersion: 2
+        x: 635
+        y: 289
+        width: 110
+        height: 91
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 610a3ac7340dab280800000000000000
+      internalID: -9026673514838253546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_63
+      rect:
+        serializedVersion: 2
+        x: 756
+        y: 288
+        width: 102
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7629a8565f640ba10800000000000000
+      internalID: 1923115060671713895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_64
+      rect:
+        serializedVersion: 2
+        x: 863
+        y: 294
+        width: 102
+        height: 89
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ffd73ee9c4d628860800000000000000
+      internalID: 7530701702767541759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_65
+      rect:
+        serializedVersion: 2
+        x: 970
+        y: 295
+        width: 104
+        height: 92
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ca40ef01d69e87a0800000000000000
+      internalID: -6372990598023984441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_66
+      rect:
+        serializedVersion: 2
+        x: 1079
+        y: 296
+        width: 143
+        height: 99
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a661f76c4511707e0800000000000000
+      internalID: -1799450470306081174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_67
+      rect:
+        serializedVersion: 2
+        x: 1230
+        y: 337
+        width: 100
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9014064b4cf55ebb0800000000000000
+      internalID: -4907410920505851639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_68
+      rect:
+        serializedVersion: 2
+        x: 1327
+        y: 302
+        width: 27
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 33a02ceb00cda0c80800000000000000
+      internalID: -8355624262874035661
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_69
+      rect:
+        serializedVersion: 2
+        x: 1368
+        y: 301
+        width: 96
+        height: 93
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aec9428fab67c7c20800000000000000
+      internalID: 3205567580180094186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_70
+      rect:
+        serializedVersion: 2
+        x: 1472
+        y: 301
+        width: 99
+        height: 94
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f634d889d36ee8c00800000000000000
+      internalID: 904913727374836591
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_71
+      rect:
+        serializedVersion: 2
+        x: 1581
+        y: 332
+        width: 37
+        height: 73
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ac517e790369d660800000000000000
+      internalID: 7411063554242075810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_72
+      rect:
+        serializedVersion: 2
+        x: 1703
+        y: 310
+        width: 54
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 281cf13547ff8eb50800000000000000
+      internalID: 6622824127124193666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_73
+      rect:
+        serializedVersion: 2
+        x: 1837
+        y: 322
+        width: 46
+        height: 73
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8bf58b2bd693ee050800000000000000
+      internalID: 5831661710804017080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_74
+      rect:
+        serializedVersion: 2
+        x: 1895
+        y: 316
+        width: 96
+        height: 93
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d0cdcdb93b31d320800000000000000
+      internalID: 2580909180643557591
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_75
+      rect:
+        serializedVersion: 2
+        x: 1242
+        y: 297
+        width: 26
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0496b9583b7b0dbe0800000000000000
+      internalID: -1454460697972086464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_76
+      rect:
+        serializedVersion: 2
+        x: 1676
+        y: 213
+        width: 112
+        height: 85
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4c04ee1e8b0bafa0800000000000000
+      internalID: -5788520191023117236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_77
+      rect:
+        serializedVersion: 2
+        x: 1910
+        y: 215
+        width: 112
+        height: 86
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4716e855d535ee7e0800000000000000
+      internalID: -1734357146158603916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_78
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 174
+        width: 87
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f1dd9bb18811c50a0800000000000000
+      internalID: -6891614053505311457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_79
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 173
+        width: 80
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04c46e92010dac9f0800000000000000
+      internalID: -447316445128930240
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_80
+      rect:
+        serializedVersion: 2
+        x: 195
+        y: 173
+        width: 122
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1477da360facfb280800000000000000
+      internalID: -9025271994413910207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_81
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 177
+        width: 131
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 70d6df8f311f07a50800000000000000
+      internalID: 6516973728889138439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_82
+      rect:
+        serializedVersion: 2
+        x: 486
+        y: 194
+        width: 107
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 608c4a89512fd9c20800000000000000
+      internalID: 3214991883581573126
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_83
+      rect:
+        serializedVersion: 2
+        x: 618
+        y: 197
+        width: 102
+        height: 80
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cf9fbd0807d1d1af0800000000000000
+      internalID: -424150420867515908
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_84
+      rect:
+        serializedVersion: 2
+        x: 725
+        y: 196
+        width: 166
+        height: 86
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 761959eb48d93e930800000000000000
+      internalID: 4171350873333928295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_85
+      rect:
+        serializedVersion: 2
+        x: 898
+        y: 196
+        width: 91
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 359c1223ddba989e0800000000000000
+      internalID: -1618573624545785517
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_86
+      rect:
+        serializedVersion: 2
+        x: 1001
+        y: 199
+        width: 85
+        height: 83
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca23cb565a0997c90800000000000000
+      internalID: -7171541891559968084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_87
+      rect:
+        serializedVersion: 2
+        x: 1100
+        y: 200
+        width: 83
+        height: 77
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cffcd1ad0d1101ac0800000000000000
+      internalID: -3886586889710481412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_88
+      rect:
+        serializedVersion: 2
+        x: 1187
+        y: 206
+        width: 485
+        height: 86
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 534e5243c1152bf30800000000000000
+      internalID: 4589820151819789365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_89
+      rect:
+        serializedVersion: 2
+        x: 1793
+        y: 213
+        width: 109
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d73e974b0db380030800000000000000
+      internalID: 3461082081201349501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_90
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 95
+        width: 59
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f37bd7746f008e1d0800000000000000
+      internalID: -3321403667424364737
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_91
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 97
+        width: 167
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b105b0f7fd029ff50800000000000000
+      internalID: 6915594847085350939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_92
+      rect:
+        serializedVersion: 2
+        x: 249
+        y: 100
+        width: 73
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 842730040db7ae6b0800000000000000
+      internalID: -5266260679898992056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_93
+      rect:
+        serializedVersion: 2
+        x: 341
+        y: 101
+        width: 74
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 936ee8ca1f3dc1ea0800000000000000
+      internalID: -5900608376826567111
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_94
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 103
+        width: 86
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: caca3a9b7735ccce0800000000000000
+      internalID: -1383639211828859732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_95
+      rect:
+        serializedVersion: 2
+        x: 515
+        y: 112
+        width: 73
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d7dc14c1c7b8bfe00800000000000000
+      internalID: 1079609900851645821
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_96
+      rect:
+        serializedVersion: 2
+        x: 601
+        y: 115
+        width: 81
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 30e7b0e6cb934fd80800000000000000
+      internalID: -8217879938581430781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_97
+      rect:
+        serializedVersion: 2
+        x: 688
+        y: 119
+        width: 78
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: efed12c829c030e90800000000000000
+      internalID: -7060785967231017218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_98
+      rect:
+        serializedVersion: 2
+        x: 775
+        y: 122
+        width: 92
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e2a5091336cc9f6f0800000000000000
+      internalID: -650263944772953554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_99
+      rect:
+        serializedVersion: 2
+        x: 873
+        y: 119
+        width: 165
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e4e99a2491ae89460800000000000000
+      internalID: 7248800994466307662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_100
+      rect:
+        serializedVersion: 2
+        x: 1042
+        y: 120
+        width: 107
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 738370c3f0e494d20800000000000000
+      internalID: 3263225232345217079
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_101
+      rect:
+        serializedVersion: 2
+        x: 1156
+        y: 127
+        width: 200
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0080a0737589f22a0800000000000000
+      internalID: -6760017015306844160
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_102
+      rect:
+        serializedVersion: 2
+        x: 1363
+        y: 126
+        width: 134
+        height: 75
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 812953abd16e71550800000000000000
+      internalID: 6131622433040732696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_103
+      rect:
+        serializedVersion: 2
+        x: 1507
+        y: 134
+        width: 199
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 09a89422510f4b050800000000000000
+      internalID: 5815536992402377360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_104
+      rect:
+        serializedVersion: 2
+        x: 1719
+        y: 138
+        width: 199
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce4457190af0cb540800000000000000
+      internalID: 5024908466548196588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_105
+      rect:
+        serializedVersion: 2
+        x: 1925
+        y: 139
+        width: 89
+        height: 68
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a5edef97ec26d0f70800000000000000
+      internalID: 9155082256463617626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_106
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 35
+        width: 52
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61092a79a3ff8ee70800000000000000
+      internalID: 9144839670492991510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_107
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 36
+        width: 53
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9929329b5b1b30490800000000000000
+      internalID: -7781180337112771943
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_108
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 42
+        width: 76
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 556cb420160b9a6a0800000000000000
+      internalID: -6437420261652576683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_109
+      rect:
+        serializedVersion: 2
+        x: 219
+        y: 40
+        width: 67
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a2d0a8e173a85ca0800000000000000
+      internalID: -6027888391605923163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_110
+      rect:
+        serializedVersion: 2
+        x: 297
+        y: 42
+        width: 69
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d7a17dbdcf58c340800000000000000
+      internalID: 4884259133134579670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_111
+      rect:
+        serializedVersion: 2
+        x: 370
+        y: 41
+        width: 69
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48e6bff804cbbed00800000000000000
+      internalID: 1003102327499615876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_112
+      rect:
+        serializedVersion: 2
+        x: 442
+        y: 40
+        width: 64
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8bf4f467376ec6160800000000000000
+      internalID: 7020239302744297400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_113
+      rect:
+        serializedVersion: 2
+        x: 514
+        y: 44
+        width: 59
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 135a044030cd59200800000000000000
+      internalID: 186296865120101681
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_114
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 54
+        width: 61
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b17cbf3cced6b620800000000000000
+      internalID: 2789661988026610102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_115
+      rect:
+        serializedVersion: 2
+        x: 646
+        y: 56
+        width: 58
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 36ba94c20cde6fb70800000000000000
+      internalID: 8932588320568486755
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_116
+      rect:
+        serializedVersion: 2
+        x: 709
+        y: 62
+        width: 142
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e50a58cbbc1b44a0800000000000000
+      internalID: -6608156435390265881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_117
+      rect:
+        serializedVersion: 2
+        x: 862
+        y: 65
+        width: 137
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8bbb6db727f628540800000000000000
+      internalID: 5008688273084038072
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_118
+      rect:
+        serializedVersion: 2
+        x: 1006
+        y: 65
+        width: 141
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1a2de72377be7e40800000000000000
+      internalID: 5656159887242897950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_119
+      rect:
+        serializedVersion: 2
+        x: 1159
+        y: 62
+        width: 82
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7391c5bf6e454a460800000000000000
+      internalID: 7252014651009669431
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_120
+      rect:
+        serializedVersion: 2
+        x: 1255
+        y: 66
+        width: 94
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83a42ffe14056f2b0800000000000000
+      internalID: -5551161246558827976
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_121
+      rect:
+        serializedVersion: 2
+        x: 1354
+        y: 66
+        width: 96
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 269ac92645d35dd00800000000000000
+      internalID: 996770325173414242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_122
+      rect:
+        serializedVersion: 2
+        x: 1455
+        y: 63
+        width: 62
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52fe10d9d9419bda0800000000000000
+      internalID: -5928684767279976667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_123
+      rect:
+        serializedVersion: 2
+        x: 1523
+        y: 68
+        width: 96
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: caa534461164655c0800000000000000
+      internalID: -4227114159730107732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_124
+      rect:
+        serializedVersion: 2
+        x: 1624
+        y: 63
+        width: 61
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4c7c1f76fb487e90800000000000000
+      internalID: -7027783696445047732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_125
+      rect:
+        serializedVersion: 2
+        x: 1693
+        y: 65
+        width: 60
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8032b1cb406fe1ae0800000000000000
+      internalID: -1576552319336897784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_126
+      rect:
+        serializedVersion: 2
+        x: 1761
+        y: 68
+        width: 76
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eb2249af6260c41b0800000000000000
+      internalID: -5671151066283760962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_127
+      rect:
+        serializedVersion: 2
+        x: 1849
+        y: 71
+        width: 80
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ed3205cd65f29720800000000000000
+      internalID: 2851611365884444131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_128
+      rect:
+        serializedVersion: 2
+        x: 1934
+        y: 70
+        width: 83
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7aab3d93f6182c8e0800000000000000
+      internalID: -1674633796716873049
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_129
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 10
+        width: 14
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cfac7e10e504e11a0800000000000000
+      internalID: -6836956411798762756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_130
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 10
+        width: 30
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 649b8dcbcb963e800800000000000000
+      internalID: 640471831359830342
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_131
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 10
+        width: 71
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19725844f986c7100800000000000000
+      internalID: 107075524408715153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_132
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 12
+        width: 26
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 348747d489d3a0be0800000000000000
+      internalID: -1510327000685578173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_133
+      rect:
+        serializedVersion: 2
+        x: 173
+        y: 10
+        width: 21
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c5ba82b3ac10e90c0800000000000000
+      internalID: -4567211004019561636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_134
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 10
+        width: 22
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f4eebda5ef6e08540800000000000000
+      internalID: 5008256765756436047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_135
+      rect:
+        serializedVersion: 2
+        x: 244
+        y: 10
+        width: 23
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a77d8d4ee9bfe33b0800000000000000
+      internalID: -5530706632501569670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_136
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 13
+        width: 23
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d5f1fc8573158fa50800000000000000
+      internalID: 6555078555792777053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_137
+      rect:
+        serializedVersion: 2
+        x: 314
+        y: 13
+        width: 25
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dfda363d4c9e02300800000000000000
+      internalID: 225437012937911805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_138
+      rect:
+        serializedVersion: 2
+        x: 350
+        y: 13
+        width: 25
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 59c247c479cb6ec90800000000000000
+      internalID: -7140812801140577131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_139
+      rect:
+        serializedVersion: 2
+        x: 378
+        y: 10
+        width: 33
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50aebea5c3e662e10800000000000000
+      internalID: 2172545075755346437
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_140
+      rect:
+        serializedVersion: 2
+        x: 417
+        y: 10
+        width: 30
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 487a9a39225e71fa0800000000000000
+      internalID: -5829939255938799740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_141
+      rect:
+        serializedVersion: 2
+        x: 453
+        y: 10
+        width: 30
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be01929a0e3503800800000000000000
+      internalID: 590063775561355499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_142
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 12
+        width: 22
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c3408475fed41f9a0800000000000000
+      internalID: -6201089521555602372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_143
+      rect:
+        serializedVersion: 2
+        x: 531
+        y: 12
+        width: 23
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22fd2fbc1eea115f0800000000000000
+      internalID: -787656175000559838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_144
+      rect:
+        serializedVersion: 2
+        x: 566
+        y: 13
+        width: 24
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 12d0a65fa45849120800000000000000
+      internalID: 2419705456796241185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_145
+      rect:
+        serializedVersion: 2
+        x: 594
+        y: 10
+        width: 57
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 54469e7970a1f2020800000000000000
+      internalID: 2319100953034843205
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_146
+      rect:
+        serializedVersion: 2
+        x: 658
+        y: 11
+        width: 40
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e51f2647e57e99a0800000000000000
+      internalID: -6224407998804060701
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_147
+      rect:
+        serializedVersion: 2
+        x: 705
+        y: 10
+        width: 169
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b17e8b0e526455460800000000000000
+      internalID: 7229761905311147803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_148
+      rect:
+        serializedVersion: 2
+        x: 876
+        y: 9
+        width: 61
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 464845c517e46cc50800000000000000
+      internalID: 6685116945665393764
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_149
+      rect:
+        serializedVersion: 2
+        x: 942
+        y: 10
+        width: 59
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0eea935bec71c1080800000000000000
+      internalID: -9215464560935719200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_150
+      rect:
+        serializedVersion: 2
+        x: 1008
+        y: 10
+        width: 57
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46b425457b51d7b20800000000000000
+      internalID: 3133684792857611108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_151
+      rect:
+        serializedVersion: 2
+        x: 1071
+        y: 10
+        width: 62
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cbc9ea711f5085d20800000000000000
+      internalID: 3267368062699871420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_152
+      rect:
+        serializedVersion: 2
+        x: 1140
+        y: 10
+        width: 62
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8df38d38ac93eba10800000000000000
+      internalID: 1927041232519315416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_153
+      rect:
+        serializedVersion: 2
+        x: 1214
+        y: 11
+        width: 69
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61a368e111f6e30c0800000000000000
+      internalID: -4594112450554086890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_154
+      rect:
+        serializedVersion: 2
+        x: 1298
+        y: 13
+        width: 67
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e194fd05b9ba6d500800000000000000
+      internalID: 420712298770811166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_155
+      rect:
+        serializedVersion: 2
+        x: 1373
+        y: 12
+        width: 74
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c4ead3d0ad27f280800000000000000
+      internalID: -9009682360759032636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_156
+      rect:
+        serializedVersion: 2
+        x: 1452
+        y: 11
+        width: 73
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16a90d9f40ae3b660800000000000000
+      internalID: 7400515919791823457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_157
+      rect:
+        serializedVersion: 2
+        x: 1537
+        y: 12
+        width: 76
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 84481cb66dcb98980800000000000000
+      internalID: -8536083989587196856
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_158
+      rect:
+        serializedVersion: 2
+        x: 1625
+        y: 11
+        width: 80
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ad5fa88b45f83040800000000000000
+      internalID: 4627718321887731108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_159
+      rect:
+        serializedVersion: 2
+        x: 1713
+        y: 11
+        width: 81
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4705990a6763b61a0800000000000000
+      internalID: -6815293727966670732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_160
+      rect:
+        serializedVersion: 2
+        x: 1801
+        y: 12
+        width: 149
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7496cfa55582eaf0800000000000000
+      internalID: -368585616423218054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atlas_skyland_simple_161
+      rect:
+        serializedVersion: 2
+        x: 1959
+        y: 15
+        width: 53
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c8109e9e6f46dbf0800000000000000
+      internalID: -299964988648318784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

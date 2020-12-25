@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using ExitGames.Client.Photon;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -13,16 +15,22 @@ public class ArduinoDashboard : MonoBehaviour
     [Header ("Dashboard")]
     public bool hasLanding;
     public GameObject mainPanel;
-    public Transform content;
     public PlayableDirector Top2Down, Down2Top;
 
+    [Header ("SFX")]
+    public AudioClip clipToggleClick;
+    private AudioSource audioSource;
+
+    [Header ("UI - Arduino Messages")]
+    public MessageManager ArduinoReceivedlMessage;
+    public MessageManager ArduinoTransmittedMessage;
+
     [Header ("UI - Arduino Serial Port Setting")]
-    public bool DontDestroy;
-    public GameObject panel;
+    public bool isDontDestroy;
     public GameObject listPort;
-    public GameObject listRate;
+    public GameObject listBaud;
     private Toggle[] portOption;
-    private Toggle[] rateOption;
+    private Toggle[] baudOption;
     private float timesPressDelete { get; set; }
     private float timesPressESC { get; set; }
     private int countBuffer; // 緩存計數器
@@ -31,34 +39,32 @@ public class ArduinoDashboard : MonoBehaviour
     public Button btnConnect;
     public Button btnDisconnect;
     private TextMeshProUGUI textQuit;
-    public Button btnQuit;
-    public Button btnTest;
-    public Button btnForbbiden;
     public TextMeshProUGUI textTime;
-    public int timeRecieve;
+
+    [Header ("UI - Master/Server Setting")]
+    public static string localTime;
+    public static int lag = -999;
+    public TextMeshProUGUI localClock;
+    public TextMeshProUGUI masterClock;
+    public TextMeshProUGUI ds3231Clock;
+    public TMP_InputField inputSynchronization, inputTransmission;
 
     /**********************************************************************
      * 2020/07/26 更新 Arduino Dashboard
      **********************************************************************/
 
-    [Header ("UI - ACM, Arduino Messages")]
-    public MessageManager arduinoControlMessage;
-    public MessageManager arduinoReceivedlMessage;
-    public MessageManager arduinoTransmittedMessage;
-
     [Header ("UI - Message")]
     public int countCommand;
-    public Text textKeyword;
-    public Text textMsg;
-    private List<string> msgList = new List<string> ();
     private int countMsg;
 
     void Awake ()
     {
         Instance = this;
-        if (DontDestroy)
+        if (isDontDestroy)
             DontDestroyOnLoad (this);
-        //SceneManager.LoadScene("Main");
+        audioSource = GetComponent<AudioSource> ();
+        ArduinoReceivedlMessage.Initialize ();
+        ArduinoTransmittedMessage.Initialize ();
 
         portOption = listPort.GetComponentsInChildren<Toggle> ();
         int countPort = portOption.Length;
@@ -69,39 +75,35 @@ public class ArduinoDashboard : MonoBehaviour
             {
                 if (isOn)
                 {
+                    audioSource.PlayOneShot (clipToggleClick);
                     portOption[index].GetComponentInChildren<CanvasGroup> ().alpha = 1f;
                     ArduinoController.Port = index;
-                    string Keyword = "<color=lime>重設Serial Port為 </color> <color=white>" + ArduinoController.SerialPort + "</color>";
-                    AddNewMsg (Keyword);
-                    Debug.Log (Keyword);
+                    ArduinoReceivedlMessage.AddMessage ("[Control]Serial port has been reset to " + ArduinoController.SerialPort);
                 }
                 else
                     portOption[index].GetComponentInChildren<CanvasGroup> ().alpha = 0.27f;
             });
         }
-
-        rateOption = listRate.GetComponentsInChildren<Toggle> ();
-        int countRate = rateOption.Length;
+        baudOption = listBaud.GetComponentsInChildren<Toggle> ();
+        int countRate = baudOption.Length;
         for (int i = 0; i < countRate; i++)
         {
             int index = i;
-            rateOption[index].onValueChanged.AddListener (isOn =>
+            baudOption[index].onValueChanged.AddListener (isOn =>
             {
                 if (isOn)
                 {
-                    rateOption[index].GetComponentInChildren<CanvasGroup> ().alpha = 1f;
-                    ArduinoController.Rate = index;
-                    string Keyword = "<color=lime>重設Serial Baud為 </color> <color=white>" + ArduinoController.SerialRate + "</color>";
-                    AddNewMsg (Keyword);
-                    Debug.Log (Keyword);
+                    audioSource.PlayOneShot (clipToggleClick);
+                    baudOption[index].GetComponentInChildren<CanvasGroup> ().alpha = 1f;
+                    ArduinoController.Baud = index;
+                    ArduinoReceivedlMessage.AddMessage ("[Control]Serial baud has been reset to " + ArduinoController.SerialBaud);
                 }
                 else
-                    rateOption[index].GetComponentInChildren<CanvasGroup> ().alpha = 0.36f;
+                    baudOption[index].GetComponentInChildren<CanvasGroup> ().alpha = 0.36f;
             });
         }
-
         portOption[ArduinoController.Port].isOn = true;
-        rateOption[ArduinoController.Rate].isOn = true;
+        baudOption[ArduinoController.Baud].isOn = true;
 
         btnConnect.onClick.AddListener (ArduinoController.ConnectArduino);
         btnDisconnect.onClick.AddListener (() =>
@@ -112,67 +114,59 @@ public class ArduinoDashboard : MonoBehaviour
                 ArduinoController.DisconnectArduino ();
         });
         textQuit = btnDisconnect.GetComponentInChildren<TextMeshProUGUI> ();
-        // btnQuit.onClick.AddListener (ArduinoController.SafetyOff);
-        // btnTest.onClick.AddListener(()=>ArduinoController.ArduinoConnector.WriteLine("R"));
         ArduinoController.countCommand = countCommand;
-        panel.SetActive (false);
     }
 
     void Update ()
     {
-        if (Input.GetKeyDown (KeyCode.F9) && Down2Top.time == 0 && Top2Down.time == 0)
-            mainPanel.SetActive (!mainPanel.activeSelf);
-        content.Translate (new Vector3 (Input.GetAxis ("Horizontal") * -5.0f, 0, 0));
-
-        if (Input.mousePosition.x > Screen.width - 60)
-            content.Translate (-500 * Time.deltaTime, 0, 0);
-        else if (Input.mousePosition.x < 60)
-            content.Translate (500 * Time.deltaTime, 0, 0);
-
-        if ((Input.mousePosition.y < 10 || Input.GetAxis ("Vertical") < 0) && !hasLanding && Down2Top.time == 0)
+        localTime =
+            String.Format ("{0:00}", DateTime.Now.Hour) + ":" +
+            String.Format ("{0:00}", DateTime.Now.Minute) + ":" +
+            String.Format ("{0:00}", DateTime.Now.Second);
+        localClock.text = localTime;
+        if (lag != -999)
         {
-            Top2Down.Play ();
-            hasLanding = true;
+            int second = DateTime.Now.Hour * 3600 + DateTime.Now.Minute * 60 + DateTime.Now.Second + lag;
+            masterClock.text =
+                String.Format ("{0:00}", second / 3600) + ":" +
+                String.Format ("{0:00}", (second % 3600) / 60) + ":" +
+                String.Format ("{0:00}", second % 60);
         }
-        else if ((Input.mousePosition.y > Screen.height - 10 || Input.GetAxis ("Vertical") > 0) && hasLanding && Top2Down.time == 0)
-        {
-            Down2Top.Play ();
-            hasLanding = false;
-        }
+
+        textTime.text = ArduinoController.timeBoot + "\n" + ArduinoController.timeLastReceived + "\n" + localTime;
 
         if (Input.GetKey (KeyCode.LeftControl) && Input.GetKey (KeyCode.LeftAlt))
         {
             if (Input.GetKeyDown (KeyCode.Slash))
                 ArduinoController.ConnectArduino ();
         }
-        // textKeyword.text = ArduinoController.Keyword;
+
+        /*************************************************
+         *   Main Thread Messages
+         *************************************************/
         countMsg = ArduinoController.queueMsg.Count;
         for (int i = 0; i < countMsg; i++)
         {
             countBuffer++;
             string msgRx = ArduinoController.queueMsg.Dequeue ();
+            if (msgRx.Contains ("DS3231") || msgRx.Contains ("Clock"))
+                ds3231Clock.text = msgRx.Split ('/') [1];
             if (msgRx.Contains ("Checking"))
-                arduinoTransmittedMessage.AddMessage (msgRx + "--- from other [Server]");
+                ArduinoTransmittedMessage.AddMessage (msgRx + "--- from other [Server]");
             else
-                arduinoReceivedlMessage.AddMessage (msgRx);
-            AddNewMsg (msgRx.Replace ("Wakaka/", ""));
+                ArduinoReceivedlMessage.AddMessage (msgRx);
         }
         if (countBuffer % 30000 == 0)
         {
             countBuffer++;
             GC.Collect ();
-            arduinoReceivedlMessage.AddMessage ("[Control]Memory has been deallocated.");
+            ArduinoReceivedlMessage.AddMessage ("[Control]Memory has been deallocated.");
         }
         ArduinoController.CheckStatus ();
         if (ArduinoController.Status == ArduinoStatus.Connected)
             textQuit.text = "Disconnect";
         else if (ArduinoController.Status == ArduinoStatus.Unconnected)
             textQuit.text = "Quit";
-
-        textTime.text = ArduinoController.timeBoot + "\n" + ArduinoController.timeLastReceived + "\n" +
-            String.Format ("{0:00}", DateTime.Now.Hour) + ":" +
-            String.Format ("{0:00}", DateTime.Now.Minute) + ":" +
-            String.Format ("{0:00}", DateTime.Now.Second);;
 
         // 刪除設定
         if (Input.GetKey (KeyCode.Delete))
@@ -182,16 +176,12 @@ public class ArduinoDashboard : MonoBehaviour
             {
                 ArduinoController.DeletePrefs ();
                 portOption[ArduinoController.Port].isOn = true;
-                rateOption[ArduinoController.Rate].isOn = true;
-                arduinoReceivedlMessage.AddMessage ("[Control]Your settings have been deleted.");
+                baudOption[ArduinoController.Baud].isOn = true;
+                ArduinoReceivedlMessage.AddMessage ("[Control]Your settings have been deleted.");
             }
         }
         else if (Input.GetKeyUp (KeyCode.Delete))
             timesPressDelete = 0;
-
-        // 開啟Arduino監控窗
-        if (Input.GetKeyDown (KeyCode.F10))
-            panel.SetActive (!panel.activeSelf);
 
         // 重啟遊戲
         if (Input.GetKey (KeyCode.Escape))
@@ -206,47 +196,53 @@ public class ArduinoDashboard : MonoBehaviour
             timesPressESC = 0;
     }
 
-    public void AddNewMsg (string msg)
-    {
-        if (msg.Contains ("Clock")) return;
-        if (string.IsNullOrEmpty (msg)) return;
-        byte[] byteArray = System.Text.Encoding.Unicode.GetBytes (msg);
-        if (byteArray.Length < 1)
-            Debug.LogWarning ("QQ");
-        // Arduino傳輸的錯誤，字元的第一個byte錯誤
-        try
-        {
-            if (byteArray[0] == 0)
-                return;
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogWarning (e.ToString ());
-        }
-        string str = System.Text.Encoding.Unicode.GetString (byteArray);
-        textMsg.text = "";
-        if (msgList.Count == 31)
-            msgList.RemoveAt (0);
-        msgList.Add (str);
-
-        for (int i = 0; i < msgList.Count; i++)
-        {
-            if (i == 0)
-                textMsg.text += ("<color=cyan><i>" + i.ToString ("00") + ": </i></color>" + msgList[i]);
-            else
-                textMsg.text += ("\n<color=cyan><i>" + i.ToString ("00") + ": </i></color>" + msgList[i]);
-        }
-    }
-
-    public void Keyword (string msg)
-    {
-        textKeyword.text = msg;
-        AddNewMsg (msg);
-    }
-
     private void OnDestroy ()
     {
         ArduinoController.Aborting ();
+    }
+
+    /*************************************************
+     *   General Server Setting
+     *************************************************/
+    public void SynchronizeClockTime ()
+    {
+        int sec = DateTime.Now.Hour * 3600 + DateTime.Now.Minute * 60 + DateTime.Now.Second;
+
+        // string command = "Base/Clock/" + (DateTime.Now.Hour * 3600 + DateTime.Now.Minute * 60 + DateTime.Now.Second) + "/";
+        // ArduinoReceivedlMessage.AddMessage (command);
+        // PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
+        // { { PlayerCustomData.COMMAND, command }, { PlayerCustomData.MASTER_TIME, DateTime.Now.Hour * 3600 + DateTime.Now.Minute * 60 + DateTime.Now.Second }
+        // });
+
+        PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
+        {
+            {
+                PlayerCustomData.COMMAND,
+                    "Base/Clock/" + sec + "/" + PhotonNetwork.LocalPlayer.NickName + "/"
+            },
+        });
+    }
+
+    public void SetBaseSynchronizationIntervalTime ()
+    {
+        PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
+        {
+            {
+                PlayerCustomData.COMMAND,
+                    "Base/Sync/" + inputSynchronization.text + "/" + PhotonNetwork.LocalPlayer.NickName + "/"
+            }
+        });
+    }
+
+    public void SetBaseTransmissionIntervalTime ()
+    {
+        PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
+        {
+            {
+                PlayerCustomData.COMMAND,
+                    "Base/Trans/" + inputTransmission.text + "/" + PhotonNetwork.LocalPlayer.NickName + "/"
+            }
+        });
     }
 }
 
@@ -257,28 +253,32 @@ public class MessageManager
     public Transform[] messages;
     private int counter;
 
+    public void Initialize ()
+    {
+        int count = window.childCount;
+        messages = new Transform[count];
+        for (int i = 0; i < count; i++)
+        {
+            messages[i] = window.GetChild (i);
+        }
+    }
+
     public void AddMessage (string msg)
     {
-        if (msg.Contains ("Clock")) return; // 來自時鐘模組
+        if (msg.Contains ("Clock") || msg.Contains ("DS3231")) return; // 來自時鐘模組
         if (msg.Contains ("S/")) return; // 來自其他Server的訊息
         if (string.IsNullOrEmpty (msg)) return;
         msg = msg.Replace ("Z/", "");
         if (counter < messages.Length)
         {
             messages[counter].gameObject.SetActive (true);
-            messages[counter].GetComponentsInChildren<TextMeshProUGUI> () [0].text =
-                String.Format ("{0:00}", DateTime.Now.Hour) + ":" +
-                String.Format ("{0:00}", DateTime.Now.Minute) + ":" +
-                String.Format ("{0:00}", DateTime.Now.Second);
+            messages[counter].GetComponentsInChildren<TextMeshProUGUI> () [0].text = ArduinoDashboard.localTime;
             messages[counter].GetComponentsInChildren<TextMeshProUGUI> () [1].text = msg;
             counter++;
         }
         else
         {
-            window.GetChild (0).GetComponentsInChildren<TextMeshProUGUI> () [0].text =
-                String.Format ("{0:00}", DateTime.Now.Hour) + ":" +
-                String.Format ("{0:00}", DateTime.Now.Minute) + ":" +
-                String.Format ("{0:00}", DateTime.Now.Second);
+            window.GetChild (0).GetComponentsInChildren<TextMeshProUGUI> () [0].text = ArduinoDashboard.localTime;
             window.GetChild (0).GetComponentsInChildren<TextMeshProUGUI> () [1].text = msg;
             window.GetChild (0).SetSiblingIndex (1000);
         }

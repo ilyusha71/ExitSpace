@@ -11,16 +11,46 @@ byte count = 0;
 #include <DS3231.h>
 #include <Wire.h>
 
-DS3231 clock;
+DS3231 ds3231;
 bool Century, h12, PM;
 // Alarm
 // byte ADay, AHour, AMinute, ASecond, ABits;
 // bool ADy, A12h, Apm;
 byte year, month, date, DoW, hour, minute, second;
-unsigned long galaxyTimer, spaceTimer, commandTimer;
+
+/****************************************************************************
+ * Clock Manage
+ * GalaxyClockTimer: 1 tick per second for PC.
+ * GroundSynchronizeTimer: HC12 Server transmit synchronize time to other arduinos.
+ * TransmitCommandTimer: Transimit server commands that collect from PC.
+ ****************************************************************************/
+unsigned long GalaxyClockTimer, GroundSynchronizeTimer, TransmitCommandTimer;
+int GroundSynchronizeInterval = 3000, TransmitCommandInterval = 500;
+
 void SetTime(byte year, byte month, byte date, byte DoW, byte hour, byte minute, byte second);
-String getValue(String data, char separator, int index);
 #define SIZE_OF_ARRAY(ary) sizeof(ary) / sizeof(*ary)
+
+/****************************************************************************
+ * Split Method
+ ****************************************************************************/
+String Split(String data, char separator, int index);
+String Split(String data, char separator, int index)
+{
+  int found = 0;
+  int strIndex[] = {0, -1};
+  int maxIndex = data.length() - 1;
+
+  for (int i = 0; i <= maxIndex && found <= index; i++)
+  {
+    if (data.charAt(i) == separator || i == maxIndex)
+    {
+      found++;
+      strIndex[0] = strIndex[1] + 1;
+      strIndex[1] = (i == maxIndex) ? i + 1 : i;
+    }
+  }
+  return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
+}
 
 void setup()
 {
@@ -44,17 +74,20 @@ int checkingIndex = 0;
 int countDevice = 0;
 
 char msgSerial;
+
 void loop()
 {
-  if (millis() > galaxyTimer && !isChecking)
+  if (millis() > GalaxyClockTimer)
   {
-    galaxyTimer += 1000;
+    GalaxyClockTimer += 1000;
+
     // 讀取 DS3231 的時間資料
-    second = clock.getSecond();
-    minute = clock.getMinute();
-    hour = clock.getHour(h12, PM);
-    // 電腦Server對時
-    Serial.print(F("Wakaka/Clock/"));
+    second = ds3231.getSecond();
+    minute = ds3231.getMinute();
+    hour = ds3231.getHour(h12, PM);
+
+    // PC Master correction time
+    Serial.print(F("Wakaka/DS3231/"));
     hour < 10 ? Serial.print(F("0")) : Serial.print(F(""));
     Serial.print(hour, DEC);
     minute < 10 ? Serial.print(F(":0")) : Serial.print(F(":"));
@@ -62,9 +95,11 @@ void loop()
     second < 10 ? Serial.print(F(":0")) : Serial.print(F(":"));
     Serial.println(second);
   }
-  if (millis() > spaceTimer)
+
+  if (millis() > GroundSynchronizeTimer)
   {
-    spaceTimer += 3000;
+    GroundSynchronizeTimer += GroundSynchronizeInterval;
+
     // 空間Arduino對時
     HC12.print(F("Z/S/"));
     HC12.print(hour, DEC);
@@ -74,42 +109,22 @@ void loop()
     HC12.print(second, DEC);
     HC12.println();
   }
-  if (millis() > commandTimer)
+
+  if (millis() > TransmitCommandTimer)
   {
-    commandTimer += 2000;
+    TransmitCommandTimer += TransmitCommandInterval;
     delay(10);
 
-    // if (checkingHasData)
-    // {
-    //   for (size_t i = 0; i < SIZE_OF_ARRAY(checkingDataList); i++)
-    //   {
-    //     if (checkingDataList[i] != "" && checkingHasData)
-    //     {
-    //       delay(100);
-    //       // Serial.print(F("Wakaka/Server/"));
-    //       // Serial.print(checkingDataList[i]);
-    //       HC12.println(checkingDataList[i]);
-    //       checkingDataList[i] = "";
-    //     }
-    //   }
-    //   checkingHasData = false;
-    //   checkingIndex = 0;
-    // }
-    // else
+    for (size_t i = 0; i < SIZE_OF_ARRAY(txDataList); i++)
     {
-
-      // 訊息驗證 Callback
-      for (size_t i = 0; i < SIZE_OF_ARRAY(txDataList); i++)
+      if (txDataList[i] != "" && txHasData)
       {
-        if (txDataList[i] != "" && txHasData)
-        {
-          HC12.println(txDataList[i]);
-          txDataList[i] = "";
-        }
+        HC12.println(txDataList[i]);
+        txDataList[i] = "";
       }
-      txHasData = false;
-      txIndex = 0;
     }
+    txHasData = false;
+    txIndex = 0;
   }
 
   while (HC12.available())
@@ -127,71 +142,30 @@ void loop()
   }
 
   while (Serial.available())
-  { // If Serial monitor has data
+  {
     txBuffer = Serial.read();
-    if (txBuffer == '\0' || txBuffer == 255)
+    if (txBuffer == '\0' || (txBuffer != 10 && txBuffer != 13 && txBuffer < 32) || txBuffer > 126)
       break;
     txData += (char)txBuffer;
     if (txBuffer == 10) // LF character
     {
-      // String checkHead = getValue(txData, '/', 1);
-      // if (checkHead == "CheckingStart")
-      // {
-      //   isChecking = true;
-      //   countDevice = getValue(txData, '/', 2).toInt();
-      //   Serial.print(F("Wakaka/Server/000/000/Checking Start/"));
-      //   Serial.println(countDevice);
-      //   checkingIndex = 0;
-      // }
-      // else if (checkHead == "CheckingEnd")
-      // {
-      //   isChecking = false;
-      //   countDevice = getValue(txData, '/', 2).toInt();
-      //   Serial.print(F("Wakaka/Server/000/000/Checking End/"));
-      //   Serial.print(checkingIndex);
-      //   Serial.print(F("/"));
-      //   Serial.println(countDevice);
-      //   checkingIndex = 0;
-      // }
-      // else if (checkHead == "Checking End")
-      // {
-      //   isChecking = false;
-      //   if (checkingIndex == countDevice)
-      //   {
-      //     // checkingHasData = true;
-      //     Serial.print(F("Wakaka/Server/dd/Server/Checking End/"));
-      //   }
-      //   else
-      //     Serial.print(F("Wakaka/Server/dd/Server/Checking Fail/"));
-      //   Serial.println(checkingIndex);
-      //   checkingIndex = 0;
-      // }
-      // else
+      if (Split(txData, '/', 0) == "SERVER")
       {
-        // if (isChecking)
-        // {
-        //   Serial.print(F("Wakaka/Server/"));
-        //   Serial.print(checkingIndex);
-        //   Serial.print(F("/"));
-        //   Serial.print(txData);
-        //   checkingDataList[checkingIndex] = txData;
-        //   checkingIndex++;
-        // }
-        // else
-        {
-          // Serial.print(F("Wakaka/Server/"));
-          // Serial.print(checkingIndex);
-          // Serial.print(F("/NO/"));
-          // Serial.print(txData);
-          // checkingIndex++;
-          if (txIndex == 5)
-            return;
-          txDataList[txIndex] = txData;
-          txIndex++;
-          txHasData = true;
-        }
+        if (Split(txData, '/', 1) == "GSD")
+          GroundSynchronizeInterval = Split(txData, '/', 2).toInt();
+        else if (Split(txData, '/', 1) == "TCD")
+          TransmitCommandInterval = Split(txData, '/', 2).toInt();
+        txData = "";
       }
-      txData = "";
+      else
+      {
+        if (txIndex == 5) // Max transmission count once
+          return;
+        txDataList[txIndex] = txData;
+        txIndex++;
+        txHasData = true;
+        txData = "";
+      }
     }
   }
 }
@@ -209,29 +183,11 @@ void loop()
 
 void SetTime(byte year, byte month, byte date, byte DoW, byte hour, byte minute, byte second)
 {
-  clock.setSecond(second); //Set the second
-  clock.setMinute(minute); //Set the minute 设置分钟
-  clock.setHour(hour);     //Set the hour 设置小时
-  clock.setDoW(DoW);       //Set the day of the week 设置星期几
-  clock.setDate(date);     //Set the date of the month 设置月份
-  clock.setMonth(month);   //Set the month of the year 设置一年中的月份
-  clock.setYear(year);     //Set the year (Last two digits of the year) 设置年份(在今年的最后两位数——比如2013年最后的13)
-}
-
-String getValue(String data, char separator, int index)
-{
-  int found = 0;
-  int strIndex[] = {0, -1};
-  int maxIndex = data.length() - 1;
-
-  for (int i = 0; i <= maxIndex && found <= index; i++)
-  {
-    if (data.charAt(i) == separator || i == maxIndex)
-    {
-      found++;
-      strIndex[0] = strIndex[1] + 1;
-      strIndex[1] = (i == maxIndex) ? i + 1 : i;
-    }
-  }
-  return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
+  ds3231.setSecond(second); //Set the second
+  ds3231.setMinute(minute); //Set the minute 设置分钟
+  ds3231.setHour(hour);     //Set the hour 设置小时
+  ds3231.setDoW(DoW);       //Set the day of the week 设置星期几
+  ds3231.setDate(date);     //Set the date of the month 设置月份
+  ds3231.setMonth(month);   //Set the month of the year 设置一年中的月份
+  ds3231.setYear(year);     //Set the year (Last two digits of the year) 设置年份(在今年的最后两位数——比如2013年最后的13)
 }

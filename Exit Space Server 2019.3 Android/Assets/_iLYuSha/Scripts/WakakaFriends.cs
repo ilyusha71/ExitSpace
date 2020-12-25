@@ -136,7 +136,10 @@ public class WakakaFriends : MonoBehaviourPunCallbacks
     #endregion
 
     #region PUN CALLBACKS
-    public override void OnConnected () { }
+    public override void OnConnected ()
+    {
+        Debug.LogWarning ("OnConnected: " + PhotonNetwork.GameVersion);
+    }
     public override void OnConnectedToMaster ()
     {
         // 客戶端新介面

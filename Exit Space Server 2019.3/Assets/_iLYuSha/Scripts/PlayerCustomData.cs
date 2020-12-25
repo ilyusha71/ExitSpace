@@ -1,5 +1,9 @@
 ﻿public class PlayerCustomData
 {
+    public static readonly string MASTER_TIME = "MASTER_TIME";
+    public static readonly string DEV_COMMAND = "DEV_COMMAND";
+    public static readonly string COMMAND = "COMMAND";
+    public static readonly string MASTER_CB = "MASTER_CB";
     public static readonly string FAIL = "FAIL";
     public static readonly string STAGE_1_TIME = "STAGE_1_TIME";
     public static readonly string STAGE_2_TIME = "STAGE_2_TIME";

@@ -35,16 +35,16 @@
 /****************************************************************************
  * 燒錄設定
  ****************************************************************************/
-String DEVICE_NAME = "3-E.6-E.4";
+// String DEVICE_NAME = "2-U.3-U.2";
 // String DEVICE_NAME = "3-R.1.2.3.4.5.6.7.8.9.10-A.1.2.3.4.5.6.7.8.9.10";
-// String DEVICE_NAME = "2-B.8-X";
-// String DEVICE_NAME = "1-N.1-X";
-int callbackTime = 100;
-#define MODE 100
+// String DEVICE_NAME = "H5-C.8-C.2";
+// String DEVICE_NAME = "1-N.2-X";
+String DEVICE_NAME = "4B1-A.1.2.10-T.2";
+#define MODE 150
 #if MODE == ENTRY_MODE
 String presents = "";
 boolean isPresent[11];
-byte writeAgentID[8];
+byte writeAgentID[16];
 boolean hasNewAgentID;
 #endif
 #if MODE == ENTRY_MODE || MODE == WRITER_MODE
@@ -95,7 +95,11 @@ SoftwareSerial HC12(2, 3); // HC-12 TX Pin, HC-12 RX Pin
 bool rxHasData = false;
 uint8_t rxBuffer;
 String rxData = "";
-unsigned long callbackTimer;
+int cbDelay = 100;
+unsigned long cbClock;
+/****************************************************************************
+ * ---
+ ****************************************************************************/
 void (*resetFunc)(void) = 0; //declare reset function at address 0
 /****************************************************************************
  * General
@@ -138,8 +142,11 @@ void Init()
   }
   needInit = false;
 }
-String getValue(String data, char separator, int index);
-String getValue(String data, char separator, int index)
+/****************************************************************************
+ * Split Method
+ ****************************************************************************/
+String Split(String data, char separator, int index);
+String Split(String data, char separator, int index)
 {
   int found = 0;
   int strIndex[] = {0, -1};
@@ -267,7 +274,7 @@ void Present()
   int presentIndex = 0;
   while (!checkPresentCount)
   {
-    String n = getValue(presents, '.', presentIndex);
+    String n = Split(presents, '.', presentIndex);
     if (n != "")
     {
       isPresent[n.toInt()] = true;
@@ -634,10 +641,10 @@ void setup()
   Serial.print(F(" * Stage "));
   Serial.println(DEVICE_NAME[0]);
 #if MODE == WRITER_MODE
-  int key = getValue(getValue(DEVICE_NAME, '-', 1), '.', 1).toInt();
-  reader[0].SetSpecificKey(key);
+  int key = Split(Split(DEVICE_NAME, '-', 1), '.', 1).toInt();
+   reader[0].AddPassKey(key);
 #elif MODE == VIVIANE_MODE
-  int key = getValue(getValue(DEVICE_NAME, '-', 1), '.', 1).toInt();
+  int key = Split(Split(DEVICE_NAME, '-', 1), '.', 1).toInt();
   reader[0].SetSpecificKey(key);
   for (int i = 0; i < NR_OF_READERS; i++)
   {
@@ -656,13 +663,13 @@ void setup()
     else if (i == 1)
       Serial.print(F(" * Inner Reader: "));
 
-    String condition = getValue(DEVICE_NAME, '-', i + 1);
+    String condition = Split(DEVICE_NAME, '-', i + 1);
     Serial.println(condition);
     bool checkPassKeyCount = false;
     int checPassKeyIndex = 1;
     while (!checkPassKeyCount)
     {
-      String n = getValue(condition, '.', checPassKeyIndex);
+      String n = Split(condition, '.', checPassKeyIndex);
       if (n != "")
       {
         reader[i].AddPassKey(n.toInt());
@@ -676,7 +683,7 @@ void setup()
     {
 #if MODE == BOX_MODE
     case 'T':
-      int name = getValue(condition, '.', 1).toInt();
+      int name = Split(condition, '.', 1).toInt();
       reader[i].SetTitle(title, name);
       Serial.print(F(" *   Target ==> ["));
       for (size_t i = 0; i < 16; i++)
@@ -689,7 +696,7 @@ void setup()
       break;
 #endif
     case 'C':
-      reader[i].SetKeyCount(getValue(condition, '.', 1).toInt());
+      reader[i].SetKeyCount(Split(condition, '.', 1).toInt());
       break;
     case 'W':
       reader[i].SetMode(Wakaka);
@@ -781,21 +788,21 @@ void loop()
     rxData += (char)rxBuffer;
     if (rxBuffer == 10) // LF character
     {
-      String rxHead = getValue(rxData, '/', 1);
+      String rxHead = Split(rxData, '/', 1);
       if (rxHead == "S") // Server Main Clock
       {
         Serial.print(rxData); // 記錄時間
-        callbackTimer = millis() + callbackTime;
+        cbClock = millis() + cbDelay;
         needInit = true;
       }
       else if (rxHead == DEVICE_NAME)
       {
         Serial.print(rxData);
-        String rxCommand = getValue(rxData, '/', 2);
+        String rxCommand = Split(rxData, '/', 2);
         if (rxCommand == "Checking")
         {
           rxHasData = true;
-          callbackTime = getValue(rxData, '/', 3).toInt();
+          cbDelay = Split(rxData, '/', 3).toInt();
         }
         else if (rxCommand == "Init")
           Init();
@@ -804,13 +811,13 @@ void loop()
 #if MODE == ENTRY_MODE
         else if (rxCommand == "Present")
         {
-          presents = getValue(rxData, '/', 3);
+          presents = Split(rxData, '/', 3);
           Present();
         }
         else if (rxCommand == "ID")
         {
           hasNewAgentID = true;
-          getValue(rxData, '/', 3).getBytes(writeAgentID, 8);
+          Split(rxData, '/', 3).getBytes(writeAgentID, 16);
         }
 #elif MODE == READER_MODE
         else if (rxCommand == "UnlockForce")
@@ -820,7 +827,7 @@ void loop()
         else if (rxCommand == "Unlocked_1_U1_X")
           UnlockEML_1_U1_X();
         else if (rxCommand == "Unlocked_3_E6_E4")
-          UnlockEML_3_E6_E4(getValue(rxData, '/', 3).toInt());
+          UnlockEML_3_E6_E4(Split(rxData, '/', 4).toInt());
 #if MODE == BOX_MODE
         else if (rxCommand == "Conferred")
           ConferNewTitle();
@@ -832,7 +839,7 @@ void loop()
       rxData = "";
     }
   }
-  if (millis() > callbackTimer && rxHasData)
+  if (millis() > cbClock && rxHasData)
   {
     rxHasData = false;
     HC12.print("Z/Callback/");
@@ -860,7 +867,7 @@ void loop()
         digitalWrite(RELAY_LOW, LOW);
         mfrc522[readerIndex].PCD_StopCrypto1();
         digitalWrite(RST_PIN, LOW);
-        return;
+        continue;
       }
 #endif
       // // 如果是記錄點，寫入時間
@@ -868,13 +875,13 @@ void loop()
       // if (!SetCardData(time, blockTime))
       // {
       //   Fail();
-      //   return;
+      //   continue;
       // }
       // 特工資料
       if (!GetCardData(bufferAgentID, blockID))
       {
         Fail();
-        return;
+        continue;
       }
       else
       {
@@ -882,12 +889,12 @@ void loop()
         {
           mfrc522[readerIndex].PICC_HaltA();
           Serial.println(F("==> Hello Wakaka Agent!"));
-#if MODE == READER_MODE
+#if MODE >= READER_MODE
           UnlockForce();
 #endif
           mfrc522[readerIndex].PCD_StopCrypto1();
           digitalWrite(RST_PIN, LOW);
-          return;
+          continue;
         }
         if (!memcmp(bufferAgentID, recordAgentID, 16) == 0)
         {
@@ -933,7 +940,7 @@ void loop()
         if (!SetCardData(writeAgentID, blockID))
         {
           Fail();
-          return;
+          continue;
         }
         else
           hasNewAgentID = false;
@@ -981,11 +988,11 @@ void loop()
       {
         Serial.println(F("] ==> Fail"));
         Fail();
-        return;
+        continue;
       }
 #elif MODE == PRINTER_MODE
       Print();
-      return;
+      continue;
 #elif MODE >= READER_MODE
       // 讀取器
       (readerIndex == 0) ? Serial.print(F("Outer")) : Serial.print(F("Inner"));
@@ -1127,7 +1134,7 @@ void loop()
           if (!GetCardData(bufferChallenge, blockChallenge))
           {
             Fail();
-            return;
+            continue;
           }
           else
           {
@@ -1136,7 +1143,7 @@ void loop()
               if (!SetCardData(title, blockChallenge))
               {
                 Fail();
-                return;
+                continue;
               }
               else
               {
@@ -1197,7 +1204,7 @@ void loop()
         if (!GetCardData(bufferChallenge, blockChallenge))
         {
           Fail();
-          return;
+          continue;
         }
         else
         {
@@ -1206,7 +1213,7 @@ void loop()
             if (!SetCardData(title, blockTitle))
             {
               Fail();
-              return;
+              continue;
             }
             else
             {

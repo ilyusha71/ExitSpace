@@ -25,11 +25,11 @@ public static class ArduinoController
 {
     // Arduino 連線參數與設定
     private static readonly string PREFS_PORT = "Arduino Port"; // COM10以上無法連接，請通過【裝置管理員】更改COM的編號
-    private static readonly string PREFS_RATE = "Arduino Rate";
+    private static readonly string PREFS_BAUD = "Arduino Baud";
     private static readonly string[] valueCOM = new string[] { "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9" };
     private static readonly int[] valueBaud = new int[] { 9600, 19200, 38400 };
     public static string SerialPort { get; private set; }
-    public static int SerialRate { get; private set; }
+    public static int SerialBaud { get; private set; }
     public static int Port
     {
         get
@@ -44,24 +44,24 @@ public static class ArduinoController
             PlayerPrefs.SetInt (PREFS_PORT, value);
         }
     }
-    public static int Rate
+    public static int Baud
     {
         get
         {
-            int value = PlayerPrefs.GetInt (PREFS_RATE);
-            SerialRate = valueBaud[value];
+            int value = PlayerPrefs.GetInt (PREFS_BAUD);
+            SerialBaud = valueBaud[value];
             return value;
         }
         set
         {
-            SerialRate = valueBaud[value];
-            PlayerPrefs.SetInt (PREFS_RATE, value);
+            SerialBaud = valueBaud[value];
+            PlayerPrefs.SetInt (PREFS_BAUD, value);
         }
     }
     public static void DeletePrefs ()
     {
         PlayerPrefs.DeleteKey (PREFS_PORT);
-        PlayerPrefs.DeleteKey (PREFS_RATE);
+        PlayerPrefs.DeleteKey (PREFS_BAUD);
     }
     public static SerialPort ArduinoConnector;
     private static Thread ArduinoThread;
@@ -85,7 +85,7 @@ public static class ArduinoController
         if (Status == ArduinoStatus.Unconnected)
         {
             Status = ArduinoStatus.Connecting;
-            Keyword = "[Control]Arduino is connecting... " + SerialPort + " " + SerialRate;
+            Keyword = "[Control]Arduino is connecting... " + SerialPort + " " + SerialBaud;
             queueMsg.Enqueue (Keyword);
             // Debug.Log (Keyword);
         }
@@ -104,7 +104,7 @@ public static class ArduinoController
             return;
         }
 
-        ArduinoConnector = new SerialPort (SerialPort, SerialRate);
+        ArduinoConnector = new SerialPort (SerialPort, SerialBaud);
         try
         {
             ArduinoConnector.Open ();
@@ -142,9 +142,7 @@ public static class ArduinoController
                     }
                     if (check == "Wakaka")
                     {
-                        timeLastReceived = String.Format ("{0:00}", DateTime.Now.Hour) + ":" +
-                            String.Format ("{0:00}", DateTime.Now.Minute) + ":" +
-                            String.Format ("{0:00}", DateTime.Now.Second);
+                        timeLastReceived = ArduinoDashboard.localTime;
                         WakakaMessages = ArduinoMessages.Replace ("Wakaka/", "");
                         queueMsg.Enqueue (WakakaMessages);
 
@@ -189,7 +187,7 @@ public static class ArduinoController
         }
         else if (Status == ArduinoStatus.Unconnected || Status == ArduinoStatus.Connecting)
         {
-            Keyword = "<color=Yellow>尚未與Arduino完成連接</color> <color=white>" + SerialPort + " " + SerialRate + "</color>";
+            Keyword = "<color=Yellow>尚未與Arduino完成連接</color> <color=white>" + SerialPort + " " + SerialBaud + "</color>";
             queueMsg.Enqueue (Keyword);
             Debug.LogWarning (Keyword);
             return;
@@ -225,10 +223,7 @@ public static class ArduinoController
         {
             if (ArduinoThread.IsAlive)
             {
-                timeBoot = String.Format ("{0:00}", DateTime.Now.Hour) + ":" +
-                    String.Format ("{0:00}", DateTime.Now.Minute) + ":" +
-                    String.Format ("{0:00}", DateTime.Now.Second);
-
+                timeBoot = ArduinoDashboard.localTime;
                 Status = ArduinoStatus.Connected;
                 Keyword = "[Control]Arduino has booted at " + timeBoot;
                 queueMsg.Enqueue (Keyword);
@@ -273,9 +268,7 @@ public static class ArduinoController
             else
             {
                 Status = ArduinoStatus.Unconnected;
-                Keyword = "[Control]Arduino has disconnected at " + String.Format ("{0:00}", DateTime.Now.Hour) + ":" +
-                    String.Format ("{0:00}", DateTime.Now.Minute) + ":" +
-                    String.Format ("{0:00}", DateTime.Now.Second);
+                Keyword = "[Control]Arduino has disconnected at " + ArduinoDashboard.localTime;
                 queueMsg.Enqueue (Keyword);
                 // Debug.Log (Keyword);
 
