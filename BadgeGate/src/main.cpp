@@ -1,5 +1,6 @@
 #include <Arduino.h>
 String DEVICE_NAME = "BadgeGate";
+#define BADGE 7
 /****************************************************************************
  * HC-12
  *  HC12_SET
@@ -51,6 +52,8 @@ void setup()
   HC12.begin(9600);
   pinMode(HC12_SET, OUTPUT);
   digitalWrite(HC12_SET, HIGH);
+  pinMode(BADGE, OUTPUT);
+  digitalWrite(BADGE, LOW);
   Serial.println(F("BadgeGate"));
 }
 

@@ -56,7 +56,7 @@ public class WakakaFriends : MonoBehaviourPunCallbacks
 
     void Awake ()
     {
-        textVersion.text = "v" + Application.version;
+        textVersion.text =  "KocmocA " + PhotonNetwork.PhotonServerSettings.AppSettings.AppVersion + "\n" + Application.version;
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         audioSource = GetComponent<AudioSource> ();
 
@@ -142,6 +142,9 @@ public class WakakaFriends : MonoBehaviourPunCallbacks
     }
     public override void OnConnectedToMaster ()
     {
+        Debug.LogWarning ("OnConnectedToMaster");
+        Debug.Log ("Region: " + PhotonNetwork.CloudRegion);
+        Debug.Log ("IP: " + PhotonNetwork.ServerAddress);
         // 客戶端新介面
         if (!PhotonNetwork.InLobby)
             PhotonNetwork.JoinLobby ();

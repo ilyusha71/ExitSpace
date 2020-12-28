@@ -12,7 +12,7 @@ using Random = UnityEngine.Random;
 
 public class WakakaGalaxy : MonoBehaviourPunCallbacks
 {
-    public TextMeshProUGUI textTime, textPhotonCloudState, textServer, textRegionPing, textWarning;
+    public TextMeshProUGUI textKocmocA, textTime, textPhotonCloudState, textServer, textRegionPing, textWarning;
     private string regionNameText;
     private readonly string NAME_CONNECTED = "已进入";
     private readonly string NAME_DISCONNECTED = "已逃离";
@@ -81,6 +81,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
 
     void Awake ()
     {
+        textKocmocA.text = "KocmocA\n" + PhotonNetwork.PhotonServerSettings.AppSettings.AppVersion;
         inputCode.text = PlayerPrefs.GetString ("InputCode");
         Button[] btns = groupRegion.GetComponentsInChildren<Button> ();
         for (int i = 0; i < btns.Length; i++)
@@ -88,7 +89,6 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
             listRegionButton.Add (btns[i]);
             btns[i].gameObject.SetActive (false);
         }
-        PhotonNetwork.PhotonServerSettings.AppSettings.AppVersion = Application.version;
     }
 
     void Update ()
@@ -322,6 +322,9 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster ()
     {
         Debug.LogWarning ("OnConnectedToMaster");
+        Debug.Log("Region: " + PhotonNetwork.CloudRegion);
+        Debug.Log("IP: " + PhotonNetwork.ServerAddress);
+
         tipSearchRegionServer.SetActive (false);
         panelLobby.SetActive (true);
         windowCommand.SetActive (true);
