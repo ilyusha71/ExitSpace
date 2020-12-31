@@ -212,6 +212,7 @@ public class AgentCampManager : MonoBehaviour
             //temp
             Player[] players = PhotonNetwork.PlayerList;
             int participants = 0, badges = 0;
+            bool checkArthur = false;
             for (int i = 0; i < players.Length; i++)
             {
                 object customData;
@@ -222,12 +223,17 @@ public class AgentCampManager : MonoBehaviour
                     {
                         if (players[i].CustomProperties.TryGetValue (PlayerCustomData.BADGE[j], out customData))
                             if ((bool) customData)
+                            {
                                 badges++;
+                                if (j == 0)
+                                    checkArthur = true;
+                            }
+
                     }
                 }
             }
             Debug.Log ("participants: " + participants + "   badges: " + badges);
-            if (badges > participants * 5.6f)
+            if (badges > participants * 5.6f && checkArthur)
                 ArduinoController.ArduinoConnector.WriteLine ("Z/BadgeGate/Pass/");
         }
         else if (commands.Length > 1)

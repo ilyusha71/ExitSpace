@@ -53,7 +53,7 @@ void setup()
   pinMode(HC12_SET, OUTPUT);
   digitalWrite(HC12_SET, HIGH);
   pinMode(BADGE, OUTPUT);
-  digitalWrite(BADGE, LOW);
+  digitalWrite(BADGE, HIGH);
   Serial.println(F("BadgeGate"));
 }
 
@@ -83,10 +83,10 @@ void loop()
           rxHasData = true;
           cbDelay = Split(rxData, '/', 4).toInt();
         }
-        else if (rxCommand == "Pass")
-        {
-          Serial.println(F("Pass"));
-        }
+
+        rxCommand = Split(rxData, '/', 2);
+        if (rxCommand == "Pass")
+          digitalWrite(BADGE, LOW);
       }
       rxData = "";
     }

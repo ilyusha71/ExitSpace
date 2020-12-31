@@ -35,12 +35,12 @@
 /****************************************************************************
  * 燒錄設定
  ****************************************************************************/
-// String DEVICE_NAME = "2-U.3-U.2";
+String DEVICE_NAME = "1-B.1-X";
 // String DEVICE_NAME = "3-R.1.2.3.4.5.6.7.8.9.10-A.1.2.3.4.5.6.7.8.9.10";
 // String DEVICE_NAME = "H5-C.8-C.2";
 // String DEVICE_NAME = "1-N.2-X";
-String DEVICE_NAME = "4B1-A.1.2.10-T.2";
-#define MODE 150
+// String DEVICE_NAME = "4B1-A.1.2.10-T.2";
+#define MODE 20
 #if MODE == ENTRY_MODE
 String presents = "";
 boolean isPresent[11];
@@ -52,7 +52,7 @@ boolean hasNewAgentID;
  * DEFINE ENTRY or WRITER
  ****************************************************************************/
 #define NR_OF_READERS 1
-#define SS_PIN 8
+#define SS_PIN 10
 #elif MODE == PRINTER_MODE
 /****************************************************************************
  * DEFINE PRINTER
