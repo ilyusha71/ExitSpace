@@ -177,6 +177,10 @@ public class AgentCampManager : MonoBehaviour
             content.DOKill ();
             content.DOLocalMoveY (1560, 1.37f);
         }
+        if (Input.GetKeyDown (KeyCode.Alpha6))
+            BlockArea ();
+        else if (Input.GetKeyDown (KeyCode.Alpha7))
+            OpenArea ();
         content.Translate (new Vector3 (Input.GetAxis ("Horizontal") * -5.0f, 0, 0));
         if (content.localPosition.x > 0)
             content.localPosition = new Vector3 (0, content.localPosition.y, content.localPosition.z);
@@ -629,6 +633,21 @@ public class AgentCampManager : MonoBehaviour
 
         PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
         { { PlayerCustomData.COMMAND, "Device/" + ADN + "/Present/" + presents + "/" + PhotonNetwork.LocalPlayer.NickName + "/" }
+        });
+    }
+    /// <summary>
+    /// 只允許iLYuSha通過
+    /// </summary>
+    public void OpenArea ()
+    {
+        PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
+        { { PlayerCustomData.COMMAND, "Device/" + ADN + "/OpenArea/" + PhotonNetwork.LocalPlayer.NickName + "/" }
+        });
+    }
+    public void BlockArea ()
+    {
+        PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
+        { { PlayerCustomData.COMMAND, "Device/" + ADN + "/BlockArea/" + PhotonNetwork.LocalPlayer.NickName + "/" }
         });
     }
     /// <summary>

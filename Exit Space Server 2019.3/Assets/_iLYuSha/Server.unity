@@ -85455,7 +85455,7 @@ PrefabInstance:
     - target: {fileID: 3456475558118296874, guid: c4fd8fde73f189042bc7bed892954dfa,
         type: 3}
       propertyPath: m_text
-      value: Black
+      value: Block
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c4fd8fde73f189042bc7bed892954dfa, type: 3}

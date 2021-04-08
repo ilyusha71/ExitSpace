@@ -1,9 +1,45 @@
+// 2021-04-08 v2.0 
+/****************************************************************************
+ * 
+ * 1. 寫入內容          RUBY_NUMBER     ASCII       Sector      Block       Knights
+ * 		Ruby01			01              49			15		  	00          Arthur
+ * 		Ruby02		  	02              50			15		  	01          Merlin
+ * 		Ruby03	  		03	    		51			15	  		02          Lancelot
+ * 		Ruby04	  		04	    		52			14		  	00          Galahad
+ * 		Ruby05	  		05	    		53			14	  		01          Percival
+ * 		Ruby06	  		06	    		54			14		  	02          Bors
+ * 		Ruby07		  	07	    		55			13		  	00          Guinevere
+ * 		Ruby08		  	08	    		56			13		  	01          Excalibur
+ * 		Ruby09		  	09	    		57			13		  	02          The Sword in the Stone
+ * 		Ruby10		  	10	    		58			12		  	00          Viviane
+ * 		Ruby11		  	11	    		59			12		  	01          deleted
+ * 		Ruby12		  	12	    		60			12		  	02          deleted
+ * 		Ruby13		  	13	    		61			11		  	00          deleted
+ * 2. 使用區塊
+ * Sector   Block   Content
+ * 15       00      Ruby01      Arthur
+ * 15       01      Ruby02      Merlin
+ * 15       02      Ruby03      Lancelot
+ * 14       00      Ruby04      Galahad
+ * 14       01      Ruby05      Percival
+ * 14       02      Ruby06      Bors
+ * 13       00      Ruby07      Guinevere
+ * 13       01      Ruby08      Excalibur
+ * 13       02      Ruby09      The Sword in the Stone
+ * 12       00      Ruby10      Viviane
+ * 05       01      #Stage      *unavailable
+ * 05       02      #Time       *unavailable
+ * 06       00      *Text       Challenge
+ * 06       01      *Text       Title
+ * 07       00      *Text       ID
+ * 07       01      KocmocA     iLYuSha Key
+ ****************************************************************************/
+// v1.2.200116
 /****************************************************************************
  * RFID Writer
  * 
- * v1.2.200116
  * 1. 寫入內容          RUBY_NUMBER     ASCII       Sector      Block       Knights
-* 		Wakaka Key		00              48			09~15		00~02       Wakaka
+ * 		Wakaka Key		00              48			09~15		00~02       Wakaka
  * 		Ruby01			01              49			15		  	00          Arthur
  * 		Ruby02		  	02              50			15		  	01          Merlin
  * 		Ruby03	  		03	    		51			15	  		02          Lancelot
@@ -19,11 +55,11 @@
  * 		Ruby13		  	13	    		61			11		  	00          deleted
  ****************************************************************************/
 
-#define RFID_h
-class RFID
+#define AgentsRfidTag_h
+class AgentsRfidTag
 {
 public:
-    RFID();
+    AgentsRfidTag();
     void Initialize(byte ruby);
     const char *badge;
     byte sector;                                    // 指定讀寫的「區段」，可能值:0~15，從區段15開始使用
@@ -58,8 +94,8 @@ public:
 
 private:
 };
-RFID::RFID() {}
-void RFID::Initialize(byte ruby)
+AgentsRfidTag::AgentsRfidTag() {}
+void AgentsRfidTag::Initialize(byte ruby)
 {
     // Serial.print(F("Target is "));
     sector = 15 - (ruby - 1) / 3;

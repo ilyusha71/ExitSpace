@@ -22,8 +22,25 @@
 #include <SPI.h>
 /****************************************************************************
  * RFID Setting
+ * 區塊分配
+ * Sector   Block   Content
+ * 15       00      Ruby01      Arthur
+ * 15       01      Ruby02      Merlin
+ * 15       02      Ruby03      Lancelot
+ * 14       00      Ruby04      Galahad
+ * 14       01      Ruby05      Percival
+ * 14       02      Ruby06      Bors
+ * 13       00      Ruby07      Guinevere
+ * 13       01      Ruby08      Excalibur
+ * 13       02      Ruby09      The Sword in the Stone
+ * 12       00      Ruby10      Viviane
+ * 05       01      #Stage      *unavailable
+ * 05       02      #Time       *unavailable
+ * 06       00      *Text       Challenge
+ * 06       01      *Text       Title
+ * 07       00      *Text       ID
+ * 07       01      KocmocA     iLYuSha Key 真正萬用通行卡
  ****************************************************************************/
-#include <RFID.h>
 #include <Reader.h>
 #include <MFRC522.h>
 #define ENTRY_MODE 1
@@ -111,11 +128,10 @@ MFRC522 mfrc522[NR_OF_READERS]; // Create MFRC522 instance.
 MFRC522::StatusCode status;
 MFRC522::MIFARE_Key key; // 儲存金鑰
 int readerIndex;
-byte ilyushaKey[16] = "iLYuSha KocmocA", rubyData[18];
-byte wakakaKey[16] = "Wakaka Key", rubyData[18];
+byte wakakaKey[16] = "Wakaka Key", ilyushaKey[16] = "KocmocA", rubyData[18];
 byte bufferAgentID[18] = "Unknown", recordAgentID[18];
-byte blockID[2] = {7, 0};
-boolean hasRuby[11];
+byte blockID[2] = {7, 0}, blockKocmocA[2] = {7, 1};
+boolean isBlockArea = false, hasRuby[11];
 unsigned long waitTimer, waitUnlock = 3000;
 
 // , bufferTime[18], bufferStage[18]
@@ -709,7 +725,7 @@ void setup()
 #if MODE == BOX_MODE
     case 'T':
       int name = Split(condition, '.', 1).toInt();
-     title =  reader[index].SetTitle( name);
+      title = reader[index].SetTitle(name);
       Serial.print(F(" *   Target ==> ["));
       for (size_t i = 0; i < 16; i++)
       {
@@ -830,6 +846,10 @@ void loop()
           UnlockEML_1_U1_X();
         else if (rxCommand == "Unlocked_3_E6_E4")
           UnlockEML_3_E6_E4(Split(rxData, '/', 4).toInt());
+        else if (rxCommand == "BlockArea")
+          isBlockArea = true;
+        else if (rxCommand == "OpenArea")
+          isBlockArea = false;
 #if MODE == BOX_MODE
         else if (rxCommand == "Conferred")
           ConferNewTitle();
@@ -859,7 +879,16 @@ void loop()
       continue;
     if (mfrc522[readerIndex].PICC_IsNewCardPresent() && mfrc522[readerIndex].PICC_ReadCardSerial())
     {
-      // SetCardData(wakakaKey, blockID);
+      // if (!SetCardData(ilyushaKey, blockKocmocA))
+      // {
+      //   Fail();
+      //   continue;
+      // }
+      // else
+      // {
+      //   Serial.print(F("You have chosen a new challenge ["));
+      //   UnlockForce();
+      // }
       // return;
 #if MODE == VIVIANE_MODE
       if (readerIndex == 1)
@@ -881,6 +910,27 @@ void loop()
       //   Fail();
       //   continue;
       // }
+      if (!GetCardData(bufferAgentID, blockKocmocA))
+      {
+        Fail();
+        continue;
+      }
+      else
+      {
+        if (memcmp(bufferAgentID, ilyushaKey, 16) == 0)
+        {
+          mfrc522[readerIndex].PICC_HaltA();
+          Serial.println(F("==> Hello iLYuSha"));
+#if MODE >= READER_MODE
+          UnlockForce();
+#endif
+          mfrc522[readerIndex].PCD_StopCrypto1();
+          digitalWrite(RST_PIN, LOW);
+          continue;
+        }
+      }
+      if (isBlockArea)
+        return;
       // 特工資料
       if (!GetCardData(bufferAgentID, blockID))
       {
@@ -900,6 +950,7 @@ void loop()
           digitalWrite(RST_PIN, LOW);
           continue;
         }
+        // 修復單次讀取失敗問題，同一ID連續讀取可互補不足
         if (!memcmp(bufferAgentID, recordAgentID, 16) == 0)
         {
           for (size_t i = 0; i < 18; i++)
