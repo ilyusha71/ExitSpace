@@ -26,6 +26,7 @@ public:
         static char const *table[] = {"[Counting]", "[Specify]", "[OR]", "[And]", "[Wakaka]", "[Special]", "[Disable]", "[Title]"};
         return table[value];
     }
+
     READER() {}
 
     void SetKeyCount(int count)
@@ -69,9 +70,10 @@ public:
     //     countKeys = count;
     //     Show();
     // }
-    void SetTitle(byte *title, int name)
+    byte *SetTitle(int name)
     {
         mode = Title;
+        byte *title;
         switch (name)
         {
         case 1:
@@ -108,6 +110,7 @@ public:
             break;
         }
         Show();
+        return title;
     }
 
     void Show()

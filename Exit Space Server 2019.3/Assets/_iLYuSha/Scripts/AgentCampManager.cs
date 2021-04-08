@@ -39,6 +39,8 @@ public class AgentCampManager : MonoBehaviour
 
     [Header ("Auto Checking")]
     public Toggle isChecking;
+    public Button[] btnStages;
+    public string[] checkList = new string[0];
     public Animator TimedStupidityBomb, Timespace;
     public TextMeshProUGUI textDevice, textCountdown;
     public string autoCheckingTarget;
@@ -98,7 +100,7 @@ public class AgentCampManager : MonoBehaviour
         {
             if (isOn)
             {
-                textDevice.text = ExitSpaceData.DEVICES[indexChecking];
+                // textDevice.text = checkList[indexChecking];
                 TimedStupidityBomb.speed = 0;
                 Timespace.speed = 1;
             }
@@ -109,12 +111,29 @@ public class AgentCampManager : MonoBehaviour
                 Timespace.speed = 0;
             }
         });
+        btnStages[0].onClick.AddListener (() =>
+        {
+            checkList = ExitSpaceData.STAGE_1_DEVICES;
+        });
+        btnStages[1].onClick.AddListener (() =>
+        {
+            checkList = ExitSpaceData.STAGE_2_DEVICES;
+        });
+        btnStages[2].onClick.AddListener (() =>
+        {
+            checkList = ExitSpaceData.STAGE_3_DEVICES;
+        });
+        btnStages[3].onClick.AddListener (() =>
+        {
+            checkList = ExitSpaceData.STAGE_4_DEVICES;
+        });
+
         DisableAutoChecking ();
 
         if (!isChecking.enabled)
         {
             nextCheckingTime = Time.time + 4.0f;
-            indexChecking = ExitSpaceData.DEVICES.Length - 1;
+            indexChecking = checkList.Length - 1;
             isChecking.enabled = true;
             textDevice.text = "Are U Ready?";
         }
@@ -174,31 +193,22 @@ public class AgentCampManager : MonoBehaviour
             Processing (ArduinoController.queueCommand.Dequeue ());
         }
 
-        if (isChecking.isOn)
+        if (isChecking.isOn && checkList.Length > 0)
         {
             if (Time.time > nextCheckingTime)
             {
-                nextCheckingTime = Time.time + 10.0f;
-                indexChecking = (int) Mathf.Repeat (++indexChecking, ExitSpaceData.DEVICES.Length);
-                textDevice.text = ExitSpaceData.DEVICES[indexChecking];
-                ArduinoDashboard.Instance.ArduinoTransmittedMessage.AddMessage (ExitSpaceData.DEVICES[indexChecking] + "/Checking/100/");
+                nextCheckingTime = Time.time + 5.0f;
+                indexChecking = (int) Mathf.Repeat (++indexChecking, checkList.Length);
+                textDevice.text = checkList[indexChecking];
 
-                if (PhotonNetwork.LocalPlayer == PhotonNetwork.MasterClient)
-                {
-                    if (ArduinoController.Status == ArduinoStatus.Connected)
-                        ArduinoController.ArduinoConnector.WriteLine ("Z/" + ExitSpaceData.DEVICES[indexChecking] + "/Checking/100/");
-                }
-                else
-                    PhotonNetwork.MasterClient.SetCustomProperties (
-                        new Hashtable
-                        {
-                            {
-                                PlayerCustomData.DEV_COMMAND, "DEV/" + ExitSpaceData.DEVICES[indexChecking] + "/Checking/100/"
-                            }
-                        });
+                PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
+                { { PlayerCustomData.COMMAND, "Device/" + checkList[indexChecking] + "/Checking/100/" + PhotonNetwork.LocalPlayer.NickName + "/" }
+                });
             }
+            textCountdown.text = ((int) (nextCheckingTime - Time.time)).ToString ();
         }
-        textCountdown.text = ((int) (nextCheckingTime - Time.time)).ToString ();
+        else
+            textCountdown.text = "---";
     }
 
     public void Processing (string[] commands)
@@ -232,7 +242,7 @@ public class AgentCampManager : MonoBehaviour
                     }
                 }
             }
-            Debug.Log ("participants: " + participants + "   badges: " + badges);
+            // Debug.Log ("participants: " + participants + "   badges: " + badges);
             if (badges > participants * 5.6f && checkArthur)
                 ArduinoController.ArduinoConnector.WriteLine ("Z/BadgeGate/Pass/");
         }
@@ -596,16 +606,18 @@ public class AgentCampManager : MonoBehaviour
     /**********************************************************************
      * Dashboard Command
      **********************************************************************/
+    /// <summary>
+    /// 寫入卡片識別ID
+    /// </summary>
     public void WriteNewAgentID ()
     {
         PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
-        {
-            {
-                PlayerCustomData.COMMAND,
-                    "Base/" + ADN + "/ID/" + writeID.text + "/" + PhotonNetwork.LocalPlayer.NickName + "/"
-            }
+        { { PlayerCustomData.COMMAND, "Device/" + ADN + "/ID/" + writeID.text + "/" + PhotonNetwork.LocalPlayer.NickName + "/" }
         });
     }
+    /// <summary>
+    /// 送徽章
+    /// </summary>
     public void SendBadgePresents ()
     {
         if (!ExitSpaceData.IsStage1Entry (ADN)) return;
@@ -616,89 +628,52 @@ public class AgentCampManager : MonoBehaviour
         }
 
         PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
-        {
-            {
-                PlayerCustomData.COMMAND,
-                    "Base/" + ADN + "/Present/" + presents + "/" + PhotonNetwork.LocalPlayer.NickName + "/"
-            }
+        { { PlayerCustomData.COMMAND, "Device/" + ADN + "/Present/" + presents + "/" + PhotonNetwork.LocalPlayer.NickName + "/" }
         });
-
-        // ArduinoDashboard.Instance.ArduinoTransmittedMessage.AddMessage (ADN + "/Present/" + presents + "/");
-        // if (PhotonNetwork.LocalPlayer == PhotonNetwork.MasterClient)
-        //     ArduinoController.ArduinoConnector.WriteLine ("Z/" + ADN + "/Present/" + presents + "/");
-        // else
-        //     PhotonNetwork.MasterClient.SetCustomProperties (
-        //         new Hashtable
-        //         {
-        //             {
-        //                 PlayerCustomData.DEV_COMMAND, "DEV/" + ADN + "/Present/" + presents + "/"
-        //             }
-        //         });
     }
+    /// <summary>
+    /// 強制解鎖
+    /// </summary>
     public void Unlock ()
     {
-        // ArduinoDashboard.Instance.ArduinoTransmittedMessage.AddMessage (ADN + "/UnlockForce/");
-        // if (PhotonNetwork.LocalPlayer == PhotonNetwork.MasterClient)
-        //     ArduinoController.ArduinoConnector.WriteLine ("Z/" + ADN + "/UnlockForce/");
-        // else
-        //     PhotonNetwork.MasterClient.SetCustomProperties (
-        //         new Hashtable
-        //         {
-        //             {
-        //                 PlayerCustomData.DEV_COMMAND, "DEV/" + ADN + "/UnlockForce/"
-        //             }
-        //         });
-
         PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
-        {
-            {
-                PlayerCustomData.COMMAND,
-                    "Base/" + ADN + "/UnlockForce/" + PhotonNetwork.LocalPlayer.NickName + "/"
-            }
+        { { PlayerCustomData.COMMAND, "Device/" + ADN + "/UnlockForce/" + PhotonNetwork.LocalPlayer.NickName + "/" }
         });
     }
+    /// <summary>
+    /// HC12雙向通訊檢測
+    /// </summary>
     public void Check ()
     {
-        // ArduinoDashboard.Instance.ArduinoTransmittedMessage.AddMessage (ADN + "/Checking/" + customCallbackTime.text + "/");
-        // if (PhotonNetwork.LocalPlayer == PhotonNetwork.MasterClient)
-        //     ArduinoController.ArduinoConnector.WriteLine ("Z/" + ADN + "/Checking/" + customCallbackTime.text + "/");
-        // else
-        //     PhotonNetwork.MasterClient.SetCustomProperties (
-        //         new Hashtable
-        //         {
-        //             {
-        //                 PlayerCustomData.DEV_COMMAND, "DEV/" + ADN + "/Checking/" + customCallbackTime.text + "/"
-        //             }
-        //         });
-
         PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
-        {
-            {
-                PlayerCustomData.COMMAND,
-                    "Base/" + ADN + "/Checking/" + customCallbackTime.text + "/" + PhotonNetwork.LocalPlayer.NickName + "/"
-            }
+        { { PlayerCustomData.COMMAND, "Device/" + ADN + "/Checking/" + customCallbackTime.text + "/" + PhotonNetwork.LocalPlayer.NickName + "/" }
         });
     }
+    /// <summary>
+    /// 設定光敏電阻觸發臨界值
+    /// 預設為50
+    /// </summary>
+    public void SetDeclineFactor ()
+    {
+        PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
+        { { PlayerCustomData.COMMAND, "Device/" + ADN + "/SetDecline/" + inputDec.text + "/" + PhotonNetwork.LocalPlayer.NickName + "/" }
+        });
+    }
+    /// <summary>
+    /// 設定光敏電阻觸發兩次之間隔時間
+    /// 預設為500ms
+    /// </summary>
+    public void SetInterval ()
+    {
+        PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
+        { { PlayerCustomData.COMMAND, "Device/" + ADN + "/SetInterval/" + inputInter.text + "/" + PhotonNetwork.LocalPlayer.NickName + "/" }
+        });
+    }
+
     public void AddBlackDoor ()
     {
-        // ArduinoDashboard.Instance.ArduinoReceivedlMessage.AddMessage (ADN + "/BlackDoor/");
-        // if (PhotonNetwork.LocalPlayer == PhotonNetwork.MasterClient)
-        //     blackDoor.Add (ADN);
-        // else
-        //     PhotonNetwork.MasterClient.SetCustomProperties (
-        //         new Hashtable
-        //         {
-        //             {
-        //                 PlayerCustomData.DEV_COMMAND, "MASTER/" + ADN + "/BlackDoor/"
-        //             }
-        //         });
-
         PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
-        {
-            {
-                PlayerCustomData.COMMAND,
-                    "Master/" + ADN + "/BlackDoor/" + PhotonNetwork.LocalPlayer.NickName + "/"
-            }
+        { { PlayerCustomData.COMMAND, "Master/" + ADN + "/BlockDoor/" + PhotonNetwork.LocalPlayer.NickName + "/" }
         });
     }
     public void CheckRestart ()
@@ -717,28 +692,8 @@ public class AgentCampManager : MonoBehaviour
     public void Plus (int num)
     {
         indexChecking += num;
-        indexChecking = (int) Mathf.Repeat (indexChecking, ExitSpaceData.DEVICES.Length);
+        indexChecking = (int) Mathf.Repeat (indexChecking, checkList.Length);
         nextCheckingTime = Time.time;
-    }
-    public void SetDeclineFactor ()
-    {
-        PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
-        {
-            {
-                PlayerCustomData.COMMAND,
-                    "Base/" + ADN + "/SetDecline/" + inputDec.text + "/" + PhotonNetwork.LocalPlayer.NickName + "/"
-            }
-        });
-    }
-    public void SetInterval ()
-    {
-        PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
-        {
-            {
-                PlayerCustomData.COMMAND,
-                    "Base/" + ADN + "/SetInterval/" + inputInter.text + "/" + PhotonNetwork.LocalPlayer.NickName + "/"
-            }
-        });
     }
     /**********************************************************************
      * Developer & Master
@@ -748,14 +703,13 @@ public class AgentCampManager : MonoBehaviour
         object customData;
         if (PhotonNetwork.MasterClient.CustomProperties.TryGetValue (PlayerCustomData.COMMAND, out customData))
         {
-            if (((string) customData).Contains ("Base"))
+            if (((string) customData).Contains ("Device")) // 傳送給其他Arduino的指令
             {
                 ArduinoController.ArduinoConnector.WriteLine ((string) customData);
                 ArduinoDashboard.Instance.ArduinoTransmittedMessage.AddMessage ((string) customData);
                 PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable { { PlayerCustomData.COMMAND, "" } });
-
             }
-            else if (((string) customData).Contains ("Master"))
+            else if (((string) customData).Contains ("Master")) // 要求MasterClient端執行的指令
             {
                 ArduinoDashboard.Instance.ArduinoReceivedlMessage.AddMessage ((string) customData);
                 if (((string) customData).Contains ("BlackDoor"))
@@ -763,13 +717,6 @@ public class AgentCampManager : MonoBehaviour
                 PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable { { PlayerCustomData.COMMAND, "" } });
 
             }
-            // if (((string) customData).Contains ("DEV"))
-            // {
-            //     ArduinoController.ArduinoConnector.WriteLine ((string) customData);
-            //     ArduinoDashboard.Instance.ArduinoReceivedlMessage.AddMessage ((string) customData);
-            //     ArduinoDashboard.Instance.ArduinoTransmittedMessage.AddMessage ((string) customData);
-            // }
-
         }
     }
     public void MasterCallback ()

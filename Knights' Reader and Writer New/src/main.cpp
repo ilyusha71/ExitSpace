@@ -35,12 +35,12 @@
 /****************************************************************************
  * 燒錄設定
  ****************************************************************************/
-String DEVICE_NAME = "1-B.1-X";
+// String DEVICE_NAME = "2-U.7-U.5";
 // String DEVICE_NAME = "3-R.1.2.3.4.5.6.7.8.9.10-A.1.2.3.4.5.6.7.8.9.10";
-// String DEVICE_NAME = "H5-C.8-C.2";
+String DEVICE_NAME = "V4-C.2-C.1";
 // String DEVICE_NAME = "1-N.2-X";
-// String DEVICE_NAME = "4B1-A.1.2.10-T.2";
-#define MODE 20
+// String DEVICE_NAME = "4B2-A.3.4.7-T.3";
+#define MODE 100
 #if MODE == ENTRY_MODE
 String presents = "";
 boolean isPresent[11];
@@ -82,7 +82,8 @@ byte ssPins[] = {SS_PIN_A, SS_PIN_B};
 /****************************************************************************
  * DEFINE BOX
  ****************************************************************************/
-byte bufferChallenge[18], title[18];
+byte bufferChallenge[18];
+byte *title;
 byte blockChallenge[2] = {6, 0}, blockTitle[2] = {6, 1};
 #endif
 #endif
@@ -110,6 +111,7 @@ MFRC522 mfrc522[NR_OF_READERS]; // Create MFRC522 instance.
 MFRC522::StatusCode status;
 MFRC522::MIFARE_Key key; // 儲存金鑰
 int readerIndex;
+byte ilyushaKey[16] = "iLYuSha KocmocA", rubyData[18];
 byte wakakaKey[16] = "Wakaka Key", rubyData[18];
 byte bufferAgentID[18] = "Unknown", recordAgentID[18];
 byte blockID[2] = {7, 0};
@@ -642,7 +644,7 @@ void setup()
   Serial.println(DEVICE_NAME[0]);
 #if MODE == WRITER_MODE
   int key = Split(Split(DEVICE_NAME, '-', 1), '.', 1).toInt();
-   reader[0].AddPassKey(key);
+  reader[0].AddPassKey(key);
 #elif MODE == VIVIANE_MODE
   int key = Split(Split(DEVICE_NAME, '-', 1), '.', 1).toInt();
   reader[0].SetSpecificKey(key);
@@ -656,14 +658,14 @@ void setup()
   /****************************************************************************
    * DEFINE READER UNLOCKE CONDITION
    ****************************************************************************/
-  for (int i = 0; i < NR_OF_READERS; i++)
+  for (int index = 0; index < NR_OF_READERS; index++)
   {
-    if (i == 0)
+    if (index == 0)
       Serial.print(F(" * Outer Reader: "));
-    else if (i == 1)
+    else if (index == 1)
       Serial.print(F(" * Inner Reader: "));
 
-    String condition = Split(DEVICE_NAME, '-', i + 1);
+    String condition = Split(DEVICE_NAME, '-', index + 1);
     Serial.println(condition);
     bool checkPassKeyCount = false;
     int checPassKeyIndex = 1;
@@ -672,7 +674,7 @@ void setup()
       String n = Split(condition, '.', checPassKeyIndex);
       if (n != "")
       {
-        reader[i].AddPassKey(n.toInt());
+        reader[index].AddPassKey(n.toInt());
         checPassKeyIndex++;
       }
       else
@@ -681,10 +683,33 @@ void setup()
 
     switch (condition.charAt(0))
     {
+    case 'C':
+      reader[index].SetKeyCount(Split(condition, '.', 1).toInt());
+      break;
+    case 'W':
+      reader[index].SetMode(Wakaka);
+      break;
+    case 'X':
+      reader[index].SetMode(Disable);
+      break;
+    case 'U':
+      reader[index].SetMode(Specify);
+      break;
+    case 'E':
+      reader[index].SetMode(Special);
+      pinMode(5, OUTPUT);
+      digitalWrite(5, LOW);
+      break;
+    case 'R':
+      reader[index].SetMode(OR);
+      break;
+    case 'A':
+      reader[index].SetMode(AND);
+      break;
 #if MODE == BOX_MODE
     case 'T':
       int name = Split(condition, '.', 1).toInt();
-      reader[i].SetTitle(title, name);
+     title =  reader[index].SetTitle( name);
       Serial.print(F(" *   Target ==> ["));
       for (size_t i = 0; i < 16; i++)
       {
@@ -695,37 +720,14 @@ void setup()
       Serial.println(F("]"));
       break;
 #endif
-    case 'C':
-      reader[i].SetKeyCount(Split(condition, '.', 1).toInt());
-      break;
-    case 'W':
-      reader[i].SetMode(Wakaka);
-      break;
-    case 'X':
-      reader[i].SetMode(Disable);
-      break;
-    case 'U':
-      reader[i].SetMode(Specify);
-      break;
-    case 'E':
-      reader[i].SetMode(Special);
-      pinMode(5, OUTPUT);
-      digitalWrite(5, LOW);
-      break;
-    case 'R':
-      reader[i].SetMode(OR);
-      break;
-    case 'A':
-      reader[i].SetMode(AND);
-      break;
     }
 
-    if (reader[i].mode != Disable)
+    if (reader[index].mode != Disable)
     {
       // 初始化 MFRC522
       Serial.print(F(" *   Status ==> "));
-      mfrc522[i].PCD_Init(ssPins[i], RST_PIN); // Init each MFRC522 card
-      mfrc522[i].PCD_DumpVersionToSerial();
+      mfrc522[index].PCD_Init(ssPins[index], RST_PIN); // Init each MFRC522 card
+      mfrc522[index].PCD_DumpVersionToSerial();
     }
   }
 #elif MODE == PRINTER_MODE
@@ -819,7 +821,7 @@ void loop()
           hasNewAgentID = true;
           Split(rxData, '/', 3).getBytes(writeAgentID, 16);
         }
-#elif MODE == READER_MODE
+#elif MODE >= READER_MODE
         else if (rxCommand == "UnlockForce")
           UnlockForce();
         else if (rxCommand == "Unlocked")
@@ -857,6 +859,8 @@ void loop()
       continue;
     if (mfrc522[readerIndex].PICC_IsNewCardPresent() && mfrc522[readerIndex].PICC_ReadCardSerial())
     {
+      // SetCardData(wakakaKey, blockID);
+      // return;
 #if MODE == VIVIANE_MODE
       if (readerIndex == 1)
       {
