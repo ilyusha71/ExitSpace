@@ -54,7 +54,7 @@
  ****************************************************************************/
 // String DEVICE_NAME = "2-U.7-U.5";
 // String DEVICE_NAME = "3-R.1.2.3.4.5.6.7.8.9.10-A.1.2.3.4.5.6.7.8.9.10";
-String DEVICE_NAME = "V4-C.2-C.1";
+String DEVICE_NAME = "H6-U.7-U.6";
 // String DEVICE_NAME = "1-N.2-X";
 // String DEVICE_NAME = "4B2-A.3.4.7-T.3";
 #define MODE 100
@@ -131,7 +131,7 @@ int readerIndex;
 byte wakakaKey[16] = "Wakaka Key", ilyushaKey[16] = "KocmocA", rubyData[18];
 byte bufferAgentID[18] = "Unknown", recordAgentID[18];
 byte blockID[2] = {7, 0}, blockKocmocA[2] = {7, 1};
-boolean isBlockArea = false, hasRuby[11];
+boolean isCloseArea = false, hasRuby[11];
 unsigned long waitTimer, waitUnlock = 3000;
 
 // , bufferTime[18], bufferStage[18]
@@ -846,10 +846,10 @@ void loop()
           UnlockEML_1_U1_X();
         else if (rxCommand == "Unlocked_3_E6_E4")
           UnlockEML_3_E6_E4(Split(rxData, '/', 4).toInt());
-        else if (rxCommand == "BlockArea")
-          isBlockArea = true;
+        else if (rxCommand == "CloseArea")
+          isCloseArea = true;
         else if (rxCommand == "OpenArea")
-          isBlockArea = false;
+          isCloseArea = false;
 #if MODE == BOX_MODE
         else if (rxCommand == "Conferred")
           ConferNewTitle();
@@ -929,7 +929,7 @@ void loop()
           continue;
         }
       }
-      if (isBlockArea)
+      if (isCloseArea)
         return;
       // 特工資料
       if (!GetCardData(bufferAgentID, blockID))

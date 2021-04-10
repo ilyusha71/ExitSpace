@@ -38,6 +38,7 @@ public class AgentCampManager : MonoBehaviour
     public Color32 clearColor, checkColor, readColor;
 
     [Header ("Auto Checking")]
+    public TextMeshProUGUI textADN;
     public Toggle isChecking;
     public Button[] btnStages;
     public string[] checkList = new string[0];
@@ -50,8 +51,8 @@ public class AgentCampManager : MonoBehaviour
     public GameObject warning;
     public Button forceQuit;
 
-    [Header ("Black Door")]
-    public List<string> blackDoor = new List<string> ();
+    [Header ("Block Door")]
+    public List<string> blockDoor = new List<string> ();
 
     public GameObject gg;
 
@@ -82,7 +83,8 @@ public class AgentCampManager : MonoBehaviour
             btnADNs[i].onClick.AddListener (() =>
             {
                 ADN = adn;
-                Debug.Log (ADN);
+                textADN.text = ADN;
+                //Debug.Log (ADN);
             });
         }
 
@@ -177,20 +179,24 @@ public class AgentCampManager : MonoBehaviour
             content.DOKill ();
             content.DOLocalMoveY (1560, 1.37f);
         }
-        if (Input.GetKeyDown (KeyCode.Alpha6))
-            BlockArea ();
-        else if (Input.GetKeyDown (KeyCode.Alpha7))
-            OpenArea ();
         content.Translate (new Vector3 (Input.GetAxis ("Horizontal") * -5.0f, 0, 0));
         if (content.localPosition.x > 0)
             content.localPosition = new Vector3 (0, content.localPosition.y, content.localPosition.z);
         else if (content.localPosition.x < -offset)
             content.localPosition = new Vector3 (-offset, content.localPosition.y, content.localPosition.z);
 
+        // Hotkey
         if (Input.GetKeyDown (KeyCode.LeftBracket))
             Check ();
         if (Input.GetKeyDown (KeyCode.RightBracket))
             Unlock ();
+        if (Input.GetKeyDown (KeyCode.Backslash))
+            AddBlockDoor ();
+        if (Input.GetKeyDown (KeyCode.Minus))
+            CloseArea ();
+        else if (Input.GetKeyDown (KeyCode.Equals))
+            OpenArea ();
+
         countCommands = ArduinoController.queueCommand.Count;
         for (int i = 0; i < countCommands; i++)
         {
@@ -340,8 +346,8 @@ public class AgentCampManager : MonoBehaviour
                 else if (commands[4] == "Unlock")
                 {
                     string unlockCommand = "";
-                    if (blackDoor.Contains (commands[1]))
-                        unlockCommand = ("Z/BLACK/Unlocked");
+                    if (blockDoor.Contains (commands[1]))
+                        unlockCommand = ("Z/Block/Unlocked");
                     else if (ExitSpaceData.IsMerlinCabinet (commands[1]))
                         unlockCommand = ("Z/" + commands[1] + "/Unlocked_1_U1_X/");
                     else if (ExitSpaceData.IsStage2Door (commands[1]))
@@ -636,18 +642,28 @@ public class AgentCampManager : MonoBehaviour
         });
     }
     /// <summary>
-    /// 只允許iLYuSha通過
+    /// 清除檢查變色標記
     /// </summary>
-    public void OpenArea ()
+    public void CheckRestart ()
     {
-        PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
-        { { PlayerCustomData.COMMAND, "Device/" + ADN + "/OpenArea/" + PhotonNetwork.LocalPlayer.NickName + "/" }
-        });
+        foreach (Button btn in dicAdnBtns.Values)
+        {
+            btn.GetComponentsInChildren<Image> () [0].color = clearColor;
+            btn.GetComponentsInChildren<Image> () [1].enabled = false;
+        }
+        foreach (Button btn in dicXtdBtns.Values)
+        {
+            btn.GetComponentsInChildren<Image> () [0].color = clearColor;
+            btn.GetComponentsInChildren<Image> () [1].enabled = false;
+        }
     }
-    public void BlockArea ()
+    /// <summary>
+    /// HC12雙向通訊檢測
+    /// </summary>
+    public void Check ()
     {
         PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
-        { { PlayerCustomData.COMMAND, "Device/" + ADN + "/BlockArea/" + PhotonNetwork.LocalPlayer.NickName + "/" }
+        { { PlayerCustomData.COMMAND, "Device/" + ADN + "/Checking/" + customCallbackTime.text + "/" + PhotonNetwork.LocalPlayer.NickName + "/" }
         });
     }
     /// <summary>
@@ -660,12 +676,27 @@ public class AgentCampManager : MonoBehaviour
         });
     }
     /// <summary>
-    /// HC12雙向通訊檢測
+    /// 封鎖一般卡，Master將不會返還Unlock訊號
     /// </summary>
-    public void Check ()
+    public void AddBlockDoor ()
     {
         PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
-        { { PlayerCustomData.COMMAND, "Device/" + ADN + "/Checking/" + customCallbackTime.text + "/" + PhotonNetwork.LocalPlayer.NickName + "/" }
+        { { PlayerCustomData.COMMAND, "Master/" + ADN + "/BlockDoor/" + PhotonNetwork.LocalPlayer.NickName + "/" }
+        });
+    }
+    /// <summary>
+    /// 封鎖萬用卡，只允許iLYuSha通過
+    /// </summary>
+    public void CloseArea ()
+    {
+        PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
+        { { PlayerCustomData.COMMAND, "Device/" + ADN + "/CloseArea/" + PhotonNetwork.LocalPlayer.NickName + "/" }
+        });
+    }
+    public void OpenArea ()
+    {
+        PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
+        { { PlayerCustomData.COMMAND, "Device/" + ADN + "/OpenArea/" + PhotonNetwork.LocalPlayer.NickName + "/" }
         });
     }
     /// <summary>
@@ -687,26 +718,6 @@ public class AgentCampManager : MonoBehaviour
         PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
         { { PlayerCustomData.COMMAND, "Device/" + ADN + "/SetInterval/" + inputInter.text + "/" + PhotonNetwork.LocalPlayer.NickName + "/" }
         });
-    }
-
-    public void AddBlackDoor ()
-    {
-        PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
-        { { PlayerCustomData.COMMAND, "Master/" + ADN + "/BlockDoor/" + PhotonNetwork.LocalPlayer.NickName + "/" }
-        });
-    }
-    public void CheckRestart ()
-    {
-        foreach (Button btn in dicAdnBtns.Values)
-        {
-            btn.GetComponentsInChildren<Image> () [0].color = clearColor;
-            btn.GetComponentsInChildren<Image> () [1].enabled = false;
-        }
-        foreach (Button btn in dicXtdBtns.Values)
-        {
-            btn.GetComponentsInChildren<Image> () [0].color = clearColor;
-            btn.GetComponentsInChildren<Image> () [1].enabled = false;
-        }
     }
     public void Plus (int num)
     {
@@ -730,9 +741,13 @@ public class AgentCampManager : MonoBehaviour
             }
             else if (((string) customData).Contains ("Master")) // 要求MasterClient端執行的指令
             {
-                ArduinoDashboard.Instance.ArduinoReceivedlMessage.AddMessage ((string) customData);
-                if (((string) customData).Contains ("BlackDoor"))
-                    blackDoor.Add (((string) customData).Split ('/') [1]);
+                if (PhotonNetwork.LocalPlayer == PhotonNetwork.MasterClient)
+                    ArduinoDashboard.Instance.ArduinoReceivedlMessage.AddMessage ((string) customData);
+                else
+                    ArduinoDashboard.Instance.ArduinoTransmittedMessage.AddMessage ((string) customData);
+
+                if (((string) customData).Contains ("BlockDoor"))
+                    blockDoor.Add (((string) customData).Split ('/') [1]);
                 PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable { { PlayerCustomData.COMMAND, "" } });
 
             }

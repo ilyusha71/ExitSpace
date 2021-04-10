@@ -151,9 +151,7 @@ public class ArduinoDashboard : MonoBehaviour
             string msgRx = ArduinoController.queueMsg.Dequeue ();
             if (msgRx.Contains ("DS3231") || msgRx.Contains ("Clock"))
                 ds3231Clock.text = msgRx.Split ('/') [1];
-            if (msgRx.Contains ("Base"))
-                ArduinoTransmittedMessage.AddMessage (msgRx);
-            else
+            else if (!msgRx.Contains ("Device"))
                 ArduinoReceivedlMessage.AddMessage (msgRx);
         }
         if (countBuffer % 30000 == 0)

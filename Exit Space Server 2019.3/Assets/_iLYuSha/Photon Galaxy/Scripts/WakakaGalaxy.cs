@@ -322,8 +322,8 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster ()
     {
         Debug.LogWarning ("OnConnectedToMaster");
-        Debug.Log("Region: " + PhotonNetwork.CloudRegion);
-        Debug.Log("IP: " + PhotonNetwork.ServerAddress);
+        Debug.Log ("Region: " + PhotonNetwork.CloudRegion);
+        Debug.Log ("IP: " + PhotonNetwork.ServerAddress);
 
         tipSearchRegionServer.SetActive (false);
         panelLobby.SetActive (true);
@@ -574,26 +574,8 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     public override void OnPlayerPropertiesUpdate (Player targetPlayer, Hashtable changedProps)
     {
         Debug.LogWarning (targetPlayer.NickName + " Properties Update");
-        if (targetPlayer == PhotonNetwork.MasterClient)
-        {
-            object customData;
-            // if (targetPlayer.CustomProperties.TryGetValue (PlayerCustomData.MASTER_TIME, out customData))
-            //     ArduinoDashboard.lag = DateTime.Now.Hour * 3600 + DateTime.Now.Minute * 60 + DateTime.Now.Second - (int) customData;
-
-            if (targetPlayer.CustomProperties.TryGetValue (PlayerCustomData.COMMAND, out customData))
-            {
-                // ArduinoDashboard.Instance.ArduinoTransmittedMessage.AddMessage (customData.ToString ());
-                if (PhotonNetwork.LocalPlayer == PhotonNetwork.MasterClient)
-                    FindObjectOfType<AgentCampManager> ().DeveloperCommand ();
-            }
-
-            // else
-            // {
-
-            //     FindObjectOfType<AgentCampManager> ().MasterCallback ();
-            // }
-
-        }
+        // 以下控制代碼適用所有PC端觀測者，無需判定 MasterClient
+        FindObjectOfType<AgentCampManager> ().DeveloperCommand ();
     }
     // Called after switching to a new MasterClient when the current one leaves.
     public override void OnMasterClientSwitched (Player newMasterClient)
