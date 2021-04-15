@@ -21,11 +21,11 @@ byte year, month, date, DoW, hour, minute, second;
 /****************************************************************************
  * Clock Manage
  * GalaxyClockTimer: 1 tick per second for PC.
- * GroundSynchronizeTimer: HC12 Server transmit synchronize time to other arduinos.
- * TransmitCommandTimer: Transimit server commands that collect from PC.
+ * ClockSynchronizationTimer: HC12 Server transmit synchronize time to other arduinos.
+ * HC12TransmissionTimer: Transimit server commands that collect from PC.
  ****************************************************************************/
-unsigned long GalaxyClockTimer, GroundSynchronizeTimer, TransmitCommandTimer;
-int GroundSynchronizeInterval = 3000, TransmitCommandInterval = 500;
+unsigned long GalaxyClockTimer, ClockSynchronizationTimer, HC12TransmissionTimer;
+int ClockSynchronizationInterval = 3000, HC12TransmissionInterval = 500;
 
 void SetTime(byte year, byte month, byte date, byte DoW, byte hour, byte minute, byte second);
 #define SIZE_OF_ARRAY(ary) sizeof(ary) / sizeof(*ary)
@@ -96,9 +96,9 @@ void loop()
     Serial.println(second);
   }
 
-  if (millis() > GroundSynchronizeTimer)
+  if (millis() > ClockSynchronizationTimer)
   {
-    GroundSynchronizeTimer += GroundSynchronizeInterval;
+    ClockSynchronizationTimer += ClockSynchronizationInterval;
 
     // 空間Arduino對時
     HC12.print(F("Z/S/"));
@@ -110,9 +110,9 @@ void loop()
     HC12.println();
   }
 
-  if (millis() > TransmitCommandTimer)
+  if (millis() > HC12TransmissionTimer)
   {
-    TransmitCommandTimer += TransmitCommandInterval;
+    HC12TransmissionTimer += HC12TransmissionInterval;
     delay(10);
 
     for (size_t i = 0; i < SIZE_OF_ARRAY(txDataList); i++)
@@ -149,23 +149,19 @@ void loop()
     txData += (char)txBuffer;
     if (txBuffer == 10) // LF character
     {
-      if (Split(txData, '/', 0) == "SERVER")
-      {
-        if (Split(txData, '/', 1) == "GSD")
-          GroundSynchronizeInterval = Split(txData, '/', 2).toInt();
-        else if (Split(txData, '/', 1) == "TCD")
-          TransmitCommandInterval = Split(txData, '/', 2).toInt();
-        txData = "";
-      }
+      if (Split(txData, '/', 1) == "CSI")
+        ClockSynchronizationInterval = Split(txData, '/', 2).toInt();
+      else if (Split(txData, '/', 1) == "HTI")
+        HC12TransmissionInterval = Split(txData, '/', 2).toInt();
       else
       {
-        if (txIndex == 5) // Max transmission count once
+        if (txIndex > 5) // Max transmission count once
           return;
         txDataList[txIndex] = txData;
         txIndex++;
         txHasData = true;
-        txData = "";
       }
+      txData = "";
     }
   }
 }

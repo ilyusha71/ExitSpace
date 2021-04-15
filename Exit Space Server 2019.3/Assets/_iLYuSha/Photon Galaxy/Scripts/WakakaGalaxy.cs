@@ -12,7 +12,7 @@ using Random = UnityEngine.Random;
 
 public class WakakaGalaxy : MonoBehaviourPunCallbacks
 {
-    public TextMeshProUGUI textKocmocA, textTime, textPhotonCloudState, textServer, textRegionPing, textWarning;
+    public TextMeshProUGUI textVersionPUN, textTime, textPhotonCloudState, textServer, textRegionPing, textWarning;
     private string regionNameText;
     private readonly string NAME_CONNECTED = "已进入";
     private readonly string NAME_DISCONNECTED = "已逃离";
@@ -33,7 +33,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     public GameObject panelLogin;
     public TMP_InputField inputCode;
     public Button btnInternational, btnChina;
-    public Animation anim;
+    public Animation animConnecting;
     public GameObject tipSearchRegionServer;
     public Transform groupRegion;
     public Sprite[] iconFlags;
@@ -81,7 +81,8 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
 
     void Awake ()
     {
-        textKocmocA.text = "KocmocA\n" + PhotonNetwork.PhotonServerSettings.AppSettings.AppVersion;
+        PhotonNetwork.GameVersion = PhotonNetwork.PhotonServerSettings.AppSettings.AppVersion;
+        textVersionPUN.text = "PUN " + PhotonNetwork.GameVersion;
         inputCode.text = PlayerPrefs.GetString ("InputCode");
         Button[] btns = groupRegion.GetComponentsInChildren<Button> ();
         for (int i = 0; i < btns.Length; i++)
@@ -166,27 +167,23 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     public void OnInternationServerButtonClicked ()
     {
         OnLogoutButtonClicked ();
-        anim.Play ("Interstellar");
+        animConnecting.Play ("Interstellar");
         textWarning.text = "寻找区域星系列表";
         tipSearchRegionServer.SetActive (true);
         tipSearchRegionServer.GetComponent<TextMeshProUGUI> ().text = "正在建立星系传送门";
         PhotonNetwork.PhotonServerSettings.AppSettings.AppIdRealtime = "84f4bc51-fb6f-4613-b4ca-1fedcb3e1151"; // TODO: replace with your own AppId
         PhotonNetwork.NetworkingClient.AppId = PhotonNetwork.PhotonServerSettings.AppSettings.AppIdRealtime;
-        // 如果使用ConnectUsingSettings連線會自動在遊戲版本加入PUN版本的後綴。
-        // 為確保兩種連線方式的NetworkingClient.AppVersion相同，必須加入下面這行
-        PhotonNetwork.GameVersion = PhotonNetwork.PhotonServerSettings.AppSettings.AppVersion;
         PhotonNetwork.NetworkingClient.NameServerHost = "ns.exitgames.com";
         PhotonNetwork.NetworkingClient.ConnectToNameServer ();
     }
     public void OnChinaServerButtonClicked ()
     {
         OnLogoutButtonClicked ();
-        anim.Play ("China");
+        animConnecting.Play ("China");
         tipSearchRegionServer.SetActive (true);
         tipSearchRegionServer.GetComponent<TextMeshProUGUI> ().text = "正在建立星系传送门";
         PhotonNetwork.PhotonServerSettings.AppSettings.AppIdRealtime = "8d3d0446-b335-47c1-ab69-7aa9e6878c10"; // TODO: replace with your own AppId
         PhotonNetwork.NetworkingClient.AppId = PhotonNetwork.PhotonServerSettings.AppSettings.AppIdRealtime;
-        PhotonNetwork.GameVersion = PhotonNetwork.PhotonServerSettings.AppSettings.AppVersion;
         PhotonNetwork.NetworkingClient.NameServerHost = "ns.photonengine.cn";
         PhotonNetwork.NetworkingClient.ConnectToNameServer ();
     }
@@ -221,7 +218,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     }
     public void OnLogoutButtonClicked ()
     {
-        anim.Play ("Initial");
+        animConnecting.Play ("Initial");
         PhotonNetwork.Disconnect ();
     }
     public void OnMaxPlayerChange (string count)
@@ -315,13 +312,13 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     // Called to signal that the "low level connection" got established but before the client can call operation on the server.
     public override void OnConnected ()
     {
-        Debug.LogWarning ("OnConnected: " + PhotonNetwork.GameVersion);
         textWarning.text = NAME_CONNECTED + NAME_ONLINE;
     }
     // Called when the client is connected to the Master Server and ready for matchmaking and other tasks.
     public override void OnConnectedToMaster ()
     {
-        Debug.LogWarning ("OnConnectedToMaster");
+        textVersionPUN.text = "PUN " + PhotonNetwork.GameVersion;
+        // Debug.LogWarning ("OnConnectedToMaster");
         Debug.Log ("Region: " + PhotonNetwork.CloudRegion);
         Debug.Log ("IP: " + PhotonNetwork.ServerAddress);
 
@@ -421,17 +418,17 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     // Called on entering a lobby on the Master Server. The actual room-list updates will call OnRoomListUpdate.
     public override void OnJoinedLobby ()
     {
-        // Debug.LogWarning ("OnJoinedLobby");
+        Debug.LogWarning ("OnJoinedLobby:" + PhotonNetwork.CurrentLobby.Name);
     }
     // Called after leaving a lobby.
     public override void OnLeftLobby ()
     {
-        Debug.LogWarning ("OnLeftLobby");
+        Debug.LogWarning ("OnLeftLobby:" + PhotonNetwork.CurrentLobby.Name);
     }
     // Called for any update of the room-listing while in a lobby (InLobby) on the Master Server.
     public override void OnRoomListUpdate (List<RoomInfo> roomList)
     {
-        // Debug.LogWarning ("OnRoomListUpdate");
+        Debug.LogWarning ("OnRoomListUpdate");
         textWarning.text = NAME_ROOM + "组织已更新成员列表。";
         ClearRoomListView ();
         UpdateCachedRoomList (roomList);
@@ -573,7 +570,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     // Called when custom player - properties are changed.Player and the changed properties are passed as object[].
     public override void OnPlayerPropertiesUpdate (Player targetPlayer, Hashtable changedProps)
     {
-        Debug.LogWarning (targetPlayer.NickName + " Properties Update");
+        // Debug.LogWarning (targetPlayer.NickName + " Properties Update");
         // 以下控制代碼適用所有PC端觀測者，無需判定 MasterClient
         FindObjectOfType<AgentCampManager> ().DeveloperCommand ();
     }
@@ -607,6 +604,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
         }
 
         roomListEntries.Clear ();
+        cachedRoomList.Clear();
     }
     private void UpdateCachedRoomList (List<RoomInfo> roomList)
     {

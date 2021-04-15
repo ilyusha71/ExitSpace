@@ -47,7 +47,7 @@ public class ArduinoDashboard : MonoBehaviour
     public TextMeshProUGUI localClock;
     public TextMeshProUGUI masterClock;
     public TextMeshProUGUI ds3231Clock;
-    public TMP_InputField inputSynchronization, inputTransmission;
+    public TMP_InputField inputClockInterval, inputTransmission;
 
     /**********************************************************************
      * 2020/07/26 更新 Arduino Dashboard
@@ -151,6 +151,8 @@ public class ArduinoDashboard : MonoBehaviour
             string msgRx = ArduinoController.queueMsg.Dequeue ();
             if (msgRx.Contains ("DS3231") || msgRx.Contains ("Clock"))
                 ds3231Clock.text = msgRx.Split ('/') [1];
+            else if (msgRx.Contains ("cb")) // Master Client Callback
+                ArduinoTransmittedMessage.AddMessage (msgRx);
             else if (!msgRx.Contains ("Device"))
                 ArduinoReceivedlMessage.AddMessage (msgRx);
         }
@@ -221,24 +223,24 @@ public class ArduinoDashboard : MonoBehaviour
         });
     }
 
-    public void SetBaseSynchronizationIntervalTime ()
+    public void SetClockSynchronizationInterval ()
     {
         PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
         {
             {
                 PlayerCustomData.COMMAND,
-                    "Base/Sync/" + inputSynchronization.text + "/" + PhotonNetwork.LocalPlayer.NickName + "/"
+                    "Device/CSI/" + inputClockInterval.text + "/" + PhotonNetwork.LocalPlayer.NickName + "/"
             }
         });
     }
 
-    public void SetBaseTransmissionIntervalTime ()
+    public void SetHC12TransmissionInterval ()
     {
         PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
         {
             {
                 PlayerCustomData.COMMAND,
-                    "Base/Trans/" + inputTransmission.text + "/" + PhotonNetwork.LocalPlayer.NickName + "/"
+                    "Device/HTI/" + inputTransmission.text + "/" + PhotonNetwork.LocalPlayer.NickName + "/"
             }
         });
     }
@@ -267,6 +269,7 @@ public class MessageManager
         if (msg.Contains ("S/")) return; // 來自其他Server的訊息
         if (string.IsNullOrEmpty (msg)) return;
         msg = msg.Replace ("Z/", "");
+        msg = msg.Replace ("Zcb/", "");
         if (counter < messages.Length)
         {
             messages[counter].gameObject.SetActive (true);

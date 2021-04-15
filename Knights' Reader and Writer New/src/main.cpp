@@ -54,22 +54,20 @@
  ****************************************************************************/
 // String DEVICE_NAME = "2-U.7-U.5";
 // String DEVICE_NAME = "3-R.1.2.3.4.5.6.7.8.9.10-A.1.2.3.4.5.6.7.8.9.10";
-String DEVICE_NAME = "H6-U.7-U.6";
-// String DEVICE_NAME = "1-N.2-X";
+String DEVICE_NAME = "V5-U.6-C.4";
+// String DEVICE_NAME = "2-B.10-X";
 // String DEVICE_NAME = "4B2-A.3.4.7-T.3";
 #define MODE 100
-#if MODE == ENTRY_MODE
 String presents = "";
 boolean isPresent[11];
 byte writeAgentID[16];
 boolean hasNewAgentID;
-#endif
 #if MODE == ENTRY_MODE || MODE == WRITER_MODE
 /****************************************************************************
  * DEFINE ENTRY or WRITER
  ****************************************************************************/
 #define NR_OF_READERS 1
-#define SS_PIN 10
+#define SS_PIN 8
 #elif MODE == PRINTER_MODE
 /****************************************************************************
  * DEFINE PRINTER
@@ -128,9 +126,9 @@ MFRC522 mfrc522[NR_OF_READERS]; // Create MFRC522 instance.
 MFRC522::StatusCode status;
 MFRC522::MIFARE_Key key; // 儲存金鑰
 int readerIndex;
-byte wakakaKey[16] = "Wakaka Key", ilyushaKey[16] = "KocmocA", rubyData[18];
-byte bufferAgentID[18] = "Unknown", recordAgentID[18];
-byte blockID[2] = {7, 0}, blockKocmocA[2] = {7, 1};
+byte keyWakaka[16] = "Wakaka", keyKocmocA[16] = "KocmocA";
+byte blockID[2] = {7, 0}, blockKey[2] = {7, 1};
+byte bufferID[18] = "Unknown", recordID[18], rubyData[18];
 boolean isCloseArea = false, hasRuby[11];
 unsigned long waitTimer, waitUnlock = 3000;
 
@@ -201,9 +199,9 @@ void SendHeader()
   readerIndex == 0 ? HC12.print(F("/0/")) : HC12.print(F("/1/"));
   for (size_t i = 0; i < 16; i++)
   {
-    if (bufferAgentID[i] == 0)
+    if (bufferID[i] == 0)
       break;
-    HC12.print((char)bufferAgentID[i]);
+    HC12.print((char)bufferID[i]);
   }
 }
 void SendResetEvent(String keys)
@@ -280,7 +278,6 @@ void Timeout() // 一長音
   delay(500);
   needInit = true;
 }
-#if MODE == ENTRY_MODE
 void Present();
 void Present()
 {
@@ -302,12 +299,7 @@ void Present()
       checkPresentCount = true;
   }
 }
-#elif MODE >= READER_MODE
 void UnlockForce();
-void UnlockEML();
-void UnlockEML_1_U1_X();
-void UnlockEML_3_E6_E4(int index);
-void ConferNewTitle();
 void UnlockForce()
 {
   waitTimer = millis();
@@ -318,6 +310,11 @@ void UnlockForce()
   digitalWrite(6, LOW);
   needInit = true;
 }
+#if MODE >= READER_MODE
+void UnlockEML();
+void UnlockEML_1_U1_X();
+void UnlockEML_3_E6_E4(int index);
+void ConferNewTitle();
 void UnlockEML() // 一長三短
 {
   waitTimer = millis();
@@ -518,19 +515,6 @@ void Fail()
   mfrc522[readerIndex].PICC_HaltA();
   mfrc522[readerIndex].PCD_StopCrypto1();
   digitalWrite(RST_PIN, LOW);
-  // #if MODE == ENTRY_MODE || MODE == WRITER_MODE || MODE == PRINTER_MODE
-  //   mfrc522[0].PCD_Init(SS_PIN, RST_PIN); // Init each MFRC522 card
-  // #else
-  //   // digitalWrite(LED_BUZZER, HIGH);
-  //   // delay(50);
-  //   // digitalWrite(LED_BUZZER, LOW);
-  //   // delay(10);
-  //   // digitalWrite(LED_BUZZER, HIGH);
-  //   // delay(50);
-  //   // digitalWrite(LED_BUZZER, LOW);
-  //   // delay(10);
-  //   mfrc522[readerIndex].PCD_Init(ssPins[readerIndex], RST_PIN); // Init each MFRC522 card
-  // #endif
 }
 void AccessForbidden()
 {
@@ -568,9 +552,9 @@ void Print()
   printer.setDefault(); // Restore printer to defaults
   for (size_t i = 0; i < 16; i++)
   {
-    if (bufferAgentID[i] == 0)
+    if (bufferID[i] == 0)
       break;
-    printer.write(bufferAgentID[i]);
+    printer.write(bufferID[i]);
   }
   printer.println();
   for (size_t i = 1; i < NR_OF_RUBY; i++)
@@ -826,7 +810,6 @@ void loop()
           Init();
         else if (rxCommand == "Timeout")
           Timeout();
-#if MODE == ENTRY_MODE
         else if (rxCommand == "Present")
         {
           presents = Split(rxData, '/', 3);
@@ -837,7 +820,7 @@ void loop()
           hasNewAgentID = true;
           Split(rxData, '/', 3).getBytes(writeAgentID, 16);
         }
-#elif MODE >= READER_MODE
+#if MODE >= READER_MODE
         else if (rxCommand == "UnlockForce")
           UnlockForce();
         else if (rxCommand == "Unlocked")
@@ -879,17 +862,19 @@ void loop()
       continue;
     if (mfrc522[readerIndex].PICC_IsNewCardPresent() && mfrc522[readerIndex].PICC_ReadCardSerial())
     {
-      // if (!SetCardData(ilyushaKey, blockKocmocA))
+
+      // if (!SetCardData(keyKocmocA, blockKey))
       // {
       //   Fail();
       //   continue;
       // }
       // else
       // {
-      //   Serial.print(F("You have chosen a new challenge ["));
+      //   Serial.print(F("sdfsdfdsfdsfsdfdsfsd"));
       //   UnlockForce();
       // }
       // return;
+
 #if MODE == VIVIANE_MODE
       if (readerIndex == 1)
       {
@@ -903,76 +888,75 @@ void loop()
         continue;
       }
 #endif
-      // // 如果是記錄點，寫入時間
-      // byte time[16] = {hour, minute, second};
-      // if (!SetCardData(time, blockTime))
-      // {
-      //   Fail();
-      //   continue;
-      // }
-      if (!GetCardData(bufferAgentID, blockKocmocA))
+
+      /****************************************************************************
+       * 特工認證 Key
+       ****************************************************************************/
+      if (!GetCardData(bufferID, blockKey))
       {
         Fail();
         continue;
       }
       else
       {
-        if (memcmp(bufferAgentID, ilyushaKey, 16) == 0)
+        if (memcmp(bufferID, keyKocmocA, 16) == 0)
         {
           mfrc522[readerIndex].PICC_HaltA();
           Serial.println(F("==> Hello iLYuSha"));
-#if MODE >= READER_MODE
           UnlockForce();
-#endif
+          mfrc522[readerIndex].PCD_StopCrypto1();
+          digitalWrite(RST_PIN, LOW);
+          continue;
+        }
+
+        if (isCloseArea)
+          return;
+
+        if (memcmp(bufferID, keyWakaka, 16) == 0)
+        {
+          mfrc522[readerIndex].PICC_HaltA();
+          Serial.println(F("==> Hello Wakaka"));
+          UnlockForce();
           mfrc522[readerIndex].PCD_StopCrypto1();
           digitalWrite(RST_PIN, LOW);
           continue;
         }
       }
-      if (isCloseArea)
-        return;
-      // 特工資料
-      if (!GetCardData(bufferAgentID, blockID))
+
+      /****************************************************************************
+       * 特工認證 ID
+       ****************************************************************************/
+      if (!GetCardData(bufferID, blockID))
       {
         Fail();
         continue;
       }
       else
       {
-        if (memcmp(bufferAgentID, wakakaKey, 16) == 0)
-        {
-          mfrc522[readerIndex].PICC_HaltA();
-          Serial.println(F("==> Hello Wakaka Agent!"));
-#if MODE >= READER_MODE
-          UnlockForce();
-#endif
-          mfrc522[readerIndex].PCD_StopCrypto1();
-          digitalWrite(RST_PIN, LOW);
-          continue;
-        }
         // 修復單次讀取失敗問題，同一ID連續讀取可互補不足
-        if (!memcmp(bufferAgentID, recordAgentID, 16) == 0)
+        if (!memcmp(bufferID, recordID, 16) == 0)
         {
           for (size_t i = 0; i < 18; i++)
           {
-            recordAgentID[i] = bufferAgentID[i];
+            recordID[i] = bufferID[i];
           }
           for (size_t i = 0; i < NR_OF_RUBY; i++)
           {
             hasRuby[i] = false;
           }
         }
+        
         Serial.print(F("Agent: ["));
-        if (bufferAgentID[0] == 0)
+        if (bufferID[0] == 0)
         {
           byte unknownID[18] = "Unknown";
-          memcpy(bufferAgentID, unknownID, sizeof(bufferAgentID));
+          memcpy(bufferID, unknownID, sizeof(bufferID));
         }
         for (size_t i = 0; i < 16; i++)
         {
-          if (bufferAgentID[i] == 0)
+          if (bufferID[i] == 0)
             break;
-          Serial.write(bufferAgentID[i]);
+          Serial.write(bufferID[i]);
         }
         Serial.print(F("] ==> id: ["));
         byte *id = mfrc522[readerIndex].uid.uidByte; // 取得卡片的UID
@@ -985,7 +969,7 @@ void loop()
         }
         Serial.println(F("]"));
       }
-#if MODE == ENTRY_MODE
+
       /****************************************************************************
        * Agent ID Write
        * 需透過Serve開啟
@@ -999,7 +983,13 @@ void loop()
         }
         else
           hasNewAgentID = false;
+        mfrc522[readerIndex].PICC_HaltA();
+        delay(300);
+        mfrc522[readerIndex].PCD_StopCrypto1();
+        digitalWrite(RST_PIN, LOW);
+        return;
       }
+#if MODE == ENTRY_MODE
       if (ResetNewAgent())
         SendResetEvent(presents);
       mfrc522[readerIndex].PICC_HaltA();

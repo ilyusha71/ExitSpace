@@ -56,7 +56,7 @@
         "V4-C2-C1",
         "V4-U10-C3",
 
-        "H5-C8-C2",
+        "V5-C8-X",
         "H5-C2-C1",
         "V5-U6-C4",
         "V5-U3-C8",
@@ -129,7 +129,7 @@
         "V4-C2-C1",
         "V4-U10-C3",
 
-        "H5-C8-C2",
+        "V5-C8-X",
         "H5-C2-C1",
         "V5-U6-C4",
         "V5-U3-C8",
@@ -199,7 +199,7 @@
         "V3-W-C7", // Room 17
         "V3-W-C7U6", // Room 17 = V3-W-C7
         "H4-W-C3", // Room 17
-        "H5-C8-C2", // Room 17
+        "V5-C8-X", // Room 17
         "V6-W-A189", // Room 18
         "H8-W-U8", // Room 18
         "V8-W-U6", // Room 18   
@@ -247,7 +247,7 @@
     {
         "V3-W-C7", // East
         "H4-W-C3", // Southeast
-        "H5-C8-C2", // South
+        "V5-C8-X", // South
     };
     public static readonly string[] CHANCE_18_DOORS = new string[]
     {
