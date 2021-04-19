@@ -45,6 +45,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     private readonly Color32 colorMedium = new Color32 (255, 196, 0, 255);
     private readonly Color32 colorWeak = new Color32 (255, 100, 0, 255);
     private readonly Color32 colorVeryWeak = new Color32 (255, 59, 59, 255);
+    private int dontRememberID; // 1 = dont, 0 = do it
     #endregion
 
     #region Lobby
@@ -83,7 +84,9 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.GameVersion = PhotonNetwork.PhotonServerSettings.AppSettings.AppVersion;
         textVersionPUN.text = "PUN " + PhotonNetwork.GameVersion;
-        inputCode.text = PlayerPrefs.GetString ("InputCode");
+        dontRememberID = PlayerPrefs.GetInt ("Remember");
+        if (dontRememberID == 0) inputCode.text = PlayerPrefs.GetString ("InputCode");
+        else inputCode.text = "";
         Button[] btns = groupRegion.GetComponentsInChildren<Button> ();
         for (int i = 0; i < btns.Length; i++)
         {
@@ -144,11 +147,29 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     /// <summary>
     /// Login Panel
     /// </summary>
+    public void DontRememberID ()
+    {
+        dontRememberID = 1;
+        PlayerPrefs.SetInt ("Remember", dontRememberID);
+    }
+    public void ClearPref ()
+    {
+        dontRememberID = 0;
+        PlayerPrefs.DeleteKey ("Remember");
+    }
     public void OnFastLoginButtonClicked ()
     {
         if (!inputCode.text.Equals (""))
         {
-            PlayerPrefs.SetString ("InputCode", inputCode.text);
+            if (dontRememberID == 0) PlayerPrefs.SetString ("InputCode", inputCode.text);
+            else
+            {
+                if (!inputCode.text.Equals ("ExitCamp"))
+                {
+                    FindObjectOfType<AgentCampManager> ().gg.SetActive (true);
+                    return;
+                }
+            }
             PhotonNetwork.LocalPlayer.NickName = inputCode.text;
             if (PhotonNetwork.IsConnected)
             {
@@ -191,7 +212,15 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     {
         if (!inputCode.text.Equals (""))
         {
-            PlayerPrefs.SetString ("InputCode", inputCode.text);
+            if (dontRememberID == 0) PlayerPrefs.SetString ("InputCode", inputCode.text);
+            else
+            {
+                if (!inputCode.text.Equals ("ExitCamp"))
+                {
+                    FindObjectOfType<AgentCampManager> ().gg.SetActive (true);
+                    return;
+                }
+            }
             PhotonNetwork.LocalPlayer.NickName = inputCode.text;
             PhotonNetwork.NetworkingClient.ConnectToRegionMaster (region);
             panelLogin.SetActive (false);
@@ -270,7 +299,18 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     }
     public void OnJoinOrCreateRoomButtonClicked ()
     {
-        string roomName = !inputRoomName.text.Equals (string.Empty) ? inputRoomName.text : "Wakaka" + Random.Range (1000, 10000);
+        string roomName;
+        if (dontRememberID == 0)
+            roomName = !inputRoomName.text.Equals (string.Empty) ? inputRoomName.text : "Wakaka" + Random.Range (1000, 10000);
+        else
+        {
+            if (!inputRoomName.text.Equals ("Wakaka"))
+            {
+                FindObjectOfType<AgentCampManager> ().gg.SetActive (true);
+                return;
+            }
+            roomName = "Wakaka" + Random.Range (1000, 10000);
+        }
         byte maxPlayers;
         byte.TryParse (inputMaxPlayers.text, out maxPlayers);
         if (maxPlayers < 0) // 0 代表无限制
@@ -604,7 +644,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
         }
 
         roomListEntries.Clear ();
-        cachedRoomList.Clear();
+        cachedRoomList.Clear ();
     }
     private void UpdateCachedRoomList (List<RoomInfo> roomList)
     {

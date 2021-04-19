@@ -39,7 +39,7 @@
  * 06       00      *Text       Challenge
  * 06       01      *Text       Title
  * 07       00      *Text       ID
- * 07       01      KocmocA     iLYuSha Key 真正萬用通行卡
+ * 07       01      *Text       KocmocA Key 萬用卡 KocmocA or Wakaka
  ****************************************************************************/
 #include <Reader.h>
 #include <MFRC522.h>
@@ -54,7 +54,7 @@
  ****************************************************************************/
 // String DEVICE_NAME = "2-U.7-U.5";
 // String DEVICE_NAME = "3-R.1.2.3.4.5.6.7.8.9.10-A.1.2.3.4.5.6.7.8.9.10";
-String DEVICE_NAME = "V5-U.6-C.4";
+String DEVICE_NAME = "V7-U.4-C.3";
 // String DEVICE_NAME = "2-B.10-X";
 // String DEVICE_NAME = "4B2-A.3.4.7-T.3";
 #define MODE 100

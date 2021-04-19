@@ -194,9 +194,9 @@ public class AgentCampManager : MonoBehaviour
             CloseArea ();
         else if (Input.GetKeyDown (KeyCode.Equals))
             OpenArea ();
-        if (Input.GetKeyDown (KeyCode.Backslash))
+        if (Input.GetKeyDown (KeyCode.Semicolon))
             BlockDoor ();
-        else if (Input.GetKeyDown (KeyCode.Backspace))
+        else if (Input.GetKeyDown (KeyCode.Quote))
             FreeDoor ();
 
         countCommands = ArduinoController.queueCommand.Count;
