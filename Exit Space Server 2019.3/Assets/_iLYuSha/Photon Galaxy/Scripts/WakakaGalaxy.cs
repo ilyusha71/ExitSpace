@@ -45,7 +45,8 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     private readonly Color32 colorMedium = new Color32 (255, 196, 0, 255);
     private readonly Color32 colorWeak = new Color32 (255, 100, 0, 255);
     private readonly Color32 colorVeryWeak = new Color32 (255, 59, 59, 255);
-    private int dontRememberID; // 1 = dont, 0 = do it
+    private int numServices; // 1 = dont, 0 = do it
+    private float timeCheckViolation;
     #endregion
 
     #region Lobby
@@ -62,6 +63,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     [Header ("Lobby Panel - List of Room")]
     public RectTransform roomListContent;
     public GameObject RoomListEntryPrefab;
+    public GameObject refreshButton;
     public Sprite[] iconPlanets;
     private Dictionary<string, RoomInfo> cachedRoomList = new Dictionary<string, RoomInfo> ();
     private Dictionary<string, GameObject> roomListEntries = new Dictionary<string, GameObject> ();
@@ -84,8 +86,8 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.GameVersion = PhotonNetwork.PhotonServerSettings.AppSettings.AppVersion;
         textVersionPUN.text = "PUN " + PhotonNetwork.GameVersion;
-        dontRememberID = PlayerPrefs.GetInt ("Remember");
-        if (dontRememberID == 0) inputCode.text = PlayerPrefs.GetString ("InputCode");
+        numServices = PlayerPrefs.GetInt ("ServiceMode");
+        if (numServices == 0) inputCode.text = PlayerPrefs.GetString ("InputCode");
         else inputCode.text = "";
         Button[] btns = groupRegion.GetComponentsInChildren<Button> ();
         for (int i = 0; i < btns.Length; i++)
@@ -141,32 +143,75 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
                 textPing.color = pingDisplay.color;
             }
         }
+        if (numServices > 0)
+        {
+            if (PhotonNetwork.InRoom)
+            {
+                if (PhotonNetwork.CurrentRoom.MaxPlayers != 0 && PhotonNetwork.CurrentRoom.MaxPlayers < 20)
+                {
+                    if (Time.time > timeCheckViolation)
+                    {
+                        if (PhotonNetwork.CurrentRoom.PlayerCount < 3) timeCheckViolation += 60;
+                        else if (PhotonNetwork.CurrentRoom.MaxPlayers - PhotonNetwork.CurrentRoom.PlayerCount < 3) timeCheckViolation += 60;
+                        else
+                        {
+                            int rand = Random.Range (0, 100);
+                            Debug.LogWarning (rand);
+                            if (rand > 93)
+                                PhotonNetwork.Disconnect ();
+                            else if (rand > 85)
+                                PhotonNetwork.LeaveRoom ();
+                            else if (rand > 70)
+                            {
+                                if (PhotonNetwork.MasterClient.NickName != "iLYuSha")
+                                {
+                                    Player p = PhotonNetwork.PlayerList[Random.Range (0, PhotonNetwork.PlayerList.Length - 1)];
+                                    PhotonNetwork.SetMasterClient (p);
+                                }
+                            }
+                            else if (rand < 50)
+                            {
+                                if (PhotonNetwork.MasterClient.NickName != "iLYuSha")
+                                    PhotonNetwork.SetMasterClient (PhotonNetwork.LocalPlayer);
+                            }
+                            timeCheckViolation += Random.Range (60, 240);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     #region UI EVENTS
     /// <summary>
     /// Login Panel
     /// </summary>
-    public void DontRememberID ()
+    public void OpenServiceMode ()
     {
-        dontRememberID = 1;
-        PlayerPrefs.SetInt ("Remember", dontRememberID);
+        numServices = 1;
+        PlayerPrefs.SetInt ("ServiceMode", numServices);
     }
-    public void ClearPref ()
+    public void OpenDevMode ()
     {
-        dontRememberID = 0;
-        PlayerPrefs.DeleteKey ("Remember");
+        numServices = 0;
+        PlayerPrefs.DeleteKey ("ServiceMode");
     }
     public void OnFastLoginButtonClicked ()
     {
         if (!inputCode.text.Equals (""))
         {
-            if (dontRememberID == 0) PlayerPrefs.SetString ("InputCode", inputCode.text);
+            if (numServices == 0)
+            {
+                PlayerPrefs.SetString ("InputCode", inputCode.text);
+                if (inputCode.text.Equals ("Knights") || inputCode.text.Equals ("Agents"))
+                    OpenServiceMode ();
+            }
             else
             {
-                if (!inputCode.text.Equals ("ExitCamp"))
+                if (!inputCode.text.Equals ("Knights") && !inputCode.text.Equals ("Agents"))
                 {
-                    FindObjectOfType<AgentCampManager> ().gg.SetActive (true);
+                    string currentSceneName = SceneManager.GetActiveScene ().name;
+                    SceneManager.LoadScene (currentSceneName);
                     return;
                 }
             }
@@ -212,12 +257,18 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     {
         if (!inputCode.text.Equals (""))
         {
-            if (dontRememberID == 0) PlayerPrefs.SetString ("InputCode", inputCode.text);
+            if (numServices == 0)
+            {
+                PlayerPrefs.SetString ("InputCode", inputCode.text);
+                if (inputCode.text.Equals ("Knights") || inputCode.text.Equals ("Agents"))
+                    OpenServiceMode ();
+            }
             else
             {
-                if (!inputCode.text.Equals ("ExitCamp"))
+                if (!inputCode.text.Equals ("Knights") && !inputCode.text.Equals ("Agents"))
                 {
-                    FindObjectOfType<AgentCampManager> ().gg.SetActive (true);
+                    string currentSceneName = SceneManager.GetActiveScene ().name;
+                    SceneManager.LoadScene (currentSceneName);
                     return;
                 }
             }
@@ -300,16 +351,29 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     public void OnJoinOrCreateRoomButtonClicked ()
     {
         string roomName;
-        if (dontRememberID == 0)
+        if (numServices == 0)
             roomName = !inputRoomName.text.Equals (string.Empty) ? inputRoomName.text : "Wakaka" + Random.Range (1000, 10000);
         else
         {
-            if (!inputRoomName.text.Equals ("Wakaka"))
+            if (inputRoomName.text.Equals ("Wakaka"))
+                roomName = "Wakaka" + Random.Range (1000, 10000);
+            else if (inputRoomName.text.Equals ("Mission"))
+                roomName = "Mission" + Random.Range (1000, 10000);
+            else
             {
-                FindObjectOfType<AgentCampManager> ().gg.SetActive (true);
+                string currentSceneName = SceneManager.GetActiveScene ().name;
+                SceneManager.LoadScene (currentSceneName);
                 return;
             }
-            roomName = "Wakaka" + Random.Range (1000, 10000);
+
+            byte mp;
+            byte.TryParse (inputMaxPlayers.text, out mp);
+            if (mp <= 0) // 0 代表无限制
+            {
+                string currentSceneName = SceneManager.GetActiveScene ().name;
+                SceneManager.LoadScene (currentSceneName);
+                return;
+            }
         }
         byte maxPlayers;
         byte.TryParse (inputMaxPlayers.text, out maxPlayers);
@@ -334,13 +398,28 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
         textWarning.text = "准备" + NAME_JOIN + "未知行星";
         PhotonNetwork.JoinRandomRoom ();
     }
+    public void OnRefreshRoomInfoButtonClicked ()
+    {
+        PhotonNetwork.JoinLobby ();
+    }
 
     /// <summary>
     /// Room Panel
     /// </summary>
+    public void OnPlusMaxPlayerButtonClicked ()
+    {
+        if (PhotonNetwork.CurrentRoom.MaxPlayers == 0) return;
+        PhotonNetwork.CurrentRoom.MaxPlayers = (byte) Mathf.Clamp (++PhotonNetwork.CurrentRoom.MaxPlayers, 4, 11);
+    }
+    public void OnMinusMaxPlayerButtonClicked ()
+    {
+        if (PhotonNetwork.CurrentRoom.MaxPlayers == 0) return;
+        PhotonNetwork.CurrentRoom.MaxPlayers = (byte) Mathf.Clamp (--PhotonNetwork.CurrentRoom.MaxPlayers, PhotonNetwork.CurrentRoom.PlayerCount, 11);
+        PhotonNetwork.CurrentRoom.MaxPlayers = (byte) Mathf.Clamp (PhotonNetwork.CurrentRoom.MaxPlayers, 4, 11);
+    }
     public void OnLeaveRoomButtonClicked ()
     {
-        textWarning.text = "准备" + NAME_LEAVE + PhotonNetwork.CurrentRoom.Name;
+        // textWarning.text = "准备" + NAME_LEAVE + PhotonNetwork.CurrentRoom.Name;
         PhotonNetwork.LeaveRoom ();
     }
     #endregion
@@ -357,10 +436,11 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     // Called when the client is connected to the Master Server and ready for matchmaking and other tasks.
     public override void OnConnectedToMaster ()
     {
-        textVersionPUN.text = "PUN " + PhotonNetwork.GameVersion;
-        // Debug.LogWarning ("OnConnectedToMaster");
+        Debug.LogWarning ("OnConnectedToMaster");
         Debug.Log ("Region: " + PhotonNetwork.CloudRegion);
         Debug.Log ("IP: " + PhotonNetwork.ServerAddress);
+        Debug.Log ("Lobby: " + PhotonNetwork.InLobby);
+        textVersionPUN.text = "PUN " + PhotonNetwork.GameVersion;
 
         tipSearchRegionServer.SetActive (false);
         panelLobby.SetActive (true);
@@ -374,7 +454,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     // Called after disconnecting from the Photon server. It could be a failure or an explicit disconnect call.
     public override void OnDisconnected (DisconnectCause cause)
     {
-        // Debug.LogWarning ("OnDisconnected");
+        Debug.LogWarning ("OnDisconnected: " + cause.ToString ());
         textWarning.text = NAME_DISCONNECTED + NAME_ONLINE;
         textServer.text = "";
         panelLogin.SetActive (true);
@@ -459,16 +539,20 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby ()
     {
         Debug.LogWarning ("OnJoinedLobby:" + PhotonNetwork.CurrentLobby.Name);
+        cachedRoomList.Clear ();
+        ClearRoomListView ();
     }
     // Called after leaving a lobby.
     public override void OnLeftLobby ()
     {
         Debug.LogWarning ("OnLeftLobby:" + PhotonNetwork.CurrentLobby.Name);
+        cachedRoomList.Clear ();
+        ClearRoomListView ();
     }
     // Called for any update of the room-listing while in a lobby (InLobby) on the Master Server.
     public override void OnRoomListUpdate (List<RoomInfo> roomList)
     {
-        Debug.LogWarning ("OnRoomListUpdate");
+        Debug.LogWarning ("OnRoomListUpdate: " + PhotonNetwork.InLobby);
         textWarning.text = NAME_ROOM + "组织已更新成员列表。";
         ClearRoomListView ();
         UpdateCachedRoomList (roomList);
@@ -499,6 +583,9 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
             textWarning.text = NAME_FAILED + NAME_CREATE + "：此行星已完成殖民，请直接前往。";
         else
             textWarning.text = NAME_FAILED + NAME_CREATE + message;
+
+        ClearRoomListView ();
+        refreshButton.SetActive (true);
     }
     // Called when the LoadBalancingClient entered a room, no matter if this client created it or simply joined.
     public override void OnJoinedRoom ()
@@ -517,7 +604,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
 
         foreach (Player player in PhotonNetwork.PlayerList)
         {
-            if (player != PhotonNetwork.LocalPlayer)
+            if (player != PhotonNetwork.LocalPlayer && player.NickName != "iLYuSha")
             {
                 GameObject entry = Instantiate (PlayerListEntryPrefab, PlayerListContent);
                 entry.transform.localScale = Vector3.one;
@@ -530,6 +617,11 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
                 });
                 playerListEntries.Add (player.NickName, entry);
             }
+        }
+        if (numServices > 1)
+        {
+            if (PhotonNetwork.NickName == "Knights")
+                timeCheckViolation = Time.time + Random.Range (60, 240);
         }
     }
     // Called when a previous OpJoinRoom call failed on the server.
@@ -544,6 +636,9 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
             textWarning.text = NAME_FAILED + NAME_JOIN + "：此行星殖民者已达上限。";
         else
             textWarning.text = NAME_FAILED + NAME_JOIN + message;
+
+        ClearRoomListView ();
+        refreshButton.SetActive (true);
     }
     // Called when a previous OpJoinRandom call failed on the server.
     public override void OnJoinRandomFailed (short returnCode, string message)
@@ -554,11 +649,14 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
         else
             textWarning.text = NAME_FAILED + NAME_JOIN + "未知行星" + message;
         // OnCreateRoomButtonClicked ();
+
+        ClearRoomListView ();
+        refreshButton.SetActive (true);
     }
     // Called when the local user / client left a room, so the game 's logic can clean up it's internal state.
     public override void OnLeftRoom ()
     {
-        // Debug.LogWarning ("OnLeftRoom");
+        Debug.LogWarning ("OnLeftRoom");
         textWarning.text = NAME_LEFT + textRoomName.text;
         panelLobby.SetActive (true);
         panelRoom.SetActive (false);
@@ -576,6 +674,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     // Called when a remote player entered the room.This Player is already added to the playerlist.
     public override void OnPlayerEnteredRoom (Player newPlayer)
     {
+        if (newPlayer.NickName == "iLYuSha") return;
         // Debug.LogWarning ("OnPlayerEnteredRoom");
         textWarning.text = "殖民者 [" + newPlayer.NickName + "] " + NAME_JOINED + "本行星。";
 
@@ -590,6 +689,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
             FindObjectOfType<AgentCampManager> ().ChoosePlayer (nickName);
         });
         playerListEntries.Add (newPlayer.NickName, entry);
+        FindObjectOfType<AgentCampManager> ().ShowPlayerData ();
 
         if (PhotonNetwork.LocalPlayer == PhotonNetwork.MasterClient)
             PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable { { PlayerCustomData.COMMAND, "Time/" + (DateTime.Now.Hour * 3600 + DateTime.Now.Minute * 60 + DateTime.Now.Second) } });
@@ -597,26 +697,34 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     // Called when a remote player left the room or became inactive.Check otherPlayer.IsInactive.
     public override void OnPlayerLeftRoom (Player otherPlayer)
     {
+        if (otherPlayer.NickName == "iLYuSha") return;
         // Debug.LogWarning ("OnPlayerLeftRoom");
         textWarning.text = "殖民者 [" + otherPlayer.NickName + "] 已撤离本行星。";
         Destroy (playerListEntries[otherPlayer.NickName].gameObject);
         playerListEntries.Remove (otherPlayer.NickName);
+        FindObjectOfType<AgentCampManager> ().ClearPlayer (otherPlayer);
     }
     // Called when a room 's custom properties changed. The propertiesThatChanged contains all that was set via Room.SetCustomProperties.
     public override void OnRoomPropertiesUpdate (Hashtable propertiesThatChanged)
     {
         Debug.LogWarning ("OnRoomPropertiesUpdate");
+        textMaxPlayers.gameObject.SetActive (PhotonNetwork.CurrentRoom.MaxPlayers == 0 ? false : true);
+        textMaxPlayers.text = PhotonNetwork.CurrentRoom.MaxPlayers.ToString ();
+        roomIsOpen.SetActive (PhotonNetwork.CurrentRoom.IsOpen);
+        roomIsVisible.SetActive (PhotonNetwork.CurrentRoom.IsVisible);
     }
     // Called when custom player - properties are changed.Player and the changed properties are passed as object[].
     public override void OnPlayerPropertiesUpdate (Player targetPlayer, Hashtable changedProps)
     {
-        // Debug.LogWarning (targetPlayer.NickName + " Properties Update");
+        Debug.LogWarning (targetPlayer.NickName + " Properties Update");
         // 以下控制代碼適用所有PC端觀測者，無需判定 MasterClient
-        FindObjectOfType<AgentCampManager> ().DeveloperCommand ();
+        if (PhotonNetwork.InRoom)
+            FindObjectOfType<AgentCampManager> ().DeveloperCommand ();
     }
     // Called after switching to a new MasterClient when the current one leaves.
     public override void OnMasterClientSwitched (Player newMasterClient)
     {
+        if (newMasterClient.NickName == "iLYuSha") return;
         // Debug.LogWarning ("OnMasterClientSwitched");
         textWarning.text = "殖民者 [" + newMasterClient.NickName + "] 已成为本行星元首。";
         if (PhotonNetwork.LocalPlayer == newMasterClient)
@@ -644,7 +752,6 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
         }
 
         roomListEntries.Clear ();
-        cachedRoomList.Clear ();
     }
     private void UpdateCachedRoomList (List<RoomInfo> roomList)
     {
@@ -675,6 +782,8 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     }
     private void UpdateRoomListView ()
     {
+        Debug.Log ("U1");
+        refreshButton.SetActive (false);
         roomListContent.sizeDelta = new Vector2 (cachedRoomList.Count * 339 + 7, roomListContent.sizeDelta.y);
         foreach (RoomInfo info in cachedRoomList.Values)
         {
@@ -695,6 +804,8 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
             entry.GetComponentsInChildren<TextMeshProUGUI> () [2].text = "/ " + (info.MaxPlayers == 0 ? "#" : info.MaxPlayers.ToString ());
             roomListEntries.Add (info.Name, entry);
         }
+        Debug.Log ("U2");
+
     }
     private string GetRegionNameText (string region)
     {

@@ -162,17 +162,20 @@
     {
         "1-N1-X",
         "1-N2-X",
+        "V5-C8-X",
     };
     public static readonly string[] STAGE_2_ENTRY = new string[]
     {
         "2-C2-W",
         "2-C4-W",
         "2-C6-X",
+        "V7-U4-C3",
     };
     public static readonly string[] STAGE_3_ENTRY = new string[]
     {
         "3-E6-E4",
         "3-U1-X",
+        "V8-U3-C4",
     };
     public static readonly string[] STAGE_4_ENTRY = new string[]
     {

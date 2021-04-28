@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: "\u54C7\u5494\u5494\u9017\u6BD4\u904A\u6232\u5BE6\u9A57\u5BA4"
-  productName: WakakaExitServer
+  productName: WakakaKnights
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -125,7 +125,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: v4.81
+  bundleVersion: v4.95
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0

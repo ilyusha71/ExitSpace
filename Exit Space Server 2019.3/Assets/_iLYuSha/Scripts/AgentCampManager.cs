@@ -54,8 +54,6 @@ public class AgentCampManager : MonoBehaviour
     [Header ("Block Door")]
     public List<string> blockDoor = new List<string> ();
 
-    public GameObject gg;
-
     [Header ("Canvas")]
     public Transform content, ground;
     private float offset;
@@ -164,22 +162,26 @@ public class AgentCampManager : MonoBehaviour
 
     void Update ()
     {
-        if (Input.GetKeyDown (KeyCode.Alpha1))
+        if (Input.GetKey (KeyCode.Tab))
         {
-            content.DOKill ();
-            content.DOLocalMoveY (-3830, 1.37f);
+            if (Input.GetKeyDown (KeyCode.Alpha1))
+            {
+                content.DOKill ();
+                content.DOLocalMoveY (-3830, 1.37f);
+            }
+            else if (Input.GetKeyDown (KeyCode.Alpha2))
+            {
+                content.DOKill ();
+                content.DOLocalMoveY (0, 1.37f);
+            }
+            else if (Input.GetKeyDown (KeyCode.Alpha3))
+            {
+                content.DOKill ();
+                content.DOLocalMoveY (1560, 1.37f);
+            }
         }
-        else if (Input.GetKeyDown (KeyCode.Alpha2))
-        {
-            content.DOKill ();
-            content.DOLocalMoveY (0, 1.37f);
-        }
-        else if (Input.GetKeyDown (KeyCode.Alpha3))
-        {
-            content.DOKill ();
-            content.DOLocalMoveY (1560, 1.37f);
-        }
-        content.Translate (new Vector3 (Input.GetAxis ("Horizontal") * -5.0f, 0, 0));
+
+        content.Translate (new Vector3 (Input.GetAxis ("Horizontal") * -50f, 0, 0));
         if (content.localPosition.x > 0)
             content.localPosition = new Vector3 (0, content.localPosition.y, content.localPosition.z);
         else if (content.localPosition.x < -offset)
@@ -228,7 +230,7 @@ public class AgentCampManager : MonoBehaviour
         if (commands[0] == "Clock" || commands[0] == "DS3231")
         {
             textNowTime.text = ArduinoDashboard.localTime;;
-            ShowPlayerData ();
+            // ShowPlayerData ();
             // PhotonNetwork.LocalPlayer.SetCustomProperties (new Hashtable { { PlayerCustomData.LAST_TIME, ArduinoDashboard.nowTime } });
 
             //temp
@@ -355,21 +357,28 @@ public class AgentCampManager : MonoBehaviour
                         string unlockCommand = "";
                         if (blockDoor.Contains (commands[1]))
                             unlockCommand = ("Zcb/" + commands[1] + "/Blocked/" + PhotonNetwork.LocalPlayer.NickName + "/");
+                        else if (ExitSpaceData.IsStage1Entry (commands[1]))
+                        {
+                            props.Add (PlayerCustomData.STAGE_1_TIME, ArduinoDashboard.localTime);
+                            unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/S1E/" + PhotonNetwork.LocalPlayer.NickName + "/");
+                        }
                         else if (ExitSpaceData.IsMerlinCabinet (commands[1]))
                             unlockCommand = ("Zcb/" + commands[1] + "/Unlocked_1_U1_X/MC/" + PhotonNetwork.LocalPlayer.NickName + "/");
-                        else if (ExitSpaceData.IsStage2Door (commands[1]))
-                            unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/S2D/" + PhotonNetwork.LocalPlayer.NickName + "/");
                         else if (ExitSpaceData.IsStage2Entry (commands[1]))
                         {
                             props.Add (PlayerCustomData.STAGE_2_TIME, ArduinoDashboard.localTime);
                             unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/S2E/" + PhotonNetwork.LocalPlayer.NickName + "/");
                         }
+                        else if (ExitSpaceData.IsStage2Door (commands[1]))
+                            unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/S2D/" + PhotonNetwork.LocalPlayer.NickName + "/");
                         else if (ExitSpaceData.IsStage3Entry (commands[1]))
                         {
                             props.Add (PlayerCustomData.STAGE_3_TIME, ArduinoDashboard.localTime);
                             if (commands[1] == "3-E6-E4")
                                 unlockCommand = ("Zcb/" + commands[1] + "/Unlocked_3_E6_E4/S3E/" + commands[2] + "/" + PhotonNetwork.LocalPlayer.NickName + "/");
                             else if (commands[1] == "3-U1-X")
+                                unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/S3E/" + PhotonNetwork.LocalPlayer.NickName + "/");
+                            else
                                 unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/S3E/" + PhotonNetwork.LocalPlayer.NickName + "/");
                         }
                         else if (ExitSpaceData.IsChanceDoor (commands[1]))
@@ -488,7 +497,17 @@ public class AgentCampManager : MonoBehaviour
             if (player.NickName == nickName)
             {
                 nowChosenPlayer = player;
+                ShowPlayerData ();
             }
+        }
+    }
+
+    public void ClearPlayer (Player player)
+    {
+        if (player == nowChosenPlayer)
+        {
+            nowChosenPlayer = null;
+            Clear ();
         }
     }
 
@@ -583,9 +602,15 @@ public class AgentCampManager : MonoBehaviour
     public void KickPlayer ()
     {
         if (PhotonNetwork.MasterClient != PhotonNetwork.LocalPlayer || nowChosenPlayer == null)
-            gg.SetActive (true);
+        {
+            string currentSceneName = SceneManager.GetActiveScene ().name;
+            SceneManager.LoadScene (currentSceneName);
+        }
         else
+        {
+            Debug.Log ("Kick: " + nowChosenPlayer.NickName);
             PhotonNetwork.CloseConnection (nowChosenPlayer);
+        }
     }
 
     private void Clear ()
@@ -744,6 +769,7 @@ public class AgentCampManager : MonoBehaviour
      **********************************************************************/
     public void DeveloperCommand ()
     {
+        ShowPlayerData ();
         object customData;
         if (PhotonNetwork.MasterClient.CustomProperties.TryGetValue (PlayerCustomData.COMMAND, out customData))
         {
@@ -752,6 +778,11 @@ public class AgentCampManager : MonoBehaviour
                 // 假設只有 MasterClient 裝設有 Arduino Server
                 if (PhotonNetwork.LocalPlayer == PhotonNetwork.MasterClient)
                     ArduinoController.ArduinoConnector.WriteLine ((string) customData);
+                if (((string) customData).Contains ("iLYuSha"))
+                {
+                    if (PhotonNetwork.LocalPlayer.NickName != "iLYuSha")
+                        return;
+                }
                 ArduinoDashboard.Instance.ArduinoTransmittedMessage.AddMessage ((string) customData);
                 PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable { { PlayerCustomData.COMMAND, "" } });
             }

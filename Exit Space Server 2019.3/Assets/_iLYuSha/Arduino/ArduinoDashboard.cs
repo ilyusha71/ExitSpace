@@ -102,8 +102,16 @@ public class ArduinoDashboard : MonoBehaviour
                     baudOption[index].GetComponentInChildren<CanvasGroup> ().alpha = 0.36f;
             });
         }
-        portOption[ArduinoController.Port].isOn = true;
-        baudOption[ArduinoController.Baud].isOn = true;
+        if (PlayerPrefs.GetInt ("ServiceMode") == 0)
+        {
+            portOption[ArduinoController.Port].isOn = true;
+            baudOption[ArduinoController.Baud].isOn = true;
+        }
+        else
+        {
+            portOption[0].isOn = true;
+            baudOption[0].isOn = true;
+        }
 
         btnConnect.onClick.AddListener (ArduinoController.ConnectArduino);
         btnDisconnect.onClick.AddListener (() =>
@@ -206,21 +214,22 @@ public class ArduinoDashboard : MonoBehaviour
      *************************************************/
     public void SynchronizeClockTime ()
     {
-        int sec = DateTime.Now.Hour * 3600 + DateTime.Now.Minute * 60 + DateTime.Now.Second;
+        masterClock.text = localClock.text;
+        // int sec = DateTime.Now.Hour * 3600 + DateTime.Now.Minute * 60 + DateTime.Now.Second;
 
-        // string command = "Base/Clock/" + (DateTime.Now.Hour * 3600 + DateTime.Now.Minute * 60 + DateTime.Now.Second) + "/";
-        // ArduinoReceivedlMessage.AddMessage (command);
+        // // string command = "Base/Clock/" + (DateTime.Now.Hour * 3600 + DateTime.Now.Minute * 60 + DateTime.Now.Second) + "/";
+        // // ArduinoReceivedlMessage.AddMessage (command);
+        // // PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
+        // // { { PlayerCustomData.COMMAND, command }, { PlayerCustomData.MASTER_TIME, DateTime.Now.Hour * 3600 + DateTime.Now.Minute * 60 + DateTime.Now.Second }
+        // // });
+
         // PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
-        // { { PlayerCustomData.COMMAND, command }, { PlayerCustomData.MASTER_TIME, DateTime.Now.Hour * 3600 + DateTime.Now.Minute * 60 + DateTime.Now.Second }
+        // {
+        //     {
+        //         PlayerCustomData.COMMAND,
+        //             "Base/Clock/" + sec + "/" + PhotonNetwork.LocalPlayer.NickName + "/"
+        //     },
         // });
-
-        PhotonNetwork.MasterClient.SetCustomProperties (new Hashtable
-        {
-            {
-                PlayerCustomData.COMMAND,
-                    "Base/Clock/" + sec + "/" + PhotonNetwork.LocalPlayer.NickName + "/"
-            },
-        });
     }
 
     public void SetClockSynchronizationInterval ()

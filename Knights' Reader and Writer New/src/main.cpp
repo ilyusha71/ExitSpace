@@ -54,10 +54,10 @@
  ****************************************************************************/
 // String DEVICE_NAME = "2-U.7-U.5";
 // String DEVICE_NAME = "3-R.1.2.3.4.5.6.7.8.9.10-A.1.2.3.4.5.6.7.8.9.10";
-String DEVICE_NAME = "V7-U.4-C.3";
-// String DEVICE_NAME = "2-B.10-X";
+// String DEVICE_NAME = "V7-U.4-C.3";
+String DEVICE_NAME = "2-B.10-X";
 // String DEVICE_NAME = "4B2-A.3.4.7-T.3";
-#define MODE 100
+#define MODE 20
 String presents = "";
 boolean isPresent[11];
 byte writeAgentID[16];
@@ -67,7 +67,7 @@ boolean hasNewAgentID;
  * DEFINE ENTRY or WRITER
  ****************************************************************************/
 #define NR_OF_READERS 1
-#define SS_PIN 8
+#define SS_PIN 10
 #elif MODE == PRINTER_MODE
 /****************************************************************************
  * DEFINE PRINTER
