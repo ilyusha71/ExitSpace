@@ -28,10 +28,8 @@ public class AgentCampManager : MonoBehaviour
 
     [Header ("Ground Server")]
     public TextMeshProUGUI textVersion;
-    public Transform groupAdnBtns;
-    private Dictionary<string, Button> dicAdnBtns = new Dictionary<string, Button> ();
-    public Transform groupXtdBtns;
-    private Dictionary<string, Button> dicXtdBtns = new Dictionary<string, Button> ();
+    public Transform grpBtnMCU;
+    private Dictionary<string, Button> dictBtnMCU = new Dictionary<string, Button> ();
     private string ADN;
     public Toggle[] tglPresents;
     public TMP_InputField customCallbackTime, writeID;
@@ -70,29 +68,19 @@ public class AgentCampManager : MonoBehaviour
         textNowTime.text = "";
         Clear ();
 
-        Button[] btnADNs = groupAdnBtns.GetComponentsInChildren<Button> ();
-        int countBtns = btnADNs.Length;
-        for (int i = 0; i < countBtns; i++)
+        Button[] btnMCUs = grpBtnMCU.GetComponentsInChildren<Button> ();
+        int countBtn = btnMCUs.Length;
+        for (int i = 0; i < countBtn; i++)
         {
-            btnADNs[i].GetComponentsInChildren<Image> () [0].color = clearColor;
-            string adn = btnADNs[i].name;
-            if (!dicAdnBtns.ContainsKey (adn))
-                dicAdnBtns.Add (adn, btnADNs[i]);
-            btnADNs[i].onClick.AddListener (() =>
+            btnMCUs[i].GetComponentsInChildren<Image> () [0].color = clearColor;
+            string adn = btnMCUs[i].name;
+            if (!dictBtnMCU.ContainsKey (adn))
+                dictBtnMCU.Add (adn, btnMCUs[i]);
+            btnMCUs[i].onClick.AddListener (() =>
             {
                 ADN = adn;
                 textADN.text = ADN;
-                //Debug.Log (ADN);
             });
-        }
-
-        btnADNs = groupXtdBtns.GetComponentsInChildren<Button> ();
-        countBtns = btnADNs.Length;
-        for (int i = 0; i < countBtns; i++)
-        {
-            string adn = btnADNs[i].name;
-            if (!dicXtdBtns.ContainsKey (adn))
-                dicXtdBtns.Add (adn, btnADNs[i]);
         }
 
         // Auto Checking
@@ -100,7 +88,6 @@ public class AgentCampManager : MonoBehaviour
         {
             if (isOn)
             {
-                // textDevice.text = checkList[indexChecking];
                 TimedStupidityBomb.speed = 0;
                 Timespace.speed = 1;
             }
@@ -111,6 +98,7 @@ public class AgentCampManager : MonoBehaviour
                 Timespace.speed = 0;
             }
         });
+
         btnStages[0].onClick.AddListener (() =>
         {
             checkList = ExitSpaceData.STAGE_1_DEVICES;
@@ -230,51 +218,44 @@ public class AgentCampManager : MonoBehaviour
         if (commands[0] == "Clock" || commands[0] == "DS3231")
         {
             textNowTime.text = ArduinoDashboard.localTime;;
-            // ShowPlayerData ();
-            // PhotonNetwork.LocalPlayer.SetCustomProperties (new Hashtable { { PlayerCustomData.LAST_TIME, ArduinoDashboard.nowTime } });
 
-            //temp
-            Player[] players = PhotonNetwork.PlayerList;
-            int participants = 0, badges = 0;
-            bool checkArthur = false;
-            for (int i = 0; i < players.Length; i++)
+            if (PhotonNetwork.NickName == "Knights" || PhotonNetwork.NickName == "KnightPro")
             {
-                object customData;
-                if (players[i].NickName.Contains ("CIA") || players[i].NickName.Contains ("KGB"))
+                Player[] players = PhotonNetwork.PlayerList;
+                int knights = 0, badges = 0;
+                bool checkArthur = false;
+                for (int i = 0; i < players.Length; i++)
                 {
-                    participants++;
-                    for (int j = 0; j < 10; j++)
+                    object customData;
+                    if (players[i].NickName.Contains ("KGB"))
                     {
-                        if (players[i].CustomProperties.TryGetValue (PlayerCustomData.BADGE[j], out customData))
-                            if ((bool) customData)
-                            {
-                                badges++;
-                                if (j == 0)
-                                    checkArthur = true;
-                            }
+                        knights++;
+                        for (int j = 0; j < 10; j++)
+                        {
+                            if (players[i].CustomProperties.TryGetValue (PlayerCustomData.BADGE[j], out customData))
+                                if ((bool) customData)
+                                {
+                                    badges++;
+                                    if (j == 0)
+                                        checkArthur = true;
+                                }
 
+                        }
                     }
                 }
+                // Debug.Log ("participants: " + participants + "   badges: " + badges);
+                if (badges > knights * 5.6f && checkArthur)
+                    ArduinoController.ArduinoConnector.WriteLine ("Z/BadgeGate/Pass/");
             }
-            // Debug.Log ("participants: " + participants + "   badges: " + badges);
-            if (badges > participants * 5.6f && checkArthur)
-                ArduinoController.ArduinoConnector.WriteLine ("Z/BadgeGate/Pass/");
         }
         else if (commands.Length > 1)
         {
             if (commands[1] == "Callback") // 所有觀察者都能接收
             {
-                if (dicAdnBtns.ContainsKey (commands[2]))
+                if (dictBtnMCU.ContainsKey (commands[2]))
                 {
-                    dicAdnBtns[commands[2]].GetComponentsInChildren<Image> () [0].color = checkColor;
-                    dicAdnBtns[commands[2]].GetComponentsInChildren<Image> () [1].enabled = true;
-                    audioSource.PlayOneShot (clipCallbackBell);
-                    nextCheckingTime = Time.time;
-                }
-                if (dicXtdBtns.ContainsKey (commands[2]))
-                {
-                    dicXtdBtns[commands[2]].GetComponentsInChildren<Image> () [0].color = checkColor;
-                    dicXtdBtns[commands[2]].GetComponentsInChildren<Image> () [1].enabled = true;
+                    dictBtnMCU[commands[2]].GetComponentsInChildren<Image> () [0].color = checkColor;
+                    dictBtnMCU[commands[2]].GetComponentsInChildren<Image> () [1].enabled = true;
                     audioSource.PlayOneShot (clipCallbackBell);
                     nextCheckingTime = Time.time;
                 }
@@ -294,19 +275,13 @@ public class AgentCampManager : MonoBehaviour
                 }
                 if (commands[2] != "Checking")
                 {
-                    if (dicAdnBtns.ContainsKey (commands[1]))
-                        dicAdnBtns[commands[1]].GetComponentsInChildren<Image> () [0].color = readColor;
-                    if (dicXtdBtns.ContainsKey (commands[1]))
-                        dicXtdBtns[commands[1]].GetComponentsInChildren<Image> () [0].color = readColor;
+                    if (dictBtnMCU.ContainsKey (commands[1]))
+                        dictBtnMCU[commands[1]].GetComponentsInChildren<Image> () [0].color = readColor;
                 }
 
                 // Master Client 資料處理
                 if (PhotonNetwork.LocalPlayer == PhotonNetwork.MasterClient)
                 {
-
-                    // 確認關卡
-                    // 確認時間
-
                     string nowSite = commands[1] + ":" + commands[2];
                     Hashtable props = new Hashtable ();
                     props.Add (PlayerCustomData.LAST_TIME, ArduinoDashboard.localTime);
@@ -357,56 +332,60 @@ public class AgentCampManager : MonoBehaviour
                         string unlockCommand = "";
                         if (blockDoor.Contains (commands[1]))
                             unlockCommand = ("Zcb/" + commands[1] + "/Blocked/" + PhotonNetwork.LocalPlayer.NickName + "/");
-                        else if (ExitSpaceData.IsStage1Entry (commands[1]))
-                        {
-                            props.Add (PlayerCustomData.STAGE_1_TIME, ArduinoDashboard.localTime);
-                            unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/S1E/" + PhotonNetwork.LocalPlayer.NickName + "/");
-                        }
-                        else if (ExitSpaceData.IsMerlinCabinet (commands[1]))
-                            unlockCommand = ("Zcb/" + commands[1] + "/Unlocked_1_U1_X/MC/" + PhotonNetwork.LocalPlayer.NickName + "/");
-                        else if (ExitSpaceData.IsStage2Entry (commands[1]))
-                        {
-                            props.Add (PlayerCustomData.STAGE_2_TIME, ArduinoDashboard.localTime);
-                            unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/S2E/" + PhotonNetwork.LocalPlayer.NickName + "/");
-                        }
-                        else if (ExitSpaceData.IsStage2Door (commands[1]))
-                            unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/S2D/" + PhotonNetwork.LocalPlayer.NickName + "/");
-                        else if (ExitSpaceData.IsStage3Entry (commands[1]))
+                        else if (ExitSpaceData.IsClosedDoor (commands[1]))
                         {
                             props.Add (PlayerCustomData.STAGE_3_TIME, ArduinoDashboard.localTime);
                             if (commands[1] == "3-E6-E4")
-                                unlockCommand = ("Zcb/" + commands[1] + "/Unlocked_3_E6_E4/S3E/" + commands[2] + "/" + PhotonNetwork.LocalPlayer.NickName + "/");
+                                unlockCommand = ("Zcb/" + commands[1] + "/Unlocked_3_E6_E4/BD/" + commands[2] + "/" + PhotonNetwork.LocalPlayer.NickName + "/");
                             else if (commands[1] == "3-U1-X")
-                                unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/S3E/" + PhotonNetwork.LocalPlayer.NickName + "/");
+                                unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/BD/" + PhotonNetwork.LocalPlayer.NickName + "/");
                             else
-                                unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/S3E/" + PhotonNetwork.LocalPlayer.NickName + "/");
+                                unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/BD/" + PhotonNetwork.LocalPlayer.NickName + "/");
                         }
-                        else if (ExitSpaceData.IsChanceDoor (commands[1]))
+
+                        if (PhotonNetwork.NickName != "Agents")
                         {
-                            props.Add (PlayerCustomData.MAZE_TIME, "Pause");
-                            props.Add (PlayerCustomData.TRAP_TIME, ArduinoDashboard.localTime);
-                            unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/CD/" + PhotonNetwork.LocalPlayer.NickName + "/");
+                            if (ExitSpaceData.IsMerlinCabinet (commands[1]))
+                                unlockCommand = ("Zcb/" + commands[1] + "/Unlocked_1_U1_X/MC/" + PhotonNetwork.LocalPlayer.NickName + "/");
+                            else if (ExitSpaceData.IsStage2Entry (commands[1]))
+                            {
+                                props.Add (PlayerCustomData.STAGE_2_TIME, ArduinoDashboard.localTime);
+                                unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/S2E/" + PhotonNetwork.LocalPlayer.NickName + "/");
+                            }
+                            else if (ExitSpaceData.IsStage2Door (commands[1]))
+                                unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/S2D/" + PhotonNetwork.LocalPlayer.NickName + "/");
                         }
-                        else if (ExitSpaceData.IsFateDoor (commands[1]))
+                        if (PhotonNetwork.NickName != "Knights")
                         {
-                            props.Add (PlayerCustomData.MAZE_TIME, ArduinoDashboard.localTime);
-                            props.Add (PlayerCustomData.TRAP_TIME, "Pause");
-                            unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/FD/" + PhotonNetwork.LocalPlayer.NickName + "/");
+                            if (ExitSpaceData.IsChanceDoor (commands[1]))
+                            {
+                                props.Add (PlayerCustomData.MAZE_TIME, "Pause");
+                                props.Add (PlayerCustomData.TRAP_TIME, ArduinoDashboard.localTime);
+                                unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/CD/" + PhotonNetwork.LocalPlayer.NickName + "/");
+                            }
+                            else if (ExitSpaceData.IsFateDoor (commands[1]))
+                            {
+                                props.Add (PlayerCustomData.MAZE_TIME, ArduinoDashboard.localTime);
+                                props.Add (PlayerCustomData.TRAP_TIME, "Pause");
+                                unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/FD/" + PhotonNetwork.LocalPlayer.NickName + "/");
+                            }
+                            else if (ExitSpaceData.IsStage4Entry (commands[1]))
+                            {
+                                props.Add (PlayerCustomData.STAGE_4_TIME, ArduinoDashboard.localTime);
+                                props.Add (PlayerCustomData.MAZE_TIME, "Pause");
+                                props.Add (PlayerCustomData.TRAP_TIME, "Pause");
+                                unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/S4E/" + PhotonNetwork.LocalPlayer.NickName + "/");
+                            }
+                            else if (ExitSpaceData.IsChallengeBox (commands[1]))
+                            {
+                                string title = ExitSpaceData.GetTitle (commands[1].Split ('-') [2]);
+                                props.Add (PlayerCustomData.CHALLENGE, title);
+                                unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/Box/" + PhotonNetwork.LocalPlayer.NickName + "/");
+                            }
                         }
-                        else if (ExitSpaceData.IsStage4Entry (commands[1]))
-                        {
-                            props.Add (PlayerCustomData.STAGE_4_TIME, ArduinoDashboard.localTime);
-                            props.Add (PlayerCustomData.MAZE_TIME, "Pause");
-                            props.Add (PlayerCustomData.TRAP_TIME, "Pause");
-                            unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/S4E/" + PhotonNetwork.LocalPlayer.NickName + "/");
-                        }
-                        else if (ExitSpaceData.IsChallengeBox (commands[1]))
-                        {
-                            string title = ExitSpaceData.GetTitle (commands[1].Split ('-') [2]);
-                            props.Add (PlayerCustomData.CHALLENGE, title);
-                            unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/Box/" + PhotonNetwork.LocalPlayer.NickName + "/");
-                        }
-                        else
+
+                        // Prototype testing
+                        if (PhotonNetwork.NickName != "Knights" && PhotonNetwork.NickName != "Agents")
                         {
                             Debug.LogWarning ("Site: " + commands[1]);
                             unlockCommand = ("Zcb/" + commands[1] + "/Unlocked/Unknown" + PhotonNetwork.LocalPlayer.NickName + "/");
@@ -679,16 +658,16 @@ public class AgentCampManager : MonoBehaviour
     /// </summary>
     public void ClearMark ()
     {
-        foreach (Button btn in dicAdnBtns.Values)
+        foreach (Button btn in dictBtnMCU.Values)
         {
             btn.GetComponentsInChildren<Image> () [0].color = clearColor;
             btn.GetComponentsInChildren<Image> () [1].enabled = false;
         }
-        foreach (Button btn in dicXtdBtns.Values)
-        {
-            btn.GetComponentsInChildren<Image> () [0].color = clearColor;
-            btn.GetComponentsInChildren<Image> () [1].enabled = false;
-        }
+        // foreach (Button btn in dicXtdBtns.Values)
+        // {
+        //     btn.GetComponentsInChildren<Image> () [0].color = clearColor;
+        //     btn.GetComponentsInChildren<Image> () [1].enabled = false;
+        // }
     }
     /// <summary>
     /// HC12雙向通訊檢測

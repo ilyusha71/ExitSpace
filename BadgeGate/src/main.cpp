@@ -77,16 +77,14 @@ void loop()
       else if (rxHead == DEVICE_NAME)
       {
         Serial.print(rxData);
-        String rxCommand = Split(rxData, '/', 3);
-        if (rxCommand == "Checking")
-        {
-          rxHasData = true;
-          cbDelay = Split(rxData, '/', 4).toInt();
-        }
-
-        rxCommand = Split(rxData, '/', 2);
+        String rxCommand = Split(rxData, '/', 2);
         if (rxCommand == "Pass")
           digitalWrite(BADGE, LOW);
+        else if (rxCommand == "Checking")
+        {
+          rxHasData = true;
+          cbDelay = Split(rxData, '/', 3).toInt();
+        }
       }
       rxData = "";
     }

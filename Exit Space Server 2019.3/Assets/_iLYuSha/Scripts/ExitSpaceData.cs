@@ -78,6 +78,7 @@
         "1-N1-X",
         "1-N2-X",
         "1-U1-X",
+        "BadgeGate",
         "1-B1-X",
         "1-B2-X",
         "1-B3-X",
@@ -100,6 +101,8 @@
     };
     public static readonly string[] STAGE_3_DEVICES = new string[]
     {
+        "3-N3-X",
+
         "3-E6-E4",
         "3-U1-X",
 
@@ -129,8 +132,8 @@
         "V4-C2-C1",
         "V4-U10-C3",
 
-        "V5-C8-X",
         "H5-C2-C1",
+        "V5-C8-X",
         "V5-U6-C4",
         "V5-U3-C8",
 
@@ -143,11 +146,13 @@
         "V8-W-U6",
         "V8-U3-C4",
         "H9-U3-C1",
+
         "18-W-C1",
         "19-W-W",
     };
     public static readonly string[] STAGE_4_DEVICES = new string[]
     {
+        "4-W-C1",
         "4B1-A189-T1", // Arthur
         // "4B2-A189-T1", // Arthur
         "4B1-A1210-T2", // Merlin
@@ -162,20 +167,16 @@
     {
         "1-N1-X",
         "1-N2-X",
-        "V5-C8-X",
     };
     public static readonly string[] STAGE_2_ENTRY = new string[]
     {
         "2-C2-W",
         "2-C4-W",
         "2-C6-X",
-        "V7-U4-C3",
     };
     public static readonly string[] STAGE_3_ENTRY = new string[]
     {
-        "3-E6-E4",
-        "3-U1-X",
-        "V8-U3-C4",
+        "3-N3-X",
     };
     public static readonly string[] STAGE_4_ENTRY = new string[]
     {
@@ -190,6 +191,13 @@
         "2-U3-U2",
         "2-U7-U5",
         "2-U7-U3",
+    };
+    public static readonly string[] CLOSED_DOORS = new string[]
+    {
+        "3-E6-E4",
+        "3-U1-X",
+        "B",
+        "3-U1-X",
     };
     public static readonly string[] CHANCE_DOORS = new string[]
     { // 14 Doors
@@ -472,6 +480,16 @@
         for (int i = 0; i < STAGE_2_DOORS.Length; i++)
         {
             if (device == STAGE_2_DOORS[i])
+                return true;
+        }
+        return false;
+    }
+
+    public static bool IsClosedDoor (string device)
+    {
+        for (int i = 0; i < CLOSED_DOORS.Length; i++)
+        {
+            if (device == CLOSED_DOORS[i])
                 return true;
         }
         return false;

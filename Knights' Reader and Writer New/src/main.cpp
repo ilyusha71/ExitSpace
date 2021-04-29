@@ -249,7 +249,7 @@ void SendConferEvent()
 /****************************************************************************
  * Receive Verification
  ****************************************************************************/
-void Pass();
+void PassSound();
 void PassSound()
 {
   digitalWrite(LED_BUZZER, HIGH);
@@ -945,7 +945,7 @@ void loop()
             hasRuby[i] = false;
           }
         }
-        
+
         Serial.print(F("Agent: ["));
         if (bufferID[0] == 0)
         {
@@ -989,6 +989,17 @@ void loop()
         digitalWrite(RST_PIN, LOW);
         return;
       }
+
+      /****************************************************************************
+       * Ruby Badge Reader
+       * 
+       ****************************************************************************/
+
+      for (size_t index = 1; index < NR_OF_RUBY; index++)
+      {
+        // hasRuby = GetCardRubyData(index);
+      }
+
 #if MODE == ENTRY_MODE
       if (ResetNewAgent())
         SendResetEvent(presents);
@@ -1007,8 +1018,8 @@ void loop()
         Serial.print(reader[index].specificKey);
       if (SetCardRubyData(reader[index].specificKey))
       {
-        mfrc522[readerIndex].PICC_HaltA();
         Serial.println(F("] ==> OK"));
+        mfrc522[readerIndex].PICC_HaltA();
         SendBadges(String(reader[index].specificKey) + ".");
         digitalWrite(LED_BUZZER, HIGH);
         delay(500);

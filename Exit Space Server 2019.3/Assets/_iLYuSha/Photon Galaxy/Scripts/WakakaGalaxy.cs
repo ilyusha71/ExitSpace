@@ -63,7 +63,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     [Header ("Lobby Panel - List of Room")]
     public RectTransform roomListContent;
     public GameObject RoomListEntryPrefab;
-    public GameObject refreshButton;
+    public GameObject btnRefreshRoomList;
     public Sprite[] iconPlanets;
     private Dictionary<string, RoomInfo> cachedRoomList = new Dictionary<string, RoomInfo> ();
     private Dictionary<string, GameObject> roomListEntries = new Dictionary<string, GameObject> ();
@@ -449,7 +449,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
         textWarning.text = NAME_CONNECTED + "主" + NAME_SERVER;
         textServer.text = GetRegionNameText (PhotonNetwork.CloudRegion) + "\n<size=23>" + PhotonNetwork.ServerAddress + "</size>";
         if (!PhotonNetwork.InLobby)
-            PhotonNetwork.JoinLobby ();
+            btnRefreshRoomList.SetActive (true);
     }
     // Called after disconnecting from the Photon server. It could be a failure or an explicit disconnect call.
     public override void OnDisconnected (DisconnectCause cause)
@@ -460,6 +460,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
         panelLogin.SetActive (true);
         panelLobby.SetActive (false);
         CloseRegion ();
+        ClearRoomListView();
     }
     // Called when the Name Server provided a list of regions for your title. 
     public override void OnRegionListReceived (RegionHandler regionHandler)
@@ -552,7 +553,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     // Called for any update of the room-listing while in a lobby (InLobby) on the Master Server.
     public override void OnRoomListUpdate (List<RoomInfo> roomList)
     {
-        Debug.LogWarning ("OnRoomListUpdate: " + PhotonNetwork.InLobby);
+        Debug.LogWarning ("OnRoomListUpdate: " + roomList.Count + " / " + PhotonNetwork.InLobby);
         textWarning.text = NAME_ROOM + "组织已更新成员列表。";
         ClearRoomListView ();
         UpdateCachedRoomList (roomList);
@@ -585,7 +586,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
             textWarning.text = NAME_FAILED + NAME_CREATE + message;
 
         ClearRoomListView ();
-        refreshButton.SetActive (true);
+        btnRefreshRoomList.SetActive (true);
     }
     // Called when the LoadBalancingClient entered a room, no matter if this client created it or simply joined.
     public override void OnJoinedRoom ()
@@ -638,7 +639,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
             textWarning.text = NAME_FAILED + NAME_JOIN + message;
 
         ClearRoomListView ();
-        refreshButton.SetActive (true);
+        btnRefreshRoomList.SetActive (true);
     }
     // Called when a previous OpJoinRandom call failed on the server.
     public override void OnJoinRandomFailed (short returnCode, string message)
@@ -651,7 +652,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
         // OnCreateRoomButtonClicked ();
 
         ClearRoomListView ();
-        refreshButton.SetActive (true);
+        btnRefreshRoomList.SetActive (true);
     }
     // Called when the local user / client left a room, so the game 's logic can clean up it's internal state.
     public override void OnLeftRoom ()
@@ -716,7 +717,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     // Called when custom player - properties are changed.Player and the changed properties are passed as object[].
     public override void OnPlayerPropertiesUpdate (Player targetPlayer, Hashtable changedProps)
     {
-        Debug.LogWarning (targetPlayer.NickName + " Properties Update");
+        // Debug.LogWarning (targetPlayer.NickName + " Properties Update");
         // 以下控制代碼適用所有PC端觀測者，無需判定 MasterClient
         if (PhotonNetwork.InRoom)
             FindObjectOfType<AgentCampManager> ().DeveloperCommand ();
@@ -782,8 +783,7 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
     }
     private void UpdateRoomListView ()
     {
-        Debug.Log ("U1");
-        refreshButton.SetActive (false);
+        btnRefreshRoomList.SetActive (false);
         roomListContent.sizeDelta = new Vector2 (cachedRoomList.Count * 339 + 7, roomListContent.sizeDelta.y);
         foreach (RoomInfo info in cachedRoomList.Values)
         {
@@ -804,8 +804,6 @@ public class WakakaGalaxy : MonoBehaviourPunCallbacks
             entry.GetComponentsInChildren<TextMeshProUGUI> () [2].text = "/ " + (info.MaxPlayers == 0 ? "#" : info.MaxPlayers.ToString ());
             roomListEntries.Add (info.Name, entry);
         }
-        Debug.Log ("U2");
-
     }
     private string GetRegionNameText (string region)
     {
